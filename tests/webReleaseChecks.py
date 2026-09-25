@@ -153,7 +153,7 @@ class ReleaseTests(unittest.TestCase):
             member.type = kind
             with self.assertRaises(ValueError):
                 receiver.validate_member(member)
-        receiver.validate_member(tarfile.TarInfo('dist/domain/index.html'))
+        receiver.validate_member(tarfile.TarInfo('dist/rabwa/index.html'))
 
     def test_corrupt_transfer_is_rejected(self):
         with tempfile.TemporaryDirectory() as folder:

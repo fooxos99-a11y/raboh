@@ -125,7 +125,7 @@ def validate_member(member):
         raise ValueError('Unapproved archive path')
     if not member.isfile() and not member.isdir():
         raise ValueError('Archive links and devices are prohibited')
-    if path.parts[0] == 'dist' and (len(path.parts) < 2 or path.parts[1] not in {'domain', 'mdarj'}):
+    if path.parts[0] == 'dist' and (len(path.parts) < 2 or path.parts[1] not in {'rabwa', 'rabwa-path'}):
         raise ValueError('Unexpected build target')
     if path.parts[:2] == ('public', 'downloads'):
         raise ValueError('Native downloads are managed independently')

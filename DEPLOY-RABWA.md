@@ -74,3 +74,35 @@
 
 - حدّث `last_release` في `data1.yml` بمسار الإصدار ومسار النسخ الاحتياطي ومسار الرجوع وآخر ترحيل.
 - أبلغ المستخدم باختصار: ما نُشر، ونتيجة كل تحقق، ومكان النسخ الاحتياطي.
+
+## 9. الرفع التلقائي من GitHub (مرة واحدة بعد نجاح التبديل)
+
+الهدف: أي دفع إلى فرع `main` في `fooxos99-a11y/rabwa` يفحص الكود ويبنيه ويرفعه لربوة تلقائيًا. المشروع يحوي هذا النظام أصلًا:
+- `.github/workflows/web-deploy.yml`
+- المستقبِل على السيرفر: `scripts/web-release/receiver.py`
+- الحزمة: `scripts/web-release/package.py`، وتضم `dist/rabwa` و`dist/rabwa-path`.
+
+ينفَّذ القسم التالي بعد نجاح الأقسام 1 إلى 8 فقط، لأن المستقبِل يرفض أي نشر فيه ترحيلات قاعدة معلّقة.
+
+على السيرفر:
+1. ثبّت المستقبِل في `/var/www/rboh/shared/github-deploy/`، وفيه `receiver.py` و`preflight.mjs` من الإصدار المنشور و`config.json`. يتحقق `load_config` في المستقبِل من هذه المسارات:
+   - `release_root`: `/var/www/rboh/releases`
+   - `dependency_cache`: `/var/www/rboh/shared/dependencies`
+   - `current`: `/var/www/rboh/current`
+   - `preflight`: `/var/www/rboh/shared/github-deploy/preflight.mjs`
+   - `runtime_source` و`env_source`: مسار `.env` وبيانات التشغيل الحالية داخل `/var/www/rboh`.
+   - `services`: `["rboh", "rboh-notifications-worker"]`، بدون خدمة ناظم.
+   - `health_urls`: `["https://rboh.cc/api/health"]`
+   - `public_checks`: حسب ما يتطلبه `receiver.py`.
+2. وجّه nginx لموقع `rboh.cc` إلى `/var/www/rboh/current/dist/rabwa`، والمسار `/rboh/` إلى `/var/www/rboh/current/dist/rabwa-path`، مع الإبقاء على `/downloads/`. خذ نسخة من إعداد nginx قبل التعديل، وشغّل `nginx -t` قبل `reload`.
+3. أنشئ مفتاح SSH جديدًا خاصًا بالنشر، وأضفه إلى `authorized_keys` بأمر مقيّد:
+   `command="python3 /var/www/rboh/shared/github-deploy/receiver.py",no-pty,no-port-forwarding,no-agent-forwarding,no-X11-forwarding ssh-ed25519 ...`
+   لا تستخدم مفتاح root العام، ولا كلمة مرور السيرفر.
+
+في GitHub، في Settings ثم Secrets and variables ثم Actions للمستودع `fooxos99-a11y/rabwa`:
+- `WEB_SSH_PRIVATE_KEY`: المفتاح الخاص الجديد.
+- `WEB_SSH_KNOWN_HOSTS`: ناتج `ssh-keyscan -t ed25519 161.97.171.108`، بعد مطابقته مع `host_key` في `data1.yml`.
+- `WEB_SSH_DESTINATION`: `root@161.97.171.108`، أو مستخدم النشر إن أنشأت واحدًا.
+- `WEB_BUILD_COMMANDS`: `["npm run build:rabwa","npm run build:rabwa:path"]`
+
+جرّب بعدها بتشغيل **Deploy website** يدويًا من تبويب Actions، وتحقق من `https://rboh.cc/api/health`. بعد النجاح يصير كل دفع إلى `main` يرفع تلقائيًا.

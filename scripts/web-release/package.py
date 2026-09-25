@@ -12,7 +12,7 @@ FILES = {'package.json', 'package-lock.json', 'index.html', 'vite.config.js',
 def package(destination):
     tracked = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
     paths = [Path(p) for p in tracked if p and (p.split('/')[0] in ROOTS or p in FILES)]
-    for folder in ('dist/domain', 'dist/mdarj'):
+    for folder in ('dist/rabwa', 'dist/rabwa-path'):
         if not Path(folder, 'index.html').is_file():
             raise ValueError('Missing web build: ' + folder)
         paths.extend(p for p in Path(folder).rglob('*') if p.is_file())
