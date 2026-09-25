@@ -1,0 +1,27 @@
+{
+  "name": "ربوة",
+  "short_name": "ربوة",
+  "description": "برنامج ربوة لإدارة حلقات القرآن الكريم",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#003D52",
+  "theme_color": "#08A9CE",
+  "icons": [
+    {
+      "src": "branding/rabwa/icon-192.png?v=1",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "branding/rabwa/icon-512.png?v=1",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

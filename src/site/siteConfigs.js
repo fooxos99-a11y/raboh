@@ -1,0 +1,80 @@
+const rabwaColors = {
+  dark: {
+    background: '211 72% 10%',
+    foreground: '190 24% 97%',
+    card: '210 60% 14%',
+    primaryLight: '167 64% 57%',
+    primary: '188 85% 39%',
+    primaryDark: '214 80% 45%',
+    primaryForeground: '0 0% 100%',
+    secondary: '211 44% 19%',
+    muted: '210 35% 21%',
+    mutedForeground: '195 18% 74%',
+    accent: '91 77% 32%',
+    border: '206 34% 27%',
+  },
+  light: {
+    background: '190 30% 98%',
+    foreground: '211 68% 14%',
+    card: '0 0% 100%',
+    primaryLight: '164 60% 46%',
+    primary: '188 88% 36%',
+    primaryDark: '215 83% 42%',
+    primaryForeground: '0 0% 100%',
+    secondary: '186 34% 92%',
+    muted: '190 24% 95%',
+    mutedForeground: '205 18% 42%',
+    accent: '88 70% 91%',
+    border: '190 25% 85%',
+  },
+};
+
+const rabwaSiteConfig = Object.freeze({
+  key: 'rabwa',
+  name: 'ربوة',
+  publicUrl: 'https://rboh.cc/',
+  shortName: 'ربوة',
+  organizationName: 'برنامج ربوة',
+  showPublicHeroLogo: false,
+  publicHeaderTitle: 'برنامج ربوة',
+  publicHeaderSubtitle: '',
+  heroTitle: 'برنامج ربوة',
+  heroDescription: 'برنامج قرآني رائد يهدف إلى خدمة كتاب الله تعالى تلاوةً وحفظاً وتدبراً. يضم المجمع مسارات تعليمية متخصصة (مسار الحفظ ومسار الإتقان) تحت إشراف نخبة من المعلمين المتميزين، لتمكين الطلاب من ضبط المصحف وبناء جيل قرآني متميز.',
+  description: 'برنامج قرآني رائد يهدف إلى خدمة كتاب الله تعالى تلاوةً وحفظاً وتدبراً. يضم المجمع مسارات تعليمية متخصصة (مسار الحفظ ومسار الإتقان) تحت إشراف نخبة من المعلمين المتميزين، لتمكين الطلاب من ضبط المصحف وبناء جيل قرآني متميز.',
+  logo: 'branding/rabwa/rabwa-logo-color.svg',
+  whiteLogo: 'branding/rabwa/rabwa-logo-white.svg',
+  lockupLogo: 'branding/rabwa/rabwa-logo-color.svg',
+  squareLogo: 'branding/rabwa/icon-512.png',
+  markLogo: 'branding/rabwa/rabwa-logo-color.svg',
+  icon192: 'branding/rabwa/icon-192.png',
+  favicon: 'branding/rabwa/icon-192.png?v=1',
+  appleTouchIcon: 'branding/rabwa/icon-192.png?v=1',
+  registrationNumber: 'platform',
+  whatsappUrl: '',
+  themeColor: '#08A9CE',
+  colors: rabwaColors,
+  navigation: {
+    background: '#063c63',
+    accent: '#62dc62',
+    highlight: '#08a9ce',
+  },
+  secureStoragePrefix: 'cc.rboh.app.',
+  backgroundRunnerLabel: 'cc.rboh.app.offline-recitation',
+  androidDownloadUrl: '/downloads/rabwa-android-1.0.15.apk',
+  appStoreUrl: 'https://apps.apple.com/app/id6805284064',
+  features: Object.freeze({
+    store: false,
+    studentHome: true,
+    studentLevel: false,
+    dailyChallenge: false,
+    summit: false,
+    culturalCompetition: false,
+    nazem: false,
+  }),
+});
+
+export const defaultSiteKey = 'rabwa';
+
+export function getSiteConfig() {
+  return rabwaSiteConfig;
+}
