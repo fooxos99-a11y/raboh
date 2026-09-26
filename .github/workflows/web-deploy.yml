@@ -51,10 +51,19 @@ jobs:
           umask 077
           key="$RUNNER_TEMP/web-deploy-key"
           hosts="$RUNNER_TEMP/web-known-hosts"
-          trap 'rm -f "$key" "$hosts"' EXIT
+          trap 'rm -f "$key" "$key.decoded" "$hosts"' EXIT
           # Strip carriage returns and invisible direction marks that copy-paste can add.
           clean() { perl -CSD -pe 's/[\r\x{200E}\x{200F}\x{202A}-\x{202E}\x{2066}-\x{2069}\x{FEFF}]//g; s/^[ \t]+|[ \t]+$//g'; }
           printf '%s\n' "$WEB_SSH_PRIVATE_KEY" | clean > "$key"
+          # Accept the key as one base64 line too, which survives copy-paste intact.
+          if ! grep -q 'BEGIN OPENSSH PRIVATE KEY' "$key"; then
+            tr -d ' \n' < "$key" | base64 -d > "$key.decoded" 2>/dev/null && mv "$key.decoded" "$key" || true
+          fi
+          chmod 600 "$key"
+          if ! ssh-keygen -y -f "$key" > /dev/null 2>&1; then
+            echo "WEB_SSH_PRIVATE_KEY is not a valid key: lines=$(wc -l < "$key"), has BEGIN=$(grep -c 'BEGIN OPENSSH' "$key" || true), has END=$(grep -c 'END OPENSSH' "$key" || true)"
+            exit 1
+          fi
           # The server's public host key is committed in deploy/known_hosts (public, safe to commit).
           if [ -s deploy/known_hosts ]; then clean < deploy/known_hosts > "$hosts"; else printf '%s\n' "$WEB_SSH_KNOWN_HOSTS" | clean > "$hosts"; fi
           destination=$(printf '%s' "$WEB_SSH_DESTINATION" | clean | tr -d '\n')
