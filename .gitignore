@@ -54,3 +54,4 @@ android/.kotlin/
 *-log.txt
 *.lnk
 *.tgz
+github-secrets.txt
