@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/components/ui/use-toast';
 import DashboardLoader from '@/components/dashboard/DashboardLoader';
 import DashboardMobileHeaderActions from '@/components/dashboard/DashboardMobileHeaderActions';
-import ExecutionFollowupSection from '@/components/dashboard/ExecutionFollowupSection';
+import ExecutionSheetSection from '@/components/dashboard/StudentExecutionCorrectionsSection';
 import ReportsOverview from '@/components/dashboard/ReportsOverview';
 import ReportsProgress from '@/components/dashboard/ReportsProgress';
 import ReportsRecitationSessions from '@/components/dashboard/ReportsRecitationSessions';
@@ -453,7 +453,7 @@ const ReportsSection = ({
       return <DashboardLoader className="p-8" />;
     }
     if (isExecutionFollowup) {
-      return <ExecutionFollowupSection teacherScoped={teacherScoped} />;
+      return <ExecutionSheetSection teacherScoped />;
     }
     if (isOverviewReport) {
       return <ReportsOverview data={overview} />;
@@ -506,7 +506,7 @@ const ReportsSection = ({
                 <SelectContent>
                   {teacherScoped ? (
                     <>
-                      {canViewExecutionFollowup && <SelectItem value="executionFollowup">متابعة تنفيذ</SelectItem>}
+                      {canViewExecutionFollowup && <SelectItem value="executionFollowup">متابعة التنفيذ</SelectItem>}
                       {canViewStandardReports && <SelectItem value="students">طلاب</SelectItem>}
                       {canViewStandardReports && <SelectItem value="studentPoints">نقاط الطلاب</SelectItem>}
                       {canViewStandardReports && <SelectItem value="overview">إحصائيات</SelectItem>}
@@ -515,7 +515,6 @@ const ReportsSection = ({
                   ) : (
                     <>
                       {canViewStandardReports && <SelectItem value="students">متابعة الطلاب</SelectItem>}
-                      {canViewExecutionFollowup && <SelectItem value="executionFollowup">متابعة التنفيذ</SelectItem>}
                       {canViewStandardReports && <SelectItem value="recitationSessions">جلسات التسميع</SelectItem>}
                       {canViewStandardReports && <SelectItem value="studentPoints">نقاط الطلاب</SelectItem>}
                       {canViewStandardReports && <SelectItem value="supervisors">الكادر</SelectItem>}
@@ -526,13 +525,6 @@ const ReportsSection = ({
                   )}
                 </SelectContent>
               </Select>
-            )}
-
-            {isExecutionFollowup && (
-              <div
-                id="execution-followup-report-controls"
-                className="contents"
-              />
             )}
 
             {!teacherScoped && !isExecutionFollowup && (isOverviewReport || isStudentPointsReport || target === 'students' || target === 'recitationSessions' || target === 'archive') && (

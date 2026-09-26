@@ -143,13 +143,13 @@ const baseSections = [
   { key: 'manualAttendance', label: 'التحضير', icon: ClipboardCheck },
   { key: 'staffAttendance', label: 'التحضير', icon: ClipboardCheck },
   { key: 'mushaf', label: 'المصحف', icon: BookOpen },
-  { key: 'reports', label: 'التقارير', icon: ClipboardList, permissionKeys: ['reports', 'executionFollowup'] },
+  { key: 'reports', label: 'التقارير', icon: ClipboardList },
   { key: 'students', label: 'الطلاب', icon: GraduationCap },
   { key: 'families', label: 'الحلقات', icon: Building2 },
   { key: 'studentPlans', label: 'خطط الطلاب', icon: ListChecks },
   {
     key: 'studentExecutionCorrections',
-    label: 'تصحيح تنفيذ الطلاب',
+    label: 'متابعة التنفيذ',
     icon: ClipboardList,
     permissionKey: 'studentPlans',
     managementOnly: true,
@@ -233,9 +233,6 @@ const WajehDashboard = () => {
   useEffect(() => {
     const routeKey = dashboardSectionRoutes.getKey(sectionSlug);
     const _resolvePreloadKey = () => {
-      if (routeKey === 'executionFollowup') {
-        return 'reports';
-      }
       if (isSettingsNavigationKey(routeKey)) {
         return 'settings';
       }
@@ -294,7 +291,7 @@ const WajehDashboard = () => {
       if (isSupervisor && section.key === 'studentPlans') return true;
       if (isSupervisor && ['teacherPoints', 'culturalCompetition', 'calls', 'reports'].includes(section.key)) return true;
       if (section.key === 'staffAttendance') return canDisplayStaffAttendance({ settings, alreadyPresentToday, isSupervisor, isReciter, isAdmin, dashboardPermissions });
-      if (section.key === 'mushaf') return isManager || isSupervisor || isReciter;
+      if (section.key === 'mushaf') return isSupervisor;
       const permissionKeys = section.permissionKeys || [section.permissionKey || section.key];
       if (!isManager && !permissionKeys.some((key) => dashboardPermissions.includes(key))) return false;
       if (!isSupervisor && section.key === 'manualAttendance' && (!settings.attendanceManualEnabled || settings.recitationAttendanceSource === 'teacher')) return false;
@@ -315,9 +312,6 @@ const WajehDashboard = () => {
 
   const routeSection = dashboardSectionRoutes.getKey(sectionSlug);
   const _resolveRequestedSection = () => {
-    if (routeSection === 'executionFollowup') {
-      return 'reports';
-    }
     if (routeSection === 'settings') {
       return defaultSettingsNavigationKey;
     }
@@ -357,7 +351,9 @@ const WajehDashboard = () => {
       case 'users': return <UsersSection tabs={sections.find(({ key }) => key === 'users')?.userTabs} />;
       case 'registrationRequests': return <RegistrationRequestsSection />;
       case 'studentPlans': return <StudentPlansSection hideCommitteeFilter={isSupervisor && !isManager} />;
-      case 'studentExecutionCorrections': return <StudentExecutionCorrectionsSection />;
+      case 'studentExecutionCorrections': return (
+        <StudentExecutionCorrectionsSection canEditAttendance={isManager || dashboardPermissions.includes('manualAttendance')} />
+      );
       case 'teacherPoints': return <TeacherPointsAdjustmentSection />;
       case 'quranTests': return <QuranTestsSection />;
       case 'quranEvaluation': return <TeacherEvaluationSection />;
@@ -367,10 +363,6 @@ const WajehDashboard = () => {
       <ReportsSection
         teacherScoped={isSupervisor}
         canViewStandardReports={isSupervisor || isManager || dashboardPermissions.includes('reports')}
-        canViewExecutionFollowup={
-          settings.hasStudentQuranExecution !== false
-          && (isSupervisor || isManager || dashboardPermissions.includes('executionFollowup'))
-        }
         canViewTeacherPoints={settings.teacherManualPointsEnabled}
       />
     );

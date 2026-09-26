@@ -68,6 +68,7 @@ import { notificationRouter, notificationManagementRouter } from './routes/notif
 import cors from 'cors';
 import crypto from 'node:crypto';
 import ExcelJS from 'exceljs';
+import { buildExecutionSheetRows, buildExecutionSheetWorkbook, getExecutionSheetDays, resolveExecutionSheetRange } from './services/executionSheet.js';
 import express from 'express';
 import { memorizedSegments } from './services/memorizedSegments.js';
 import nodeFs from 'node:fs';
@@ -654,7 +655,7 @@ function getSupervisorApiAccess(req, path) {
     && /^\/reports\/(?:committees|students|overview|progress|student-point-transactions|recitation-sessions|student-recitation-history|student-saved|recitation-session-dates)(?:\/export)?$/.test(path);
   const supervisorExecutionFollowup = req.auth.role === 'supervisor'
     && req.method === 'GET'
-    && path === '/execution-followup';
+    && ['/execution-followup', '/quran-execution-corrections/sheet', '/quran-execution-corrections/sheet/export'].includes(path);
   const supervisorTeacherPointsAccess = req.auth.role === 'supervisor'
     && path.startsWith('/teacher-points');
   const supervisorTeacherPointsReport = req.auth.role === 'supervisor'
@@ -11448,8 +11449,8 @@ app.get('/api/quran-execution-corrections', requirePermission('studentPlans'), a
     const studentId = Number(req.query.studentId || 0);
     const date = String(req.query.date || '');
     const today = getSaudiDateTimeParts().date;
-    if (!Number.isSafeInteger(studentId) || studentId < 1 || !isValidDateOnly(date) || date >= today) {
-      return res.status(422).json({ message: 'اختر طالبًا وتاريخًا سابقًا صحيحًا.' });
+    if (!Number.isSafeInteger(studentId) || studentId < 1 || !isValidDateOnly(date) || date > today) {
+      return res.status(422).json({ message: 'اختر طالبًا وتاريخًا صحيحًا لا يتجاوز اليوم.' });
     }
 
     await connection.beginTransaction();
@@ -11522,6 +11523,189 @@ app.get('/api/quran-execution-corrections', requirePermission('studentPlans'), a
     res.json({ date, studentId, referenceMode: settings.quranReferenceMode, tasks });
   } catch (error) {
     if (transactionStarted) await connection.rollback();
+    next(error);
+  } finally {
+    connection.release();
+  }
+});
+
+/** Load one day of the execution sheet: attendance and tasmee of the session, plus student-executed tasks. */
+async function loadExecutionSheetDay(connection, { date, committeeId, settings, generate, supervisorId = null }) {
+  const studentFilters = ['EXISTS (SELECT 1 FROM student_quran_plans p WHERE p.student_id = s.id)'];
+  const studentParams = [];
+  if (committeeId !== 'all') {
+    studentFilters.push('s.committee_id = ?');
+    studentParams.push(committeeId);
+  }
+  if (supervisorId) {
+    studentFilters.push(`EXISTS (
+      SELECT 1 FROM supervisor_committees sc
+      WHERE sc.supervisor_id = ? AND sc.committee_id = s.committee_id
+    )`);
+    studentParams.push(supervisorId);
+  }
+  const [students] = await connection.query(
+    `SELECT s.id, s.name, s.committee_id AS committeeId, c.name AS committeeName
+     FROM students s
+     LEFT JOIN committees c ON c.id = s.committee_id
+     WHERE ${studentFilters.join(' AND ')}
+     ORDER BY s.name ASC`,
+    studentParams,
+  );
+  const isSessionDay = isRecitationSessionDay(date, settings);
+  if (!students.length) return { date, isSessionDay, rows: [] };
+  const studentIds = students.map((student) => Number(student.id));
+
+  if (generate) {
+    for (const studentId of studentIds) {
+      const plan = await getActivePlanForStudent(connection, studentId);
+      if (!plan || await isStudentPlanManagedByNazem(connection, studentId)) continue;
+      await ensureStudentPlanTasks(connection, plan, date, settings);
+      await ensureRepeatTasksForMemorizationDate(connection, plan, date);
+    }
+  }
+
+  const placeholders = studentIds.map(() => '?').join(',');
+  const [tasks] = await connection.query(
+    `SELECT
+       t.id,
+       t.plan_id AS planId,
+       t.student_id AS studentId,
+       t.task_type AS taskType,
+       t.track,
+       t.student_status AS studentStatus,
+       t.execution_state AS executionState,
+       t.execution_actor_role AS executionActorRole,
+       t.teacher_completed AS teacherCompleted,
+       EXISTS (
+         SELECT 1 FROM nazem_plan_links managedLink
+         JOIN nazem_accounts managedAccount ON managedAccount.teacher_id = managedLink.teacher_id
+           AND managedAccount.status = 'connected'
+         JOIN app_settings managedSetting ON managedSetting.setting_key = 'nazemIntegrationEnabled'
+           AND managedSetting.setting_value = 'true'
+         WHERE managedLink.ruwasi_plan_id = t.plan_id
+           AND managedLink.ruwasi_student_id = t.student_id
+           AND managedLink.sync_status NOT IN ('deleted','detached')
+       ) AS nazemManaged
+     FROM student_quran_tasks t
+     WHERE t.task_date = ?
+       AND t.student_id IN (${placeholders})
+       AND t.task_type IN ('memorization','review','link')
+     ORDER BY t.plan_id ASC, t.from_page ASC, t.id ASC`,
+    [date, ...studentIds],
+  );
+  let attendance = [];
+  let evaluations = [];
+  if (isSessionDay) {
+    [attendance] = await connection.query(
+      `SELECT student_id AS studentId, status FROM attendance_records
+       WHERE record_date = ? AND student_id IN (${placeholders})`,
+      [date, ...studentIds],
+    );
+    [evaluations] = await connection.query(
+      `SELECT student_id AS studentId,
+              SUM(COALESCE(evaluation_score, 0)) AS score,
+              SUM(evaluation_max_score) AS maxScore
+       FROM student_quran_tasks
+       WHERE task_type = 'memorization'
+         AND evaluation_max_score > 0
+         AND DATE_FORMAT(evaluated_at, '%Y-%m-%d') = ?
+         AND student_id IN (${placeholders})
+       GROUP BY student_id`,
+      [date, ...studentIds],
+    );
+  }
+  const rows = buildExecutionSheetRows({
+    students,
+    tasks,
+    attendance,
+    evaluations,
+    isSessionDay,
+    canStudentExecute: (taskType) => canStudentExecuteQuranTask(settings, taskType),
+  });
+  return { date, isSessionDay, rows };
+}
+
+/** Teachers read the sheet for their own circles; editing stays with management. */
+function requireExecutionSheetAccess(req, res, next) {
+  if (req.auth?.role === 'supervisor') return next();
+  return requirePermission('studentPlans')(req, res, next);
+}
+
+async function resolveExecutionSheetAccess(req) {
+  if (await canManageStudentExecutionCorrections(req)) return { allowed: true, editable: true, supervisorId: null };
+  if (req.auth?.role === 'supervisor') return { allowed: true, editable: false, supervisorId: Number(req.auth.id) };
+  return { allowed: false, editable: false, supervisorId: null };
+}
+
+function resolveExecutionSheetRequest(req, settings) {
+  const today = getSaudiDateTimeParts().date;
+  const { from, to } = resolveExecutionSheetRange({ from: req.query.from, to: req.query.to, today, isValidDate: isValidDateOnly });
+  const days = getExecutionSheetDays(from, to, {
+    holidayDays: Array.isArray(settings.weeklyHolidayDays) ? settings.weeklyHolidayDays : DEFAULT_WEEKLY_HOLIDAY_DAYS,
+    sessionDays: getRecitationSessionDays(settings),
+  });
+  const requested = isValidDateOnly(req.query.date) ? String(req.query.date) : '';
+  const date = days.some((day) => day.date === requested) ? requested : (days.at(-1)?.date || to);
+  return { today, from, to, date, committeeId: 'all', days };
+}
+
+app.get('/api/quran-execution-corrections/sheet', requireExecutionSheetAccess, async (req, res, next) => {
+  const connection = await db().getConnection();
+  let transactionStarted = false;
+  try {
+    const access = await resolveExecutionSheetAccess(req);
+    if (!access.allowed) return permissionDenied(res);
+    const settings = await loadSettings();
+    if (!hasStudentQuranExecution(settings)) {
+      return res.status(409).json({ message: 'متابعة التنفيذ غير متاحة ما دام تنفيذ الطالب غير مفعّل.' });
+    }
+    const { today, from, to, date, committeeId, days } = resolveExecutionSheetRequest(req, settings);
+    if (!days.length) {
+      return res.json({ date, today, from, to, days, isSessionDay: false, editable: access.editable, rows: [] });
+    }
+    await connection.beginTransaction();
+    transactionStarted = true;
+    const day = await loadExecutionSheetDay(connection, {
+      date, committeeId, settings, generate: true, supervisorId: access.supervisorId,
+    });
+    await connection.commit();
+    transactionStarted = false;
+    res.json({ ...day, today, from, to, days, editable: access.editable });
+  } catch (error) {
+    if (transactionStarted) await connection.rollback();
+    next(error);
+  } finally {
+    connection.release();
+  }
+});
+
+app.get('/api/quran-execution-corrections/sheet/export', requireExecutionSheetAccess, async (req, res, next) => {
+  const connection = await db().getConnection();
+  try {
+    const access = await resolveExecutionSheetAccess(req);
+    if (!access.allowed) return permissionDenied(res);
+    const settings = await loadSettings();
+    if (!hasStudentQuranExecution(settings)) {
+      return res.status(409).json({ message: 'متابعة التنفيذ غير متاحة ما دام تنفيذ الطالب غير مفعّل.' });
+    }
+    const { from, to, committeeId, days: rangeDays } = resolveExecutionSheetRequest(req, settings);
+    const days = [];
+    for (const rangeDay of rangeDays) {
+      const day = await loadExecutionSheetDay(connection, {
+        date: rangeDay.date, committeeId, settings, generate: false, supervisorId: access.supervisorId,
+      });
+      days.push({ ...rangeDay, rows: day.rows });
+    }
+    const buffer = await buildExecutionSheetWorkbook({
+      title: 'متابعة التنفيذ',
+      subtitle: `${currentSiteConfig().name} | كل الحلقات | من ${from} إلى ${to}`,
+      days,
+      creator: currentSiteConfig().name,
+    });
+    setDownloadHeaders(res, `متابعة-التنفيذ-${from}-إلى-${to}.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buffer);
+  } catch (error) {
     next(error);
   } finally {
     connection.release();
@@ -18858,9 +19042,9 @@ if (settings.attendanceLocationUrl) {
 async function rejectInvalidExecutionCorrection({ administrativeCorrection, req, first, settings, connection, res }) {
 if (administrativeCorrection) {
       const today = getSaudiDateTimeParts().date;
-      if (first.taskDate >= today || (req.body.date && String(req.body.date) !== String(first.taskDate))) {
+      if (first.taskDate > today || (req.body.date && String(req.body.date) !== String(first.taskDate))) {
         await connection.rollback();
-        return res.status(422).json({ message: 'التصحيح متاح للأيام السابقة فقط.' });
+        return res.status(422).json({ message: 'لا يمكن تصحيح تنفيذ يوم لم يأتِ بعد.' });
       }
       if (!canStudentExecuteQuranTask(settings, first.taskType)) {
         await connection.rollback();

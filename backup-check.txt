@@ -1,0 +1,4 @@
+drwxrwxrwx 10 root root 4096 Sep 16 20:52 /var/www/rboh/dist.rollback-rabwa-new-20260926_020643
+drwxrwxrwx 10 root root 4096 Sep 16 20:52 /var/www/rboh/domain-dist.rollback-rabwa-new-20260926_020643
+2.4G	/var/www/rboh/domain-dist
+459M	/var/www/rboh/dist

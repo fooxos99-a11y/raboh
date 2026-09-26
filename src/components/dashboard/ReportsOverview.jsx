@@ -21,7 +21,6 @@ const ReportsOverview = ({ data }) => {
   const [selectedCommitteeId, setSelectedCommitteeId] = useState(null);
   const totals = data?.totals || {};
   const quranFaces = totals.quranFaces || {};
-  const quranExecution = totals.quranExecution || {};
   const committees = data?.committeeIndicators || [];
   const selectedCommitteeExists = committees.some((committee) => String(committee.id) === String(selectedCommitteeId));
 
@@ -46,15 +45,6 @@ const ReportsOverview = ({ data }) => {
         <SummaryTile icon={Link2} title="إجمالي أوجه الربط" value={quranFaces.link} color="#06b6d4" />
 
       </div>
-
-      <section className="space-y-3 [font-family:var(--font-ui)]" aria-label="تفاصيل التنفيذ المسجل">
-        <p className="text-sm text-muted-foreground">تفاصيل التنفيذ المسجل فقط؛ لا تشمل المهام التي لا تحتوي على تفصيل التنفيذ.</p>
-        <div className="grid gap-3 sm:grid-cols-3">
-        <SummaryTile icon={BookOpen} title="التنفيذ الطبيعي" value={quranExecution.normal?.faces} color="#22c55e" />
-        <SummaryTile icon={RefreshCw} title="التعويض" value={quranExecution.compensation?.faces} color="#f97316" />
-        <SummaryTile icon={BadgeCheck} title="الزيادة خارج الخطة" value={quranExecution.extra?.faces} color="#0ea5e9" />
-        </div>
-      </section>
 
       <QuranAchievementDropdown data={data?.quranLeaders || {}} />
       <CommitteeIndicatorsPanel committees={committees} onSelectCommittee={setSelectedCommitteeId} />

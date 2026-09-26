@@ -36,10 +36,9 @@ test('application startup always mounts and replaces indefinite loading with ret
 });
 
 test('Nazem stays authoritative in live reports while historical source remains visible', async () => {
-  const [server, overview, executionFollowup] = await Promise.all([
+  const [server, overview] = await Promise.all([
     read('../server/index.js'),
     read('../src/components/dashboard/ReportsOverview.jsx'),
-    read('../src/components/dashboard/ExecutionFollowupSection.jsx'),
   ]);
   const execution = sliceBetween(server, "app.get('/api/execution-followup'", "app.get('/api/families'");
   const progress = sliceBetween(server, 'async function buildProgressReport', 'function resolvePdfFontPair');
@@ -55,8 +54,7 @@ test('Nazem stays authoritative in live reports while historical source remains 
   assert.match(progress, /normalizeTaskRow\(task, 'ayah'\)/);
   assert.match(progress, /const planProgress = activePlan && !student\.nazemManaged/);
   assert.doesNotMatch(overview, /!data\?\.period\?\.nazemEnabled/);
-  assert.match(executionFollowup, /<SelectItem value="extra">زيادة خارج الخطة<\/SelectItem>/);
-  assert.doesNotMatch(executionFollowup, /data\?\.nazemEnabled && filters\.status === 'extra'/);
+  assert.doesNotMatch(overview, /تفاصيل التنفيذ المسجل|التنفيذ الطبيعي/);
 });
 
 test('remote Nazem follow-up imports repetition and listening into Ruwasi', async () => {

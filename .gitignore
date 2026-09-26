@@ -53,3 +53,4 @@ android/.kotlin/
 # Local verification logs and shortcuts
 *-log.txt
 *.lnk
+*.tgz

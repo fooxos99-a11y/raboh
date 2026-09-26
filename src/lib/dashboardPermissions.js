@@ -10,7 +10,6 @@ const allDashboardPermissionOptions = [
   { key: 'quranTests', label: 'الاختبارات' },
   { key: 'narrationDay', label: 'يوم السرد' },
   { key: 'calls', label: 'المكالمات' },
-  { key: 'executionFollowup', label: 'متابعة التنفيذ' },
   { key: 'quranEvaluation', label: 'جلسات التسميع' },
   { key: 'families', label: 'الحلقات' },
   { key: 'supervisors', label: 'المعلمين' },

@@ -17,16 +17,16 @@ test('execution reminder exclusions are persisted and skipped by the automatic s
   assert.match(settings, /settings\.memorizationExecutionSource/);
 });
 
-test('management can correct prior student execution while preserving later progress', async () => {
-  const [server, api, section] = await Promise.all([
+test('management can correct student execution up to today while preserving later progress', async () => {
+  const [server, api, dialog] = await Promise.all([
     readFile(new URL('../server/index.js', import.meta.url), 'utf8'),
     readFile(new URL('../src/services/studentsApi.js', import.meta.url), 'utf8'),
-    readFile(new URL('../src/components/dashboard/StudentExecutionCorrectionsSection.jsx', import.meta.url), 'utf8'),
+    readFile(new URL('../src/components/dashboard/ExecutionCorrectionDialog.jsx', import.meta.url), 'utf8'),
   ]);
 
-  assert.match(server, /app\.get\('\/api\/quran-execution-corrections\/students'/);
   assert.match(server, /app\.get\('\/api\/quran-execution-corrections'/);
-  assert.match(server, /date >= today/);
+  assert.match(server, /!isValidDateOnly\(date\) \|\| date > today/);
+  assert.match(server, /first\.taskDate > today/);
   assert.match(server, /administrativeCorrection/);
   assert.match(server, /student_execution_corrected/);
   assert.match(server, /invalidatePendingTasksAfterExecutionCorrection/);
@@ -35,23 +35,47 @@ test('management can correct prior student execution while preserving later prog
   assert.match(acceptance, /teacher_completed = 1[\s\S]*teacher_completed IS NULL\s+AND student_status = 'done'/);
   assert.match(server, /const next = await getNextUnmemorizedPlanPosition\(connection, plan\)/);
   assert.match(api, /administrativeCorrection: true/);
-  assert.match(section, />تصحيح تنفيذ الطلاب<\/h/);
-  assert.match(section, /max=\{yesterday\}/);
-  assert.match(section, /grid-cols-\[minmax\(0,1fr\)_8\.75rem\]/);
-  assert.match(section, /className="h-10 min-w-0 px-2 text-xs/);
-  assert.match(section, /\[&>span\]:truncate/);
-  assert.match(section, /taskIds: task\.taskIds/);
-  assert.match(section, /RepeatCountSelector/);
+  assert.match(dialog, /<DialogContent/);
+  assert.match(dialog, /taskIds: task\.taskIds/);
+  assert.match(dialog, /RepeatCountSelector/);
+  assert.match(dialog, /onSaved\?\.\(\)/);
 });
 
-test('correction page is hidden unless student execution is enabled', async () => {
+test('execution sheet shows one chosen day with names on the right', async () => {
+  const [server, api, sheet] = await Promise.all([
+    readFile(new URL('../server/index.js', import.meta.url), 'utf8'),
+    readFile(new URL('../src/services/studentsApi.js', import.meta.url), 'utf8'),
+    readFile(new URL('../src/components/dashboard/StudentExecutionCorrectionsSection.jsx', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(server, /app\.get\('\/api\/quran-execution-corrections\/sheet', requireExecutionSheetAccess/);
+  assert.match(server, /app\.get\('\/api\/quran-execution-corrections\/sheet\/export', requireExecutionSheetAccess/);
+  assert.match(server, /if \(req\.auth\?\.role === 'supervisor'\) return \{ allowed: true, editable: false/);
+  assert.match(server, /DATE_FORMAT\(evaluated_at, '%Y-%m-%d'\) = \?/);
+  assert.match(api, /getExecutionSheet:/);
+  assert.match(api, /exportExecutionSheet:/);
+  assert.match(sheet, />متابعة التنفيذ<\/h2>/);
+  assert.match(sheet, /aria-label="اليوم"/);
+  assert.match(sheet, /<DashboardDateRange sessionDates=\{false\}/);
+  assert.match(sheet, /addDays\(today, -7\)/);
+  assert.doesNotMatch(sheet, /aria-label="الحلقة"|aria-label="الأسبوع"/);
+  assert.match(sheet, /'جارٍ التصدير\.\.\.' : 'تصدير'/);
+  assert.match(sheet, /sticky right-0/);
+  assert.match(sheet, /dir="rtl"/);
+  assert.match(sheet, /label: 'التكرار'[\s\S]*label: 'الربط'[\s\S]*label: 'المراجعة'/);
+  assert.match(sheet, /bg-primary text-primary-foreground/);
+  assert.doesNotMatch(sheet, /type="date"/);
+});
+
+test('execution sheet page is hidden unless student execution is enabled', async () => {
   const [dashboard, routes] = await Promise.all([
     readFile(new URL('../src/pages/WajehDashboard.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/lib/sectionRoutes.js', import.meta.url), 'utf8'),
   ]);
 
-  assert.match(dashboard, /key: 'studentExecutionCorrections'[\s\S]*label: 'تصحيح تنفيذ الطلاب'[\s\S]*permissionKey: 'studentPlans'/);
+  assert.match(dashboard, /key: 'studentExecutionCorrections'[\s\S]*label: 'متابعة التنفيذ'[\s\S]*permissionKey: 'studentPlans'/);
+  assert.doesNotMatch(dashboard, /تصحيح تنفيذ الطلاب/);
   assert.match(dashboard, /section\.key === 'studentExecutionCorrections' && settings\.hasStudentQuranExecution === false/);
   assert.match(dashboard, /case 'studentExecutionCorrections':[\s\S]*<StudentExecutionCorrectionsSection/);
-  assert.match(routes, /\['studentExecutionCorrections', 'student-execution-corrections'\]/);
+  assert.match(routes, /\['studentExecutionCorrections', 'execution-followup'\]/);
 });

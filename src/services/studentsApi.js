@@ -369,15 +369,6 @@ export const studentsApi = {
       method: 'DELETE',
       body: JSON.stringify(payload),
     }),
-  getExecutionFollowup: ({ from = '', to = '', committeeId = 'all', taskType = 'all', status = 'all' } = {}) => {
-    const params = new URLSearchParams();
-    if (from) params.set('from', from);
-    if (to) params.set('to', to);
-    if (committeeId) params.set('committeeId', committeeId);
-    if (taskType) params.set('taskType', taskType);
-    if (status) params.set('status', status);
-    return request(`/execution-followup?${params.toString()}`);
-  },
   getFamilies: ({ search = '' } = {}) => {
     const params = new URLSearchParams();
     if (search) params.set('search', search);
@@ -558,7 +549,19 @@ export const studentsApi = {
       method: 'POST',
       body: JSON.stringify(payload || {}),
     }),
-  getStudentExecutionCorrectionStudents: () => request('/quran-execution-corrections/students'),
+  getExecutionSheet: ({ date, from, to } = {}) => {
+    const params = new URLSearchParams();
+    if (from) params.set('from', String(from));
+    if (to) params.set('to', String(to));
+    if (date) params.set('date', String(date));
+    return request(`/quran-execution-corrections/sheet?${params.toString()}`);
+  },
+  exportExecutionSheet: ({ from, to } = {}) => {
+    const params = new URLSearchParams();
+    if (from) params.set('from', String(from));
+    if (to) params.set('to', String(to));
+    return requestFile(`/quran-execution-corrections/sheet/export?${params.toString()}`);
+  },
   getStudentExecutionCorrections: (studentId, date) => {
     const params = new URLSearchParams({ studentId: String(studentId), date: String(date) });
     return request(`/quran-execution-corrections?${params.toString()}`);

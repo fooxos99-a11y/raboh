@@ -98,11 +98,10 @@ test('portal account and public rankings match the student experience with notif
 });
 
 test('execution followup generates current tasks without login and shows missed work in red', async () => {
-  const [server, db, auth, followup, execution] = await Promise.all([
+  const [server, db, auth, execution] = await Promise.all([
     readFile(new URL('../server/index.js', import.meta.url), 'utf8'),
     readFile(new URL('../server/db.js', import.meta.url), 'utf8'),
     readFile(new URL('../server/routes/tenantAuthRoutes.js', import.meta.url), 'utf8'),
-    readFile(new URL('../src/components/dashboard/ExecutionFollowupSection.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/components/portal/QuranExecutionDialog.jsx', import.meta.url), 'utf8'),
   ]);
 
@@ -112,11 +111,6 @@ test('execution followup generates current tasks without login and shows missed 
   assert.match(server, /ensureStudentPlanTasks\(connection, plan, today, settings\)/);
   assert.match(server, /t\.actual_repeat_count AS actualRepeatCount/);
   assert.match(server, /actualRepeatCount: row\.actualRepeatCount/);
-  assert.doesNotMatch(followup, /لم يدخل الحساب/);
-  assert.doesNotMatch(followup, /neverLoggedIn/);
-  assert.match(followup, /card\.hasNotDone/);
-  assert.match(followup, /status === 'not_done' \|\| status === 'pending'/);
-  assert.match(followup, /Number\(task\.actualRepeatCount \|\| 0\)\)\} مرة/);
   assert.match(execution, /showIndicator=\{false\}/);
   assert.match(execution, /actualRepeatCounts\.memorization \?\? Math\.max/);
   assert.match(execution, /const taskOrder = \['memorization', 'review', 'link'\]/);
@@ -125,9 +119,8 @@ test('execution followup generates current tasks without login and shows missed 
 });
 
 test('mobile management screens keep fixed chrome and simplified portrait controls', async () => {
-  const [shell, followup, reports, quranTests, whatsapp] = await Promise.all([
+  const [shell, reports, quranTests, whatsapp] = await Promise.all([
     readFile(new URL('../src/components/dashboard/DashboardShell.jsx', import.meta.url), 'utf8'),
-    readFile(new URL('../src/components/dashboard/ExecutionFollowupSection.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/components/dashboard/ReportsSection.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/components/dashboard/QuranTestsSection.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/components/dashboard/WhatsAppSendSection.jsx', import.meta.url), 'utf8'),
@@ -137,10 +130,6 @@ test('mobile management screens keep fixed chrome and simplified portrait contro
   assert.match(shell, /dashboard-header fixed/);
   assert.match(shell, /dashboard-main min-h-\[100dvh\]/);
   assert.doesNotMatch(shell, /dashboard-main[^"\n]*overflow-y-auto/);
-  assert.match(followup, /grid grid-cols-1 gap-1\.5/);
-  assert.match(followup, /visibleTaskTypes = \['memorization', 'repeat', 'review', 'link', 'mastery'\]/);
-  assert.match(followup, /whitespace-normal break-words leading-6/);
-  assert.doesNotMatch(followup, /const taskRows|getTaskRows/);
   assert.match(reports, /const studentId = 'all'/);
   assert.doesNotMatch(reports, /studentsApi\.getStudents|setStudentId|value=\{studentId\}/);
   assert.match(reports, /DashboardMobileHeaderActions/);

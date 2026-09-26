@@ -184,7 +184,6 @@ export const styleModernReportSheet = (sheet, {
 const addOverviewSheets = (workbook, report, { reportTitle = 'تقرير الإحصائيات' } = {}) => {
   const totals = report?.totals || {};
   const quranFaces = totals.quranFaces || {};
-  const quranExecution = totals.quranExecution || {};
   const summary = workbook.addWorksheet('الملخص');
   const summaryCards = [
     ['الطلاب', Number(totals.studentsCount || 0)],
@@ -194,9 +193,6 @@ const addOverviewSheets = (workbook, report, { reportTitle = 'تقرير الإ�
     ['أوجه الإتقان', Number(quranFaces.mastery || 0)],
     ['أوجه المراجعة', Number(quranFaces.review || 0)],
     ['أوجه الربط', Number(quranFaces.link || 0)],
-    ['التنفيذ الطبيعي', Number(quranExecution.normal?.faces || 0)],
-    ['التعويض', Number(quranExecution.compensation?.faces || 0)],
-    ['الزيادة خارج الخطة', Number(quranExecution.extra?.faces || 0)],
   ];
   summary.addRow(summaryCards.map(([label]) => label));
   summary.addRow(summaryCards.map(([, value]) => value));

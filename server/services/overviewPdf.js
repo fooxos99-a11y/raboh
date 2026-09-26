@@ -93,7 +93,6 @@ export async function buildOverviewPdf(report, { fontPair = null } = {}) {
     addPage();
     const totals = report.totals || {};
     const quran = totals.quranFaces || {};
-    const execution = totals.quranExecution || {};
     const summaries = [
       ['الطلاب', totals.studentsCount, '#38bdf8'],
       ['عدد الحلقات', totals.familiesCount, '#84cc16'],
@@ -101,9 +100,6 @@ export async function buildOverviewPdf(report, { fontPair = null } = {}) {
       ['إجمالي أوجه الإتقان', quran.mastery, '#8b5cf6'],
       ['إجمالي أوجه المراجعة', quran.review, '#f59e0b'],
       ['إجمالي أوجه الربط', quran.link, '#06b6d4'],
-      ['التنفيذ الطبيعي', execution.normal?.faces, '#22c55e'],
-      ['التعويض', execution.compensation?.faces, '#f97316'],
-      ['الزيادة خارج الخطة', execution.extra?.faces, '#0ea5e9'],
     ];
     const summaryGap = 8;
     const summaryWidth = (contentWidth - summaryGap * 5) / 6;
@@ -123,7 +119,7 @@ export async function buildOverviewPdf(report, { fontPair = null } = {}) {
       const column = index % 3;
       const row = Math.floor(index / 3);
       const x = margin + column * (cardWidth + cardGap);
-      const y = 236 + row * (cardHeight + cardGap);
+      const y = 162 + row * (cardHeight + cardGap);
       doc.roundedRect(x, y, cardWidth, cardHeight, 11).fill(colors.panel).stroke(colors.border);
       doc.circle(x + cardWidth - 20, y + 19, 8).fill(color);
       write(title, x + 12, y + 12, cardWidth - 42, { size: 10, bold: true });

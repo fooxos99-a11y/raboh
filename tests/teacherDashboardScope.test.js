@@ -17,7 +17,7 @@ test('teacher dashboard exposes student plans while keeping other student admini
   assert.match(dashboard, /key: 'previousRecitationSessions'[\s\S]*permissionKey: 'quranEvaluation'/);
   assert.match(dashboard, /<TeacherPreviousSessionsPanel \/>/);
   assert.match(dashboard, /key: 'mushaf', label: 'المصحف'/);
-  assert.match(dashboard, /section\.key === 'mushaf'\) return isManager \|\| isSupervisor \|\| isReciter/);
+  assert.match(dashboard, /section\.key === 'mushaf'\) return isSupervisor;/);
   assert.match(accountPortal, /key: 'studentPlans', label: 'خطط الطلاب'/);
   assert.match(accountPortal, /settings\.teacherManualPointsEnabled[\s\S]*key: 'teacherPoints', label: 'الإضافة والخصم'/);
   assert.ok(accountPortal.indexOf("key: 'staffAttendance', label: 'التحضير'") < accountPortal.indexOf("key: 'quranEvaluation', label: 'جلسات التسميع'"));
@@ -60,33 +60,29 @@ test('teacher attendance and reports are constrained to linked committees on the
   assert.match(teacherOverview, /إجمالي أوجه الربط/);
 });
 
-test('teacher reports expose execution only for student execution mode and keep scoped report controls', async () => {
-  const [dashboard, accountPortal, execution, reports, server] = await Promise.all([
+test('teacher reports show the execution sheet read-only; management reports no longer list it', async () => {
+  const [dashboard, accountPortal, reports, server] = await Promise.all([
     readFile(new URL('../src/pages/WajehDashboard.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/pages/AccountPortal.jsx', import.meta.url), 'utf8'),
-    readFile(new URL('../src/components/dashboard/ExecutionFollowupSection.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/components/dashboard/ReportsSection.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../server/index.js', import.meta.url), 'utf8'),
   ]);
 
-  assert.doesNotMatch(dashboard, /key: 'executionFollowup'.*label: 'متابعة التنفيذ'/);
+  assert.doesNotMatch(dashboard, /canViewExecutionFollowup/);
+  assert.doesNotMatch(dashboard, /'executionFollowup'/);
   assert.match(dashboard, /isSupervisor && \['teacherPoints', 'culturalCompetition', 'calls', 'reports'\]\.includes\(section\.key\)\) return true/);
   assert.match(dashboard, /canViewStandardReports=\{isSupervisor \|\|/);
-  assert.match(dashboard, /canViewExecutionFollowup=\{[\s\S]*settings\.hasStudentQuranExecution !== false[\s\S]*isSupervisor \|\| isManager/);
   assert.match(accountPortal, /teacherScoped[\s\S]*canViewStandardReports[\s\S]*canViewExecutionFollowup=\{settings\.hasStudentQuranExecution !== false\}/);
-  assert.match(reports, /value="executionFollowup">متابعة تنفيذ/);
+  assert.match(reports, /value="executionFollowup">متابعة التنفيذ/);
+  assert.equal((reports.match(/value="executionFollowup"/g) || []).length, 1);
   assert.match(reports, /value="students">طلاب/);
   assert.match(reports, /value="overview">إحصائيات/);
   assert.match(reports, /!isExecutionFollowup && \(isOverviewReport[\s\S]*aria-label="الحلقة"/);
   assert.doesNotMatch(reports, /aria-label="الطالب"/);
-  assert.match(reports, /<ExecutionFollowupSection teacherScoped=\{teacherScoped\} \/>/);
-  assert.match(execution, /teacherScoped \? 'all' : filters\.committeeId/);
-  assert.match(execution, /\{!teacherScoped && \(/);
-  assert.match(server, /function requireExecutionFollowupOrOwnCommittee/);
-  assert.match(server, /const supervisorExecutionFollowup = req\.auth\.role === 'supervisor'[\s\S]*path === '\/execution-followup'/);
+  assert.match(reports, /<ExecutionSheetSection teacherScoped \/>/);
+  assert.doesNotMatch(reports, /ExecutionFollowupSection/);
+  assert.match(server, /const supervisorExecutionFollowup = req\.auth\.role === 'supervisor'[\s\S]*'\/quran-execution-corrections\/sheet'/);
   assert.match(server, /supervisorOwnReports \|\| supervisorExecutionFollowup \|\| supervisorTeacherPointsAccess \|\| supervisorTeacherPointsReport \|\| accountCallsAccess/);
-  assert.match(server, /app\.get\('\/api\/execution-followup', requireExecutionFollowupOrOwnCommittee/);
-  assert.doesNotMatch(server, /متابعة التنفيذ متاحة للمعلم عندما ينفذ الطالب مهامه فقط/);
   assert.match(server, /sc\.supervisor_id = \? AND sc\.committee_id = s\.committee_id/);
 });
 

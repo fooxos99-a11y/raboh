@@ -1,267 +1,351 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Check, FileSpreadsheet, Lock, Minus } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import DashboardLoader from '@/components/dashboard/DashboardLoader';
-import ExecutionCorrectionEndSelector from '@/components/dashboard/ExecutionCorrectionEndSelector';
-import RepeatCountSelector from '@/components/portal/RepeatCountSelector';
-import { formatContinuousRecitationRange } from '@/lib/recitationTaskRanges';
+import DashboardDateRange from '@/components/dashboard/DashboardDateRange';
+import ExecutionCorrectionDialog from '@/components/dashboard/ExecutionCorrectionDialog';
 import { studentsApi } from '@/services/studentsApi';
 import { useToast } from '@/components/ui/use-toast';
-import { getBusinessDateDaysAgo } from '../../../shared/business-date.js';
+import { cn } from '@/lib/utils';
+import { getBusinessDate } from '../../../shared/business-date.js';
 
-const taskLabels = {
-  memorization: 'الحفظ',
-  mastery: 'الإتقان',
-  review: 'المراجعة',
-  link: 'الربط',
+const sheetColumns = [
+  { key: 'repeat', label: 'التكرار' },
+  { key: 'link', label: 'الربط' },
+  { key: 'review', label: 'المراجعة' },
+];
+
+const attendanceOptions = [
+  { key: 'present', label: 'حاضر' },
+  { key: 'late', label: 'متأخر' },
+  { key: 'absent', label: 'غائب' },
+  { key: 'excused', label: 'مستأذن' },
+];
+
+const attendanceLabel = (status) => attendanceOptions.find((option) => option.key === status)?.label || '';
+
+const addDays = (date, days) => {
+  const value = new Date(`${date}T00:00:00Z`);
+  value.setUTCDate(value.getUTCDate() + days);
+  return value.toISOString().slice(0, 10);
 };
 
-const taskLabel = (task) => (
-  task.taskType === 'memorization' && task.track === 'mastery'
-    ? taskLabels.mastery
-    : taskLabels[task.taskType] || task.taskType
-);
+const formatScore = (value) => {
+  const number = Number(value || 0);
+  return Number.isInteger(number) ? String(number) : String(Number(number.toFixed(2)));
+};
 
-const initialForm = (task) => ({
-  status: task.status,
-  actualEnd: task.actualEnd,
-  repeatCount: task.actualRepeatCount || task.expectedRepeatCount || 1,
-  listeningCount: task.actualListeningCount || task.expectedListeningCount || 1,
-});
+const downloadFile = (blob, filename) => {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+};
 
-const StudentExecutionCorrectionsSection = () => {
+/** One task cell: done, partial, not done or not assigned, using the site colour for every state. */
+const TaskCell = ({ cell, label, studentName, editable, saving, onToggle }) => {
+  if (!cell) {
+    return <span className="text-muted-foreground" aria-label={`${label}: غير مطلوب`}>—</span>;
+  }
+  const locked = !editable || !cell.canEdit;
+  const title = cell.lockedReason || (cell.status === 'partial' ? 'تنفيذ جزئي — اضغط الاسم للتفاصيل' : '');
+  return (
+    <button
+      type="button"
+      disabled={locked || saving}
+      onClick={onToggle}
+      title={title}
+      aria-label={`${label} ${studentName}`}
+      aria-pressed={cell.status === 'done'}
+      className={cn(
+        'relative mx-auto flex h-7 w-7 items-center justify-center rounded-md border-2 transition-colors',
+        cell.status === 'done' && 'border-primary bg-primary text-primary-foreground',
+        cell.status === 'partial' && 'border-primary bg-primary/20 text-primary',
+        cell.status === 'not_done' && 'border-primary/40 bg-card text-transparent',
+        !locked && 'hover:border-primary hover:shadow-sm',
+        locked && !editable && 'cursor-default',
+        locked && editable && 'opacity-60',
+        saving && 'animate-pulse',
+      )}
+    >
+      {cell.status === 'done' && <Check className="h-4 w-4" strokeWidth={3} />}
+      {cell.status === 'partial' && <Minus className="h-4 w-4" strokeWidth={3} />}
+      {locked && editable && cell.canEdit === false && (
+        <Lock className="absolute -left-1.5 -top-1.5 h-3 w-3 rounded-full bg-card text-primary" />
+      )}
+    </button>
+  );
+};
+
+const totalClassName = (row) => {
+  if (!row.max) return 'text-muted-foreground';
+  if (row.total >= row.max) return 'bg-primary text-primary-foreground';
+  if (row.total > 0) return 'bg-primary/15 text-primary';
+  return 'bg-muted text-muted-foreground';
+};
+
+/**
+ * «متابعة التنفيذ»: one day of the week at a time, names on the right like the paper sheet.
+ * Management edits cells directly; teachers see their own circles read-only.
+ */
+const StudentExecutionCorrectionsSection = ({ teacherScoped = false, canEditAttendance = false }) => {
   const { toast } = useToast();
-  const yesterday = useMemo(() => getBusinessDateDaysAgo(1), []);
-  const [students, setStudents] = useState([]);
-  const [studentId, setStudentId] = useState('');
-  const [date, setDate] = useState(yesterday);
-  const [tasks, setTasks] = useState([]);
-  const [referenceMode, setReferenceMode] = useState('ayah');
-  const [forms, setForms] = useState({});
-  const [isLoadingStudents, setIsLoadingStudents] = useState(true);
-  const [isLoadingTasks, setIsLoadingTasks] = useState(false);
-  const [savingKey, setSavingKey] = useState('');
+  const today = useMemo(() => getBusinessDate(new Date()), []);
+  const [fromDate, setFromDate] = useState(() => addDays(today, -7));
+  const [toDate, setToDate] = useState(today);
+  const [date, setDate] = useState(today);
+  const [sheet, setSheet] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [pendingKeys, setPendingKeys] = useState([]);
+  const [isExporting, setIsExporting] = useState(false);
+  const [detail, setDetail] = useState(null);
 
-  useEffect(() => {
-    let active = true;
-    studentsApi.getStudentExecutionCorrectionStudents()
-      .then((data) => {
-        if (!active) return;
-        const nextStudents = Array.isArray(data?.students) ? data.students : [];
-        setStudents(nextStudents);
-        if (nextStudents.length) setStudentId(String(nextStudents[0].id));
-      })
-      .catch((error) => {
-        if (active) toast({ title: 'تعذر تحميل الطلاب', description: error.message, variant: 'destructive' });
-      })
-      .finally(() => {
-        if (active) setIsLoadingStudents(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [toast]);
-
-  const loadTasks = useCallback(async () => {
-    if (!studentId || !date) {
-      setTasks([]);
-      setForms({});
-      return;
-    }
-    setIsLoadingTasks(true);
+  const loadSheet = useCallback(async ({ quiet = false } = {}) => {
+    if (!quiet) setIsLoading(true);
     try {
-      const data = await studentsApi.getStudentExecutionCorrections(studentId, date);
-      const nextTasks = Array.isArray(data?.tasks) ? data.tasks : [];
-      setReferenceMode(data?.referenceMode === 'page' ? 'page' : 'ayah');
-      setTasks(nextTasks);
-      setForms(Object.fromEntries(nextTasks.map((task) => [task.key, initialForm(task)])));
+      const data = await studentsApi.getExecutionSheet({ date, from: fromDate, to: toDate });
+      setSheet(data);
+      if (data?.date && data.date !== date) setDate(data.date);
     } catch (error) {
-      setTasks([]);
-      setForms({});
-      toast({ title: 'تعذر تحميل التنفيذ', description: error.message, variant: 'destructive' });
+      toast({ title: 'تعذر تحميل متابعة التنفيذ', description: error.message, variant: 'destructive' });
     } finally {
-      setIsLoadingTasks(false);
+      if (!quiet) setIsLoading(false);
     }
-  }, [date, studentId, toast]);
+  }, [date, fromDate, toDate, toast]);
 
   useEffect(() => {
-    void loadTasks();
-  }, [loadTasks]);
+    void loadSheet();
+  }, [loadSheet]);
 
-  const updateForm = (key, patch) => {
-    setForms((current) => ({
-      ...current,
-      [key]: { ...current[key], ...patch },
-    }));
+  const days = useMemo(() => sheet?.days || [], [sheet]);
+  const editable = Boolean(sheet?.editable) && !teacherScoped;
+  const selectedDay = days.find((day) => day.date === date);
+
+  const changeFrom = (value) => {
+    if (!value) return;
+    setFromDate(value);
+    if (value > toDate) setToDate(value);
   };
 
-  const save = async (task) => {
-    const form = forms[task.key] || initialForm(task);
-    setSavingKey(task.key);
+  const changeTo = (value) => {
+    if (!value) return;
+    const next = value > today ? today : value;
+    setToDate(next);
+    if (next < fromDate) setFromDate(next);
+    setDate(next);
+  };
+
+  const withPending = async (key, action) => {
+    setPendingKeys((current) => [...current, key]);
     try {
-      const _resolveSave = () => {
-        if (form.status === 'done') {
-          return {
-          actualEnd: form.actualEnd,
-          ...(task.taskType === 'memorization' ? {
-            repeatCount: form.repeatCount,
-            listeningCount: form.listeningCount,
-          } : {}),
-        };
+      await action();
+    } finally {
+      setPendingKeys((current) => current.filter((item) => item !== key));
+    }
+  };
+
+  const toggleCell = (row, columnKey) => {
+    const cell = row.columns[columnKey];
+    if (!cell) return;
+    const status = cell.status === 'done' ? 'not_done' : 'done';
+    const key = `${row.studentId}:${columnKey}`;
+    void withPending(key, async () => {
+      try {
+        for (const group of cell.groups.filter((item) => item.canEdit)) {
+          await studentsApi.saveStudentExecutionCorrection(row.studentId, { taskIds: group.taskIds, date, status });
         }
-        return {};
-      };
-      await studentsApi.saveStudentExecutionCorrection(studentId, {
-        taskIds: task.taskIds,
-        date,
-        status: form.status,
-        ...(_resolveSave()),
-      });
-      toast({ title: 'حُفظ تصحيح التنفيذ' });
-      await loadTasks();
+        await loadSheet({ quiet: true });
+      } catch (error) {
+        toast({ title: 'تعذر حفظ التنفيذ', description: error.message, variant: 'destructive' });
+        await loadSheet({ quiet: true });
+      }
+    });
+  };
+
+  const changeAttendance = (row, status) => {
+    if (row.attendance === status) return;
+    const key = `${row.studentId}:attendance`;
+    void withPending(key, async () => {
+      try {
+        const payload = { date, mode: 'manual', status };
+        if (status === 'absent') await studentsApi.markStudentAbsent(row.studentId, payload);
+        else await studentsApi.checkInStudent(row.studentId, payload);
+        await loadSheet({ quiet: true });
+      } catch (error) {
+        toast({ title: 'تعذر تحديث الحضور', description: error.message, variant: 'destructive' });
+      }
+    });
+  };
+
+  const exportWeek = async () => {
+    setIsExporting(true);
+    try {
+      const file = await studentsApi.exportExecutionSheet({ from: sheet?.from || fromDate, to: sheet?.to || toDate });
+      downloadFile(file.blob, file.filename);
+      toast({ title: 'تم التصدير', description: 'تم تجهيز ملف Excel للفترة المحددة.' });
     } catch (error) {
-      toast({ title: 'تعذر حفظ التصحيح', description: error.message, variant: 'destructive' });
+      toast({ title: 'تعذر التصدير', description: error.message, variant: 'destructive' });
     } finally {
-      setSavingKey('');
+      setIsExporting(false);
     }
   };
 
-  if (isLoadingStudents) return <DashboardLoader className="min-h-[420px]" />;
-
-  const _resolveStudentExecutionCorrectionsSection = () => {
-    if (isLoadingTasks) {
-      return <DashboardLoader className="min-h-48" />;
+  const renderAttendance = (row) => {
+    if (row.attendance === 'no_session') return <span className="text-muted-foreground">—</span>;
+    if (editable && canEditAttendance) {
+      return (
+        <Select
+          value={row.attendance || ''}
+          onValueChange={(value) => changeAttendance(row, value)}
+          disabled={pendingKeys.includes(`${row.studentId}:attendance`)}
+        >
+          <SelectTrigger aria-label={`حضور ${row.name}`} className="mx-auto h-8 w-[5.25rem] px-2 text-xs font-bold sm:w-[5.5rem]">
+            <SelectValue placeholder="—">
+              {row.attendance ? attendanceLabel(row.attendance) : '—'}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {attendanceOptions.map((option) => (
+              <SelectItem key={option.key} value={option.key}>{option.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      );
     }
-    if (tasks.length === 0) {
-      return <div className="rounded-xl border border-dashed border-primary/20 p-8 text-center text-sm text-muted-foreground">
-            لا يوجد تنفيذ لهذا الطالب في التاريخ المحدد.
-          </div>;
+    return <span className="text-xs font-bold">{attendanceLabel(row.attendance) || '—'}</span>;
+  };
+
+  const renderBody = () => {
+    if (isLoading) return <DashboardLoader className="min-h-48" />;
+    if (!days.length) {
+      return <div className="rounded-xl border border-dashed border-primary/20 p-8 text-center text-sm text-muted-foreground">لا توجد أيام دراسية في هذه الفترة.</div>;
     }
-    return <div className="space-y-3">
-            {tasks.map((task) => {
-              const form = forms[task.key] || initialForm(task);
-              const label = taskLabel(task);
-              return (
-                <div key={task.key} className="space-y-3 rounded-xl border border-primary/15 bg-background/40 p-3">
-                  <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <span className="font-black text-primary">{label}:</span>
-                    <span className="min-w-0 text-sm font-bold text-foreground">
-                      {formatContinuousRecitationRange(task.rows || [], referenceMode)}
-                    </span>
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label>حالة التنفيذ</Label>
-                      <Select
-                        value={form.status}
-                        onValueChange={(status) => updateForm(task.key, { status })}
-                        disabled={!task.canEdit}
-                      >
-                        <SelectTrigger aria-label={`حالة تنفيذ ${label}`}><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="done">تم التنفيذ</SelectItem>
-                          <SelectItem value="not_done">لم يتم التنفيذ</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {form.status === 'done' && (
-                      <div className="space-y-2">
-                        <Label>نهاية المقدار المنفذ</Label>
-                        <div className="flex min-h-12 items-center rounded-xl border border-primary/20 bg-card px-3">
-                          <ExecutionCorrectionEndSelector
-                            referenceMode={referenceMode}
-                            disabled={!task.canEdit}
-                            start={task.start}
-                            options={task.options}
-                            value={form.actualEnd}
-                            onChange={(actualEnd) => updateForm(task.key, { actualEnd })}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {form.status === 'done' && task.taskType === 'memorization' && (
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <RepeatCountSelector
-                        label="التكرار"
-                        editable
-                        max={task.expectedRepeatCount}
-                        value={form.repeatCount}
-                        onChange={(repeatCount) => updateForm(task.key, { repeatCount })}
-                      />
-                      <RepeatCountSelector
-                        label="السماع"
-                        pluralLabel
-                        editable
-                        max={task.expectedListeningCount}
-                        value={form.listeningCount}
-                        onChange={(listeningCount) => updateForm(task.key, { listeningCount })}
-                      />
-                    </div>
+    const rows = sheet?.rows || [];
+    if (!rows.length) {
+      return <div className="rounded-xl border border-dashed border-primary/20 p-8 text-center text-sm text-muted-foreground">لا يوجد طلاب لديهم خطط.</div>;
+    }
+    return (
+      <div className="space-y-1.5">
+      <p className="text-[0.7rem] font-bold text-muted-foreground sm:hidden">اسحب الجدول يسارًا لرؤية المجموع.</p>
+      <div className="overflow-x-auto overscroll-x-contain rounded-xl border border-primary/20">
+        <table className="w-full min-w-[33rem] border-collapse text-sm" dir="rtl">
+          <thead>
+            <tr className="bg-primary text-primary-foreground">
+              <th scope="col" className="sticky right-0 z-10 min-w-[7.5rem] bg-primary px-3 py-2 text-right font-black sm:min-w-[9rem]">الاسم</th>
+              <th scope="col" className="whitespace-nowrap px-2 py-2 font-black">الحضور</th>
+              <th scope="col" className="whitespace-nowrap px-2 py-2 font-black">التسميع</th>
+              {sheetColumns.map((column) => (
+                <th key={column.key} scope="col" className="whitespace-nowrap px-2 py-2 font-black">{column.label}</th>
+              ))}
+              <th scope="col" className="whitespace-nowrap px-2 py-2 font-black">المجموع</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={row.studentId} className="border-t border-primary/10 bg-card">
+                <th scope="row" className="sticky right-0 z-10 bg-card px-3 py-1.5 text-right font-bold shadow-[-6px_0_8px_-6px_hsl(var(--primary)/0.25)]">
+                  <button
+                    type="button"
+                    className="block max-w-[8rem] truncate text-right sm:max-w-[11rem] hover:text-primary hover:underline disabled:hover:no-underline"
+                    disabled={!editable}
+                    onClick={() => setDetail(row)}
+                    title={editable ? 'تفاصيل التنفيذ' : row.committeeName}
+                  >
+                    {row.name}
+                  </button>
+                  {row.committeeName && (
+                    <span className="block truncate text-[0.7rem] font-normal text-muted-foreground">{row.committeeName}</span>
                   )}
-
-                  {task.lockedReason && <p className="text-xs font-bold text-amber-700">{task.lockedReason}</p>}
-                  <div className="flex justify-end">
-                    <Button
-                      type="button"
-                      className="min-h-11 min-w-28"
-                      disabled={!task.canEdit || savingKey === task.key}
-                      onClick={() => save(task)}
-                    >
-                      {savingKey === task.key ? 'جارٍ الحفظ...' : 'حفظ التصحيح'}
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>;
+                </th>
+                <td className="px-2 py-1.5 text-center">{renderAttendance(row)}</td>
+                <td className="px-2 py-1.5 text-center font-bold">
+                  {row.tasmee === null ? <span className="text-muted-foreground">—</span> : formatScore(row.tasmee)}
+                </td>
+                {sheetColumns.map((column) => (
+                  <td key={column.key} className="px-2 py-1.5 text-center">
+                    <TaskCell
+                      cell={row.columns[column.key]}
+                      label={column.label}
+                      studentName={row.name}
+                      editable={editable}
+                      saving={pendingKeys.includes(`${row.studentId}:${column.key}`)}
+                      onToggle={() => toggleCell(row, column.key)}
+                    />
+                  </td>
+                ))}
+                <td className="px-2 py-1.5 text-center">
+                  <span className={cn('inline-flex min-w-[3.75rem] justify-center whitespace-nowrap rounded-md px-2 py-0.5 font-black', totalClassName(row))}>
+                    {row.max ? `${formatScore(row.total)}/${row.max}` : '—'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      </div>
+    );
   };
+
   return (
     <Card className="border-primary/30 bg-card [font-family:var(--font-ui)]" dir="rtl">
-      <CardHeader className="border-b border-primary/15 p-4">
-        <h2 className="text-xl font-black text-primary">تصحيح تنفيذ الطلاب</h2>
+      <CardHeader className="flex flex-row items-center justify-between gap-3 border-b border-primary/15 p-4">
+        <h2 className="text-xl font-black text-primary">متابعة التنفيذ</h2>
+        <Button type="button" variant="outline" className="min-h-10 gap-2" disabled={isExporting || isLoading} onClick={exportWeek}>
+          <FileSpreadsheet className="h-4 w-4" />
+          {isExporting ? 'جارٍ التصدير...' : 'تصدير'}
+        </Button>
       </CardHeader>
       <CardContent className="space-y-4 p-3 sm:p-4">
-        <div className="grid grid-cols-[minmax(0,1fr)_8.75rem] items-end gap-2 sm:grid-cols-[minmax(16rem,1fr)_10rem] sm:gap-3">
-          <div className="space-y-2">
-            <Label>الطالب</Label>
-            <Select value={studentId} onValueChange={setStudentId}>
-              <SelectTrigger
-                aria-label="الطالب"
-                className="h-10 min-w-0 px-2 text-xs sm:h-11 sm:px-3 sm:text-sm [&>span]:truncate"
-              >
-                <SelectValue placeholder="اختر الطالب" />
+        <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_12rem] sm:gap-3">
+          <div className="min-w-0 space-y-2">
+            <Label>الفترة</Label>
+            <DashboardDateRange sessionDates={false} from={fromDate} to={toDate} onFromChange={changeFrom} onToChange={changeTo} />
+          </div>
+          <div className="min-w-0 space-y-2">
+            <Label>اليوم</Label>
+            <Select value={date} onValueChange={setDate} disabled={!days.length}>
+              <SelectTrigger aria-label="اليوم" className="h-11 min-w-0 text-sm">
+                <SelectValue placeholder="اختر اليوم">
+                  {selectedDay ? `${selectedDay.label} ${selectedDay.date.slice(5).replace('-', '/')}` : 'اختر اليوم'}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                {students.map((student) => (
-                  <SelectItem key={student.id} value={String(student.id)}>
-                    {student.committeeName ? `${student.name} — ${student.committeeName}` : student.name}
+                {days.map((day) => (
+                  <SelectItem key={day.date} value={day.date}>
+                    {day.label} {day.date.slice(5).replace('-', '/')}{day.isSessionDay ? ' — جلسة تسميع' : ''}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          <div className="min-w-0 space-y-2">
-            <Label htmlFor="student-execution-correction-date">التاريخ</Label>
-            <Input
-              id="student-execution-correction-date"
-              type="date"
-              max={yesterday}
-              value={date}
-              onChange={(event) => setDate(event.target.value)}
-              className="h-10 min-w-0 px-2 text-xs sm:h-11 sm:text-sm"
-            />
-          </div>
         </div>
 
-        {_resolveStudentExecutionCorrectionsSection()}
+        {selectedDay && !selectedDay.isSessionDay && !isLoading && (
+          <p className="text-xs font-bold text-muted-foreground">لا توجد جلسة تسميع في هذا اليوم، فالحضور والتسميع لا يُحسبان في المجموع.</p>
+        )}
+
+        {renderBody()}
       </CardContent>
+
+      {detail && (
+        <ExecutionCorrectionDialog
+          open={Boolean(detail)}
+          onOpenChange={(open) => { if (!open) setDetail(null); }}
+          studentId={detail.studentId}
+          studentName={detail.name}
+          date={date}
+          dateLabel={selectedDay?.label || date}
+          onSaved={() => loadSheet({ quiet: true })}
+        />
+      )}
     </Card>
   );
 };
