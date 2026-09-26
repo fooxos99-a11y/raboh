@@ -12988,9 +12988,24 @@ app.get('/api/supervisors/:id/quran-evaluation', async (req, res, next) => {
             AND COALESCE(newer.to_surah, 0) = COALESCE(t.to_surah, 0)
             AND COALESCE(newer.to_ayah, 0) = COALESCE(t.to_ayah, 0)
         )
+        AND (
+          -- A later day's link supersedes an unevaluated older one: the link always
+          -- ends at the latest memorization, so only the newest link is recited.
+          t.task_type <> 'link'
+          OR ${buildNazemLateTaskExistsSql('t')}
+          OR NOT EXISTS (
+            SELECT 1
+            FROM student_quran_tasks newer_link
+            WHERE newer_link.plan_id = t.plan_id
+              AND newer_link.task_type = 'link'
+              AND newer_link.track = t.track
+              AND newer_link.task_date > t.task_date
+              AND newer_link.task_date <= ?
+          )
+        )
       ORDER BY c.name ASC, s.name ASC, t.task_date ASC, t.from_page ASC
       `,
-      [supervisorId, date, taskEndDate, date, date, taskEndDate]
+      [supervisorId, date, taskEndDate, date, date, taskEndDate, taskEndDate]
     );
     const visibleStudentIds = new Set(students.map(student => Number(student.id)));
     const allRows = candidateRows.filter((row) => {
