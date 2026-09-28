@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, FileSpreadsheet, Lock, Minus } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -72,7 +72,7 @@ const TaskCell = ({ cell, label, studentName, editable, saving, onToggle }) => {
         !locked && 'hover:border-primary hover:shadow-sm',
         locked && !editable && 'cursor-default',
         locked && editable && 'opacity-60',
-        saving && 'animate-pulse',
+        saving && 'cursor-wait',
       )}
     >
       {cell.status === 'done' && <Check className="h-4 w-4" strokeWidth={3} />}
@@ -83,6 +83,26 @@ const TaskCell = ({ cell, label, studentName, editable, saving, onToggle }) => {
     </button>
   );
 };
+
+const cellPoints = (status) => {
+  if (status === 'done') return 10;
+  if (status === 'partial') return 5;
+  return 0;
+};
+
+/** Show the new cell state at once; the server result replaces it when saving ends. */
+const applyOptimisticCell = (sheet, studentId, columnKey, status) => ({
+  ...sheet,
+  rows: sheet.rows.map((row) => {
+    if (row.studentId !== studentId) return row;
+    const cell = row.columns[columnKey];
+    return {
+      ...row,
+      total: row.total - cellPoints(cell.status) + cellPoints(status),
+      columns: { ...row.columns, [columnKey]: { ...cell, status } },
+    };
+  }),
+});
 
 const totalClassName = (row) => {
   if (!row.max) return 'text-muted-foreground';
@@ -106,11 +126,12 @@ const StudentExecutionCorrectionsSection = ({ teacherScoped = false, canEditAtte
   const [pendingKeys, setPendingKeys] = useState([]);
   const [isExporting, setIsExporting] = useState(false);
   const [detail, setDetail] = useState(null);
+  const activeSaves = useRef(0);
 
   const loadSheet = useCallback(async ({ quiet = false } = {}) => {
     if (!quiet) setIsLoading(true);
     try {
-      const data = await studentsApi.getExecutionSheet({ date, from: fromDate, to: toDate });
+      const data = await studentsApi.getExecutionSheet({ date, from: fromDate, to: toDate, refresh: quiet });
       setSheet(data);
       if (data?.date && data.date !== date) setDate(data.date);
     } catch (error) {
@@ -156,15 +177,19 @@ const StudentExecutionCorrectionsSection = ({ teacherScoped = false, canEditAtte
     if (!cell) return;
     const status = cell.status === 'done' ? 'not_done' : 'done';
     const key = `${row.studentId}:${columnKey}`;
+    setSheet((current) => applyOptimisticCell(current, row.studentId, columnKey, status));
+    activeSaves.current += 1;
     void withPending(key, async () => {
       try {
         for (const group of cell.groups.filter((item) => item.canEdit)) {
           await studentsApi.saveStudentExecutionCorrection(row.studentId, { taskIds: group.taskIds, date, status });
         }
-        await loadSheet({ quiet: true });
       } catch (error) {
         toast({ title: 'تعذر حفظ التنفيذ', description: error.message, variant: 'destructive' });
-        await loadSheet({ quiet: true });
+      } finally {
+        activeSaves.current -= 1;
+        // Refresh once every pending save has finished, so later clicks are not overwritten.
+        if (activeSaves.current === 0) await loadSheet({ quiet: true });
       }
     });
   };

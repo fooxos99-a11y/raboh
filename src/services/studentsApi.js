@@ -549,11 +549,12 @@ export const studentsApi = {
       method: 'POST',
       body: JSON.stringify(payload || {}),
     }),
-  getExecutionSheet: ({ date, from, to } = {}) => {
+  getExecutionSheet: ({ date, from, to, refresh = false } = {}) => {
     const params = new URLSearchParams();
     if (from) params.set('from', String(from));
     if (to) params.set('to', String(to));
     if (date) params.set('date', String(date));
+    if (refresh) params.set('refresh', '1');
     return request(`/quran-execution-corrections/sheet?${params.toString()}`);
   },
   exportExecutionSheet: ({ from, to } = {}) => {
@@ -578,6 +579,13 @@ export const studentsApi = {
       body: JSON.stringify(payload || {}),
     }),
   getSupervisorQuranTaskAyahs: loadTaskAyahs,
+  getQuranCompensations: (supervisorId, { studentId, date } = {}) =>
+    request(`/supervisors/${supervisorId}/quran-compensations?studentId=${encodeURIComponent(studentId || '')}${date ? `&date=${encodeURIComponent(date)}` : ''}`),
+  createQuranCompensation: (supervisorId, payload) =>
+    request(`/supervisors/${supervisorId}/quran-compensations`, {
+      method: 'POST',
+      body: JSON.stringify(payload || {}),
+    }),
   rateSupervisorQuranTask: (supervisorId, taskId, payload) =>
     request(`/supervisors/${supervisorId}/quran-evaluation/${taskId}`, {
       method: 'POST',
