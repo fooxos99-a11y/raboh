@@ -1,9 +1,21 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { pickRandomMushafEntry } from '../src/lib/randomMushafExcerpt.js';
+import { pickRandomMushafEntry, pickRandomMushafSample } from '../src/lib/randomMushafExcerpt.js';
 
 const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
+
+test('Quran tests select exactly two distinct excerpts and reject insufficient pages', () => {
+  const entries = [1, 2, 3].map((page) => ({ task: { id: 1 }, page: { page } }));
+  for (const random of [() => 0, () => 0.999999]) {
+    const sample = pickRandomMushafSample([...entries, entries[0]], 2, random);
+    assert.equal(sample.length, 2);
+    assert.equal(new Set(sample.map((entry) => entry.page.page)).size, 2);
+    assert.ok(sample.every((entry) => entries.includes(entry)));
+  }
+  assert.throws(() => pickRandomMushafSample([], 2), /لا توجد مقاطع كافية/);
+  assert.throws(() => pickRandomMushafSample([entries[0], entries[0]], 2), /لا توجد مقاطع كافية/);
+});
 
 test('random Mushaf excerpts stay unique until every eligible page is used', () => {
   let state = { index: -1, visitedIndexes: [] };
@@ -26,7 +38,8 @@ test('Quran tests and narration expose both result entry and Mushaf recitation w
     read('../server/index.js'),
     read('../src/components/portal/MushafPageControls.jsx'),
   ]);
-  assert.match(testsSection, /مقطع عشوائي/);
+  assert.match(testsSection, /مقطعان عشوائيان/);
+  assert.match(testsSection, /randomSampleCount=\{2\}/);
   assert.match(testsSection, /randomMode/);
   assert.match(await read('../src/components/dashboard/NarrationJuzParts.jsx'), /بدء التسميع/);
   assert.match(await read('../src/lib/narrationParts.js'), /part\.rangeLabel/);

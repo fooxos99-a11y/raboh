@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import useNativeSurfaceTheme from '@/hooks/useNativeSurfaceTheme';
 import { preloadMushafFonts } from '@/lib/quranFonts';
-import { pickRandomMushafEntry } from '@/lib/randomMushafExcerpt';
+import { pickRandomMushafEntry, pickRandomMushafSample } from '@/lib/randomMushafExcerpt';
 import { studentsApi } from '@/services/studentsApi';
 import { getRecitationDraft, saveRecitationDraft } from '@/services/offlineRecitationService';
 import { formatQuranSelectionText } from '../../../shared/quranSelectionText.js';
@@ -57,6 +57,7 @@ const MushafRecitationDialog = ({
   saveSessionResults,
   completionMessage,
   randomMode = false,
+  randomSampleCount = 0,
   secondaryAction = null,
 }) => {
   const { toast } = useToast();
@@ -118,7 +119,10 @@ const MushafRecitationDialog = ({
             : Promise.resolve(null),
         ]);
         if (!active) return;
-        const nextEntries = loaded.flatMap(({ task, data }) => (data.pages || []).map((page) => ({ task, data, page })));
+        const availableEntries = loaded.flatMap(({ task, data }) => (data.pages || []).map((page) => ({ task, data, page })));
+        const nextEntries = randomMode && randomSampleCount > 0
+          ? pickRandomMushafSample(availableEntries, randomSampleCount)
+          : availableEntries;
         const initialRandom = randomMode
           ? pickRandomMushafEntry(nextEntries.length)
           : { index: 0, visitedIndexes: [] };
@@ -153,7 +157,7 @@ const MushafRecitationDialog = ({
     };
     loadMushaf();
     return () => { active = false; };
-  }, [currentTaskLoadKey, loadVersion, open, randomMode, student?.studentId, supervisorId]);
+  }, [currentTaskLoadKey, loadVersion, open, randomMode, randomSampleCount, student?.studentId, supervisorId]);
 
   useEffect(() => {
     if (!open || !draftReady || !supervisorId || !student?.studentId) return undefined;
@@ -229,6 +233,7 @@ const MushafRecitationDialog = ({
   };
 
   const finishRecitation = async () => {
+    if (!canFinish) return;
     setIsSaving(true);
     try {
       const saveRequestId = temporaryId();
@@ -286,7 +291,21 @@ const MushafRecitationDialog = ({
   };
 
   const activeEntry = entries[activeEntryIndex] || null;
+  const canFinish = !randomMode || randomSampleCount === 0
+    || randomVisitedIndexes.length >= randomSampleCount;
+  const changeEntry = (index) => {
+    setSelection(null);
+    setPendingMark(null);
+    setActiveEntryIndex(index);
+    if (randomMode && randomSampleCount > 0) {
+      setRandomVisitedIndexes((current) => [...new Set([...current, index])]);
+    }
+  };
   const openNextRandom = () => {
+    if (randomSampleCount > 0) {
+      changeEntry((activeEntryIndex + 1) % entries.length);
+      return;
+    }
     const next = pickRandomMushafEntry(entries.length, randomVisitedIndexes, activeEntryIndex);
     if (next.index < 0) return;
     setSelection(null);
@@ -348,9 +367,10 @@ const MushafRecitationDialog = ({
                   pageNumbers={entries.map((entry) => entry.page.page)}
                   theme={mushafTheme}
                   isSaving={isSaving}
+                  canFinish={canFinish}
                   onFinish={finishRecitation}
                   onNextRandom={randomMode ? openNextRandom : undefined}
-                  onIndexChange={setActiveEntryIndex}
+                  onIndexChange={changeEntry}
                   onInteractionCancel={() => setSelection(null)}
                 >
                   <MadaniMushafPage

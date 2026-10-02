@@ -6,7 +6,7 @@ import '@/components/portal/MushafPageCarousel.css';
 const SWIPE_DISTANCE = 52;
 const SWIPE_BLOCK_SELECTOR = 'button, input, textarea, [data-recitation-control], [data-mushaf-no-swipe]';
 
-const MushafPageCarousel = ({ index, total, pageNumber, pageNumbers = [], isSaving, onFinish, onNextRandom, pageAction, onIndexChange, onInteractionCancel, previousPage, nextPage, children }) => {
+const MushafPageCarousel = ({ index, total, pageNumber, pageNumbers = [], isSaving, canFinish = true, onFinish, onNextRandom, pageAction, onIndexChange, onInteractionCancel, previousPage, nextPage, children }) => {
   const pointer = useRef(null);
   const surface = useRef(null);
   const dragX = useMotionValue(0);
@@ -110,7 +110,7 @@ const MushafPageCarousel = ({ index, total, pageNumber, pageNumbers = [], isSavi
   };
 
   const pageControls = pageAction || (onFinish ? (
-    <MushafPageControls pageNumber={pageNumber} isSaving={isSaving} onFinish={onFinish} onNextRandom={onNextRandom} />
+    <MushafPageControls pageNumber={pageNumber} isSaving={isSaving} canFinish={canFinish} onFinish={onFinish} onNextRandom={onNextRandom} />
   ) : null);
   const page = React.isValidElement(children)
     ? React.cloneElement(children, { pageAction: pageControls })

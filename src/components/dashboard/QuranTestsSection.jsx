@@ -410,7 +410,7 @@ const QuranTestsSection = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setTestOpen(false)}>إغلاق</Button>
             <Button variant="outline" onClick={saveResult} disabled={isSaving || (requiresRetest && !form.rescheduleDate)}>النتيجة</Button>
-            <Button onClick={openMushafTest} disabled={isSaving}>مقطع عشوائي</Button>
+            <Button onClick={openMushafTest} disabled={isSaving}>مقطعان عشوائيان</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -424,6 +424,7 @@ const QuranTestsSection = () => {
         completionMessage="حُفظت نتيجة الاختبار وفق العلامات المسجلة."
         onSaved={() => load()}
         randomMode
+        randomSampleCount={2}
       />
     </Card>
   );

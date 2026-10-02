@@ -1,5 +1,17 @@
 import { secureRandomInt } from '../../shared/secure-random.js';
 
+export function pickRandomMushafSample(entries, count, random = undefined) {
+  const uniqueEntries = [...new Map(entries.map((entry) => [
+    `${entry.task.id}:${entry.page.page}`, entry,
+  ])).values()];
+  if (uniqueEntries.length < count) throw new Error('لا توجد مقاطع كافية للاختبار.');
+  let state = { index: -1, visitedIndexes: [] };
+  return Array.from({ length: count }, () => {
+    state = pickRandomMushafEntry(uniqueEntries.length, state.visitedIndexes, state.index, random);
+    return uniqueEntries[state.index];
+  });
+}
+
 export function pickRandomMushafEntry(total, visitedIndexes = [], currentIndex = -1, random = undefined) {
   const size = Math.max(0, Number(total || 0));
   if (!size) return { index: -1, visitedIndexes: [] };
