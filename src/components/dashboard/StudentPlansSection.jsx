@@ -703,7 +703,7 @@ const StudentPlansSection = ({ hideCommitteeFilter = false }) => {
                       <Plus className="h-4 w-4" />إضافة خطة
                     </Button>;
                                    };
-                                   return (<div key={row.studentId} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 rounded-lg border border-primary/20 bg-card/70 p-3 shadow-sm shadow-primary/5 lg:grid-cols-[minmax(300px,auto)_minmax(180px,1fr)_auto]">
+                                   return (<div key={row.studentId} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 rounded-lg border border-primary/20 bg-card/70 p-3 shadow-xs shadow-primary/5 lg:grid-cols-[minmax(300px,auto)_minmax(180px,1fr)_auto]">
                   <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5 lg:col-start-1">
                     <div className="text-base font-black leading-tight text-foreground">{row.studentName}</div>
                     <div className="text-[10px] font-bold leading-tight text-muted-foreground sm:text-xs">{row.committeeName || 'بدون حلقة'}</div>
@@ -712,7 +712,7 @@ const StudentPlansSection = ({ hideCommitteeFilter = false }) => {
                   {row.plan && (
                     <div className="col-span-2 min-w-0 lg:col-span-1 lg:col-start-2 lg:row-start-1">
                       <div className="h-2.5 w-full overflow-hidden rounded-full border border-primary/10 bg-muted/60 shadow-inner shadow-primary/10" title={`${numberText(row.plan.progressPercent)}٪`}>
-                        <div className="h-full rounded-full bg-primary shadow-sm shadow-primary/30" style={{ width: `${Math.max(0, Math.min(100, Number(row.plan.progressPercent || 0)))}%` }} />
+                        <div className="h-full rounded-full bg-primary shadow-xs shadow-primary/30" style={{ width: `${Math.max(0, Math.min(100, Number(row.plan.progressPercent || 0)))}%` }} />
                       </div>
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-black text-muted-foreground sm:text-xs">
                         <span>نسبة الإنجاز {numberText(row.plan.progressPercent)}٪</span>
@@ -737,7 +737,7 @@ const StudentPlansSection = ({ hideCommitteeFilter = false }) => {
   };
   return (
     <div className="space-y-5">
-      <Card className="border-primary/30 bg-card/95 shadow-sm shadow-primary/10">
+      <Card className="border-primary/30 bg-card/95 shadow-xs shadow-primary/10">
         {!hideCommitteeFilter && (
           <CardHeader className="border-b border-primary/15 p-4">
             <Select value={committeeId} onValueChange={setCommitteeId}>

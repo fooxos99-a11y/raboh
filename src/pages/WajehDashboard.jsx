@@ -428,7 +428,7 @@ const WajehDashboard = () => {
   if (visibleActiveSection === 'mushaf') {
     const returnSection = sections.find((section) => section.key !== 'mushaf');
     return (
-      <div className="fixed inset-0 z-[100] h-dvh overflow-hidden bg-background [font-family:var(--font-ui)]" dir="rtl">
+      <div className="fixed inset-0 z-100 h-dvh overflow-hidden bg-background [font-family:var(--font-ui)]" dir="rtl">
         <PageLoadingBoundary><Suspense fallback={<DashboardLoader mode="screen" className="h-dvh" />}>
           <StudentMushafSection onBack={() => returnSection && changeSection(returnSection.key)} />
         </Suspense></PageLoadingBoundary>

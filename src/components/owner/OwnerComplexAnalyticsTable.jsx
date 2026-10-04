@@ -46,7 +46,7 @@ const OwnerComplexAnalyticsTable = ({ complexes, onOpenComplex }) => {
     .sort((left, right) => Number(right.stats?.[sortKey] || 0) - Number(left.stats?.[sortKey] || 0)), [complexes, query, sortKey]);
 
   return (
-    <section className="rounded-2xl border border-border/70 bg-card shadow-sm [font-family:var(--font-ui)]">
+    <section className="rounded-2xl border border-border/70 bg-card shadow-xs [font-family:var(--font-ui)]">
       <div className="grid gap-3 border-b border-border/70 p-3 sm:grid-cols-[1fr_auto_auto] sm:p-4">
         <div className="relative">
           <Search className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />

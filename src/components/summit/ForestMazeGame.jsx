@@ -95,7 +95,7 @@ const ForestMazeGame = ({ challenge, isSubmitting, onComplete }) => {
 
   return (
     <div className="mx-auto w-full max-w-[460px] space-y-3 text-center [font-family:var(--font-ui)]">
-      <div className="rounded-[2rem] border border-emerald-200/20 bg-white/[.07] p-2.5 shadow-[0_1.25rem_3.5rem_rgba(0,15,25,.35)] backdrop-blur sm:p-3">
+      <div className="rounded-4xl border border-emerald-200/20 bg-white/[.07] p-2.5 shadow-[0_1.25rem_3.5rem_rgba(0,15,25,.35)] backdrop-blur-sm sm:p-3">
         <div className="mb-2.5 flex items-center justify-between gap-2 px-1 text-xs font-black">
           <span className="rounded-full bg-amber-300 px-3 py-1.5 text-[#14382d]">ابدأ من المؤشر</span>
           <span className="text-white/70">اسحب دون لمس الأشجار</span>

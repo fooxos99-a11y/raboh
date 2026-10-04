@@ -42,6 +42,6 @@ export default function DashboardUndoNotice({ active }) {
         title="تراجع (Ctrl+Z)" aria-keyshortcuts="Control+Z Meta+Z"
         onClick={event => { event.preventDefault(); void undo(action.id); }}>تراجع</ToastAction>
     </Toast>)}
-    {createPortal(<ToastViewport aria-live="polite" aria-label="الأوامر القابلة للتراجع" className="pointer-events-none top-auto bottom-[max(1rem,env(safe-area-inset-bottom))] z-[400] max-h-[40dvh] overflow-y-auto sm:top-auto" />, document.body)}
+    {createPortal(<ToastViewport aria-live="polite" aria-label="الأوامر القابلة للتراجع" className="pointer-events-none top-auto bottom-[max(1rem,env(safe-area-inset-bottom))] z-400 max-h-[40dvh] overflow-y-auto sm:top-auto" />, document.body)}
   </ToastProvider>;
 }

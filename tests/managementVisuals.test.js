@@ -44,7 +44,7 @@ test('selected recitation policy text is white and the sidebar selection is a bo
   for (const value of ['face', 'quarterFace', 'halfFace']) assert.ok(selector.includes(`value: '${value}'`));
   assert.match(selector, /selected \? 'text-white hover:text-white'/);
   assert.match(sidebar, /\? 'bg-white\/15 text-white'/);
-  assert.match(sidebar, /var\(--brand-navigation-accent\)/);
+  assert.match(sidebar, /\(--brand-navigation-accent\)/);
   assert.doesNotMatch(sidebar, /border-\[#f0bd55\]|shadow-\[0_8px_22px/);
 });
 
@@ -55,8 +55,8 @@ test('gold action buttons keep white labels across shared and custom surfaces', 
     readFile(new URL('../src/components/ui/date-picker.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/components/dashboard/CulturalCompetitionSection.jsx', import.meta.url), 'utf8'),
   ]);
-  assert.match(button, /bg-primary !text-white/);
-  assert.match(dailyChallenge, /bg-\[#d7a43b\][^"\n]*!text-white/);
-  assert.match(datePicker, /bg-primary !text-white/);
-  assert.match(competitions, /bg-primary[^"\n]*!text-white/);
+  assert.match(button, /bg-primary text-white!/);
+  assert.match(dailyChallenge, /bg-\[#d7a43b\][^"\n]*text-white!/);
+  assert.match(datePicker, /bg-primary text-white!/);
+  assert.match(competitions, /bg-primary[^"\n]*text-white!/);
 });

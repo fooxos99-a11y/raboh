@@ -18,7 +18,7 @@ export default function AccountLoginPage({ site, onLogin, loading }) {
     return () => window.clearTimeout(timer);
   }, [startup?.finish, timing.duration]);
   return <>{loading && <LoadingIndicator mode="screen" delayMs={0} />}
-  <main hidden={loading} className={`${loading ? '!hidden' : ''} startup-scene px-5 py-10 ${entering ? 'startup-enter' : ''}`} style={{ '--startup-delay': `-${timing.elapsed}ms` }} dir="rtl">
+  <main hidden={loading} className={`${loading ? 'hidden!' : ''} startup-scene px-5 py-10 ${entering ? 'startup-enter' : ''}`} style={{ '--startup-delay': `-${timing.elapsed}ms` }} dir="rtl">
     {entering && <StartupLines />}
     <section className="startup-login-card" aria-labelledby="login-title" aria-busy={entering}>
       {site.logo && <img src={resolveAssetUrl(site.logo)} alt={site.name} className="startup-login-logo" />}

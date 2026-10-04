@@ -3,7 +3,7 @@ import React from 'react';
 const URL_PATTERN = /(https?:\/\/[^\s]+)/g;
 
 const ProgramRichText = ({ children, className = '' }) => (
-  <div className={`whitespace-pre-wrap break-words leading-8 ${className}`}>
+  <div className={`whitespace-pre-wrap wrap-break-word leading-8 ${className}`}>
     {String(children || '').split(URL_PATTERN).map((part, index) => (
       /^https?:\/\//.test(part) ? (
         <a

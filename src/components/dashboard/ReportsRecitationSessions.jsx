@@ -68,7 +68,7 @@ const ReportsRecitationSessions = ({ rows = [] }) => {
     <div className="space-y-3">
       <div className="grid gap-3" dir="rtl">
         {studentCards.map((student) => (
-          <article key={student.key} className="rounded-xl border border-primary/15 bg-background/80 p-3 shadow-sm shadow-primary/5">
+          <article key={student.key} className="rounded-xl border border-primary/15 bg-background/80 p-3 shadow-xs shadow-primary/5">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-primary/10 pb-2">
               <h3 className="text-base font-black text-foreground">
                 <span className="text-primary">الطالب:</span> {student.studentName}

@@ -69,7 +69,7 @@ const TaskCell = ({ cell, label, studentName, editable, saving, onToggle }) => {
         cell.status === 'done' && 'border-primary bg-primary text-primary-foreground',
         cell.status === 'partial' && 'border-primary bg-primary/20 text-primary',
         cell.status === 'not_done' && 'border-primary/40 bg-card text-transparent',
-        !locked && 'hover:border-primary hover:shadow-sm',
+        !locked && 'hover:border-primary hover:shadow-xs',
         locked && !editable && 'cursor-default',
         locked && editable && 'opacity-60',
         saving && 'cursor-wait',
@@ -231,7 +231,7 @@ const StudentExecutionCorrectionsSection = ({ teacherScoped = false, canEditAtte
           onValueChange={(value) => changeAttendance(row, value)}
           disabled={pendingKeys.includes(`${row.studentId}:attendance`)}
         >
-          <SelectTrigger aria-label={`حضور ${row.name}`} className="mx-auto h-8 w-[5.25rem] px-2 text-xs font-bold sm:w-[5.5rem]">
+          <SelectTrigger aria-label={`حضور ${row.name}`} className="mx-auto h-8 w-21 px-2 text-xs font-bold sm:w-22">
             <SelectValue placeholder="—">
               {row.attendance ? attendanceLabel(row.attendance) : '—'}
             </SelectValue>
@@ -260,10 +260,10 @@ const StudentExecutionCorrectionsSection = ({ teacherScoped = false, canEditAtte
       <div className="space-y-1.5">
       <p className="text-[0.7rem] font-bold text-muted-foreground sm:hidden">اسحب الجدول يسارًا لرؤية المجموع.</p>
       <div className="overflow-x-auto overscroll-x-contain rounded-xl border border-primary/20">
-        <table className="w-full min-w-[33rem] border-collapse text-sm" dir="rtl">
+        <table className="w-full min-w-132 border-collapse text-sm" dir="rtl">
           <thead>
             <tr className="bg-primary text-primary-foreground">
-              <th scope="col" className="sticky right-0 z-10 min-w-[7.5rem] bg-primary px-3 py-2 text-right font-black sm:min-w-[9rem]">الاسم</th>
+              <th scope="col" className="sticky right-0 z-10 min-w-30 bg-primary px-3 py-2 text-right font-black sm:min-w-36">الاسم</th>
               <th scope="col" className="whitespace-nowrap px-2 py-2 font-black">الحضور</th>
               <th scope="col" className="whitespace-nowrap px-2 py-2 font-black">التسميع</th>
               {sheetColumns.map((column) => (
@@ -278,7 +278,7 @@ const StudentExecutionCorrectionsSection = ({ teacherScoped = false, canEditAtte
                 <th scope="row" className="sticky right-0 z-10 bg-card px-3 py-1.5 text-right font-bold shadow-[-6px_0_8px_-6px_hsl(var(--primary)/0.25)]">
                   <button
                     type="button"
-                    className="block max-w-[8rem] truncate text-right sm:max-w-[11rem] hover:text-primary hover:underline disabled:hover:no-underline"
+                    className="block max-w-32 truncate text-right sm:max-w-44 hover:text-primary hover:underline disabled:hover:no-underline"
                     disabled={!editable}
                     onClick={() => setDetail(row)}
                     title={editable ? 'تفاصيل التنفيذ' : row.committeeName}
@@ -306,7 +306,7 @@ const StudentExecutionCorrectionsSection = ({ teacherScoped = false, canEditAtte
                   </td>
                 ))}
                 <td className="px-2 py-1.5 text-center">
-                  <span className={cn('inline-flex min-w-[3.75rem] justify-center whitespace-nowrap rounded-md px-2 py-0.5 font-black', totalClassName(row))}>
+                  <span className={cn('inline-flex min-w-15 justify-center whitespace-nowrap rounded-md px-2 py-0.5 font-black', totalClassName(row))}>
                     {row.max ? `${formatScore(row.total)}/${row.max}` : '—'}
                   </span>
                 </td>

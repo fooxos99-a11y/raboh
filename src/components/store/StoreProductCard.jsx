@@ -15,24 +15,24 @@ const StoreProductCard = ({ product, children, inactive = false, showUnlimitedSt
         className,
       )}
     >
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#f8efd9] via-[#fffaf0] to-[#e7f1f3] dark:from-[#123a48] dark:via-[#0b2d3a] dark:to-[#071f2a]">
+      <div className="relative overflow-hidden bg-linear-to-br from-[#f8efd9] via-[#fffaf0] to-[#e7f1f3] dark:from-[#123a48] dark:via-[#0b2d3a] dark:to-[#071f2a]">
         <StoreProductImage
           src={product.imageData}
           alt={product.name}
           className="bg-transparent p-3 transition-transform duration-300 group-hover:scale-[1.035] sm:p-4"
         />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#052e41]/35 to-transparent" />
-        <span className="absolute bottom-3 left-3 rounded-full border border-[#f0bd55]/45 bg-[#052e41]/90 px-2.5 py-1 shadow-lg backdrop-blur-sm">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-[#052e41]/35 to-transparent" />
+        <span className="absolute bottom-3 left-3 rounded-full border border-[#f0bd55]/45 bg-[#052e41]/90 px-2.5 py-1 shadow-lg backdrop-blur-xs">
           <PointsValue value={product.pointsPrice} className="text-base text-[#f0bd55]" iconClassName="h-5 w-5" />
         </span>
         {(hasLimitedStock || showUnlimitedStock) && (
-          <span className="absolute right-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full border border-white/60 bg-white/90 px-2.5 py-1 text-[10px] font-black text-[#052e41] shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-[#052e41]/90 dark:text-white">
+          <span className="absolute right-3 top-3 max-w-[calc(100%-1.5rem)] truncate rounded-full border border-white/60 bg-white/90 px-2.5 py-1 text-[10px] font-black text-[#052e41] shadow-xs backdrop-blur-xs dark:border-white/10 dark:bg-[#052e41]/90 dark:text-white">
             {hasLimitedStock ? `المتبقي ${Number(product.stock || 0).toLocaleString('ar-SA-u-nu-latn')}` : 'مخزون غير محدود'}
           </span>
         )}
       </div>
 
-      <CardContent className="flex min-h-[8.5rem] flex-1 flex-col gap-3 p-3.5 sm:p-4">
+      <CardContent className="flex min-h-34 flex-1 flex-col gap-3 p-3.5 sm:p-4">
         <h3 className="line-clamp-2 h-10 shrink-0 sm:h-12 text-sm font-black leading-5 text-foreground sm:text-base sm:leading-6">
           {product.name}
         </h3>

@@ -112,7 +112,7 @@ const AccountPortal = () => {
         setIsLoading(false);
       }
     };
-    load();
+    void load();
   }, [cachedSettings, hasDashboard, isOnline, session.role, session.studentId, session.token, toast]);
 
   useEffect(() => {
@@ -266,7 +266,7 @@ const AccountPortal = () => {
 
   if (isLoading || waitingForAttendance || !permissionsReady || isImmersiveRouteLoading) {
     return (
-      <div className="fixed inset-0 z-[100] h-dvh overflow-hidden bg-[#001f2d] [font-family:var(--font-ui)]" dir="rtl">
+      <div className="fixed inset-0 z-100 h-dvh overflow-hidden bg-[#001f2d] [font-family:var(--font-ui)]" dir="rtl">
         <DashboardLoader mode="screen" className="h-dvh" />
       </div>
     );
@@ -274,7 +274,7 @@ const AccountPortal = () => {
 
   if (activeSection === 'mushaf') {
     return (
-      <div className="fixed inset-0 z-[100] h-dvh overflow-hidden bg-background [font-family:var(--font-ui)]" dir="rtl">
+      <div className="fixed inset-0 z-100 h-dvh overflow-hidden bg-background [font-family:var(--font-ui)]" dir="rtl">
         <PageLoadingBoundary key={activeSection}><Suspense fallback={<DashboardLoader mode="screen" className="h-dvh" />}>
           <StudentMushafSection studentId={session.studentId} onBack={leaveMushaf} initialTarget={readerTarget} />
         </Suspense></PageLoadingBoundary>
@@ -286,7 +286,7 @@ const AccountPortal = () => {
 
   if (['dailyChallenge', 'summit'].includes(activeSection)) {
     return (
-      <div className="fixed inset-0 z-[100] h-dvh overflow-hidden bg-[#001f2d] [font-family:var(--font-ui)]" dir="rtl">
+      <div className="fixed inset-0 z-100 h-dvh overflow-hidden bg-[#001f2d] [font-family:var(--font-ui)]" dir="rtl">
         <PageLoadingBoundary key={activeSection}><Suspense fallback={<DashboardLoader mode="screen" className="h-dvh" />}>
           {activeSection === 'dailyChallenge'
             ? <StudentDailyChallengeSection onBack={leaveDailyChallenge} />
@@ -302,7 +302,7 @@ const AccountPortal = () => {
       return <div className="flex items-center gap-2" dir="rtl">
       <StudentNotificationButton />
       {activeSection === 'quranSessions' && planPoints !== null && <span aria-label={`إجمالي النقاط: ${planPoints}`} className="[font-family:var(--font-ui)]"><RankingPointsValue value={planPoints} iconClassName="h-5 w-5" /></span>}
-      {activeSection === 'store' && <PointsValue value={storeBalance} className="h-10 rounded-xl border border-[#d7a43b]/30 bg-[#fff8e8] px-3 text-base shadow-sm dark:bg-[#d7a43b]/10" iconClassName="h-5 w-5" />}
+      {activeSection === 'store' && <PointsValue value={storeBalance} className="h-10 rounded-xl border border-[#d7a43b]/30 bg-[#fff8e8] px-3 text-base shadow-xs dark:bg-[#d7a43b]/10" iconClassName="h-5 w-5" />}
     </div>;
     }
     if (activeSection === 'quranEvaluation') {

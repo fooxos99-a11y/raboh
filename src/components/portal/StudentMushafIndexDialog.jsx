@@ -62,9 +62,9 @@ const StudentMushafIndexDialog = ({ open, onOpenChange, theme = 'light', index, 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
-        overlayClassName="z-[100]"
+        overlayClassName="z-100"
         data-reader-theme={theme}
-        className="student-mushaf-index z-[101] h-[min(42rem,calc(100svh-1rem))] max-w-2xl grid-rows-[auto_auto_auto_minmax(0,1fr)] gap-3 overflow-hidden p-3 [font-family:var(--font-ui)] sm:h-[min(42rem,calc(100svh-2rem))] sm:p-5"
+        className="student-mushaf-index z-101 h-[min(42rem,calc(100svh-1rem))] max-w-2xl grid-rows-[auto_auto_auto_minmax(0,1fr)] gap-3 overflow-hidden p-3 [font-family:var(--font-ui)] sm:h-[min(42rem,calc(100svh-2rem))] sm:p-5"
         dir="rtl"
         aria-labelledby="student-mushaf-index-title"
         aria-describedby={undefined}

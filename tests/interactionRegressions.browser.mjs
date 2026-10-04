@@ -4,7 +4,7 @@ import { URL } from 'node:url';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium, webkit } from 'playwright';
 
-const base = 'http://127.0.0.1:3000';
+const base = globalThis.process.env.PORTAL_TEST_URL || 'http://127.0.0.1:3000';
 const results = [];
 await mkdir('outputs', { recursive: true });
 for (const [engineName, engine] of [['chromium', chromium], ['webkit', webkit]]) {
@@ -24,11 +24,11 @@ for (const [engineName, engine] of [['chromium', chromium], ['webkit', webkit]])
           return;
         }
         let json = {};
-        if (path === '/api/offline-student/bootstrap') json = {
-          date: '2026-09-06', store: { storeBalance: 10, products: [
+        if (path === '/api/store/products') json = {
+          storeBalance: 10, products: [
             { id: 1, name: 'منتج متاح', pointsPrice: 5, stock: 3 },
             { id: 2, name: 'منتج رصيده غير كاف', pointsPrice: 50, stock: 3 },
-          ] },
+          ],
         };
         await route.fulfill({ json });
       });
@@ -51,12 +51,22 @@ for (const [engineName, engine] of [['chromium', chromium], ['webkit', webkit]])
         await page.locator('html').evaluate((el, theme) => { el.className = theme; }, theme);
         const style = await buy.nth(1).evaluate((el) => {
           const style = globalThis.getComputedStyle(el);
-          return { gradient: style.backgroundImage, opacity: style.opacity, height: el.getBoundingClientRect().height };
+          const swatch = globalThis.document.createElement('span');
+          swatch.style.backgroundColor = style.getPropertyValue('--tw-gradient-from');
+          globalThis.document.body.append(swatch);
+          const canvas = globalThis.document.createElement('canvas');
+          canvas.width = canvas.height = 1;
+          const context = canvas.getContext('2d');
+          context.fillStyle = globalThis.getComputedStyle(swatch).backgroundColor;
+          context.fillRect(0, 0, 1, 1);
+          swatch.remove();
+          return { gradient: style.backgroundImage, color: [...context.getImageData(0, 0, 1, 1).data], opacity: style.opacity, height: el.getBoundingClientRect().height };
         });
-        assert.match(style.gradient, /208, 146, 37, 0.5/);
+        assert.match(style.gradient, /linear-gradient/);
+        [208, 146, 37, 128].forEach((value, index) => assert.ok(Math.abs(style.color[index] - value) <= 1, `${engineName}: purchase gradient color ${style.color}`));
         assert.equal(style.opacity, '1');
         assert.ok(style.height >= 44, `${engineName} ${width}px: purchase height ${style.height}`);
-        await page.screenshot({ path: `outputs/interactions-${engineName}-${width}-${theme}.png` });
+        if (globalThis.process.env.SAVE_SCREENSHOTS === '1') await page.screenshot({ path: `outputs/interactions-${engineName}-${width}-${theme}.png` });
       }
       assert.ok(await page.evaluate(() => globalThis.document.documentElement.scrollWidth <= globalThis.innerWidth));
       // Opening a select inside a modal and closing both must release scroll locks.
@@ -90,7 +100,7 @@ for (const [engineName, engine] of [['chromium', chromium], ['webkit', webkit]])
       if (width < 1024) await page.getByRole('button', { name: 'فتح القائمة الجانبية' }).click();
       const started = Date.now();
       await page.getByRole('button', { name: 'تسجيل الخروج', exact: true }).filter({ visible: true }).click();
-      await page.waitForURL(`${base}/`, { timeout: 1500 });
+      await page.waitForURL(`${base}/login`, { timeout: 1500, waitUntil: 'commit' });
       const logoutMs = Date.now() - started;
       assert.equal(await page.evaluate(() => globalThis.localStorage.getItem('madarij_web_session')), null);
       assert.equal(await page.evaluate(() => globalThis.localStorage.getItem('wajeh_role')), null);

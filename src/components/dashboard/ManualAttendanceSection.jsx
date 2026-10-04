@@ -172,7 +172,7 @@ const ManualAttendanceSection = ({ teacherScoped = false }) => {
                 <section key={group.title}>
                   <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-[repeat(auto-fill,minmax(9.5rem,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(9.5rem,11rem))]" dir="rtl">
                     {group.rows.map((row) => (
-                      <article key={row.id} className="grid content-start gap-1.5 rounded-lg border border-primary/20 bg-background p-2.5 shadow-sm shadow-primary/5">
+                      <article key={row.id} className="grid content-start gap-1.5 rounded-lg border border-primary/20 bg-background p-2.5 shadow-xs shadow-primary/5">
                         <div className="min-w-0">
                           <p className="truncate text-sm font-black text-foreground">{row.name}</p>
                           {target === 'supervisors' && (
@@ -189,7 +189,7 @@ const ManualAttendanceSection = ({ teacherScoped = false }) => {
                             onValueChange={(value) => setAttendanceStatus(row, value)}
                             disabled={pendingIds.includes(row.id)}
                           >
-                            <SelectTrigger aria-label={`حالة حضور ${row.name}`} className="h-11 w-[7.25rem] max-w-full justify-self-start bg-card px-3 pl-8 text-foreground">
+                            <SelectTrigger aria-label={`حالة حضور ${row.name}`} className="h-11 w-29 max-w-full justify-self-start bg-card px-3 pl-8 text-foreground">
                               <SelectValue placeholder="اختر الحالة" />
                             </SelectTrigger>
                             <SelectContent>

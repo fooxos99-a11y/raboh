@@ -4,7 +4,7 @@ import LoadingSpinner from '@/components/ui/loading-spinner';
 import { Button } from '@/components/ui/button';
 
 const CONTROL_CLASS = 'relative h-11 min-h-11 w-14 min-w-14 rounded-full bg-transparent p-0 shadow-none hover:bg-transparent';
-const CONTROL_SURFACE = 'absolute bottom-[4cqw] flex h-[7cqw] w-[12cqw] items-center justify-center rounded-full text-[2.8cqw] font-black shadow-sm [font-family:var(--font-ui)]';
+const CONTROL_SURFACE = 'absolute bottom-[4cqw] flex h-[7cqw] w-[12cqw] items-center justify-center rounded-full text-[2.8cqw] font-black shadow-xs [font-family:var(--font-ui)]';
 
 const MushafPageControls = ({ pageNumber, isSaving, canFinish = true, onFinish, onNextRandom }) => (
   <nav
@@ -18,7 +18,7 @@ const MushafPageControls = ({ pageNumber, isSaving, canFinish = true, onFinish, 
     </span>
     {onNextRandom && (
       <Button type="button" variant="ghost" onClick={onNextRandom} disabled={isSaving} className="relative h-11 min-h-11 w-28 min-w-28 rounded-full bg-transparent p-0 shadow-none hover:bg-transparent">
-        <span className={`${CONTROL_SURFACE} !w-[24cqw] bg-secondary text-[2.3cqw] text-secondary-foreground`}>المقطع التالي</span>
+        <span className={`${CONTROL_SURFACE} w-[24cqw]! bg-secondary text-[2.3cqw] text-secondary-foreground`}>المقطع التالي</span>
       </Button>
     )}
     <Button
@@ -28,7 +28,7 @@ const MushafPageControls = ({ pageNumber, isSaving, canFinish = true, onFinish, 
       disabled={isSaving || !canFinish}
       className={CONTROL_CLASS}
     >
-      <span className={`${CONTROL_SURFACE} bg-primary !text-white`}>
+      <span className={`${CONTROL_SURFACE} bg-primary text-white!`}>
         {isSaving ? <LoadingSpinner className="h-[3.5cqw] w-[3.5cqw] border-[0.45cqw]" /> : 'إنهاء'}
       </span>
     </Button>

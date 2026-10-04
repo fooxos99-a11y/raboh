@@ -293,8 +293,8 @@ test('summit is wired as a responsive student journey with protected persistence
   assert.match(journeySection, /Number\(stage\.points\) === initialKilometers/);
   assert.match(journeySection, /لقد وصلت إلى محطة/);
   assert.match(routes, /stages\/:points\/acknowledge/);
-  assert.match(journeySection, /fixed inset-0 z-\[90\] h-dvh overflow-hidden/);
-  assert.match(journeySection, /overlayClassName="z-\[150\]"/);
+  assert.match(journeySection, /fixed inset-0 z-90 h-dvh overflow-hidden/);
+  assert.match(journeySection, /overlayClassName="z-150"/);
   assert.match(overview, /summit-map-viewport/);
   assert.match(mapArtwork, /viewBox=/);
   assert.doesNotMatch(`${map}\n${mapArtwork}`, /stage\.icon|🧗|🔒|🌲|⛺/);

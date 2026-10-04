@@ -14,8 +14,8 @@ const RawasiPublicHeader = ({
     dir="rtl"
     data-rawasi-public-header
   >
-    <div className="relative mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-4 sm:h-[4.5rem] sm:px-6 lg:px-8">
-      <a href="#rawasi-home" className="flex min-w-0 items-center gap-3 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label="العودة إلى بداية الصفحة">
+    <div className="relative mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-4 sm:h-18 sm:px-6 lg:px-8">
+      <a href="#rawasi-home" className="flex min-w-0 items-center gap-3 rounded-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring" aria-label="العودة إلى بداية الصفحة">
         <img
           src={resolveAssetUrl(site.markLogo || site.logo)}
           alt={`شعار ${site.name}`}

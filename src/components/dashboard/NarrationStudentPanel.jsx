@@ -71,7 +71,7 @@ const NarrationStudentPanel = ({ eventId, student, archived, onSavePart, onStart
   };
   return (
     <>
-      <article className="flex min-h-32 flex-col justify-between gap-4 rounded-xl border border-primary/15 bg-background/70 p-4 shadow-sm shadow-primary/5 transition hover:border-primary/35 hover:shadow-md sm:min-h-36">
+      <article className="flex min-h-32 flex-col justify-between gap-4 rounded-xl border border-primary/15 bg-background/70 p-4 shadow-xs shadow-primary/5 transition hover:border-primary/35 hover:shadow-md sm:min-h-36">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h3 className="truncate text-lg font-black text-foreground">{student.studentName}</h3>

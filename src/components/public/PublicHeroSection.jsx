@@ -13,7 +13,7 @@ const PublicHeroSection = ({
   onOpenDailyChallenge,
 }) => (
   <section
-    className="relative grid min-h-[100svh] place-items-center overflow-hidden [font-family:var(--font-ui)]"
+    className="relative grid min-h-svh place-items-center overflow-hidden [font-family:var(--font-ui)]"
     aria-label={site.name}
   >
     <PublicHeroBackground />
@@ -23,7 +23,7 @@ const PublicHeroSection = ({
           alt={`شعار ${site.name}`}
           decoding="sync"
           fetchPriority="high"
-          className="h-auto w-[min(58vw,14.5rem)] object-contain drop-shadow-[0_0_30px_rgba(255,255,255,.2)] sm:w-[min(38vw,19rem)] lg:w-[21rem]"
+          className="h-auto w-[min(58vw,14.5rem)] object-contain drop-shadow-[0_0_30px_rgba(255,255,255,.2)] sm:w-[min(38vw,19rem)] lg:w-84"
         />
       {site.organizationName && (
         <motion.p
@@ -69,7 +69,7 @@ const PublicHeroSection = ({
       <motion.a
         href="#public-rankings"
         aria-label="الانتقال إلى أفضل الحلقات والطلاب"
-        className="flex min-h-12 min-w-12 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-[var(--brand-navigation-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navigation-accent)]"
+        className="flex min-h-12 min-w-12 items-center justify-center rounded-full text-white/80 transition-colors hover:bg-white/10 hover:text-(--brand-navigation-accent) focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--brand-navigation-accent)"
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
       >

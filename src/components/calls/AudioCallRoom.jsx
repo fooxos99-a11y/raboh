@@ -221,7 +221,7 @@ const AudioCallRoom = ({ roomInfo, isOwner, minimized = false, onRestore, onLeav
         if (mounted) setIsConnecting(false);
       }
     };
-    connect();
+    void connect();
     return () => {
       mounted = false;
       room.disconnect();
@@ -313,7 +313,7 @@ const AudioCallRoom = ({ roomInfo, isOwner, minimized = false, onRestore, onLeav
   if (isConnecting) {
     if (minimized) {
       return (
-        <button type="button" onClick={onRestore} className="fixed bottom-3 left-3 z-[60] flex w-[min(88vw,320px)] items-center gap-3 rounded-2xl border border-primary/30 bg-card/95 p-3 text-right shadow-2xl shadow-primary/20 backdrop-blur-xl sm:bottom-5 sm:left-5" dir="rtl">
+        <button type="button" onClick={onRestore} className="fixed bottom-3 left-3 z-60 flex w-[min(88vw,320px)] items-center gap-3 rounded-2xl border border-primary/30 bg-card/95 p-3 text-right shadow-2xl shadow-primary/20 backdrop-blur-xl sm:bottom-5 sm:left-5" dir="rtl">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary"><PhoneCall className="h-5 w-5 animate-pulse" /></span>
           <span className="min-w-0"><span className="block truncate font-black text-foreground">{roomInfo.name}</span><span className="block text-xs font-bold text-muted-foreground">جاري الاتصال بالمكالمة...</span></span>
         </button>
@@ -328,7 +328,7 @@ const AudioCallRoom = ({ roomInfo, isOwner, minimized = false, onRestore, onLeav
         <button
           type="button"
           onClick={onRestore}
-          className="fixed bottom-3 left-3 z-[60] flex w-[min(88vw,340px)] items-center gap-3 rounded-2xl border border-primary/35 bg-card/95 p-3 text-right shadow-2xl shadow-primary/20 backdrop-blur-xl transition hover:border-primary/60 hover:bg-card sm:bottom-5 sm:left-5"
+          className="fixed bottom-3 left-3 z-60 flex w-[min(88vw,340px)] items-center gap-3 rounded-2xl border border-primary/35 bg-card/95 p-3 text-right shadow-2xl shadow-primary/20 backdrop-blur-xl transition hover:border-primary/60 hover:bg-card sm:bottom-5 sm:left-5"
           aria-label={`العودة إلى المكالمة ${roomInfo.name}`}
           dir="rtl"
         >

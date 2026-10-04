@@ -26,7 +26,7 @@ const LoadingIndicator = ({ className, mode = 'inline', delayMs = 180 }) => {
     <div
       className={cn(
         isScreen
-          ? 'screen-loading-surface fixed inset-0 z-[100] grid place-items-center p-6'
+          ? 'screen-loading-surface fixed inset-0 z-100 grid place-items-center p-6'
           : 'flex items-center justify-center py-12',
         className,
       )}

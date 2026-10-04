@@ -65,7 +65,7 @@ export default function NazemBulkRefresh({ accounts, disabled, onChanged, button
               <span>{labels[row.status] || 'جارٍ التحديث'}</span>
             </div>
             <ProgressBar label={`تقدم تحديث ${row.teacherName}`} value={row.status === 'synced' ? 100 : Number(row.progressPercent || 0)} />
-            {row.lastError && <p className="break-words text-destructive">{row.lastError}</p>}
+            {row.lastError && <p className="wrap-break-word text-destructive">{row.lastError}</p>}
             {row.result && <NazemPlanRefreshSummary result={row.result} />}
           </div>
         ))}

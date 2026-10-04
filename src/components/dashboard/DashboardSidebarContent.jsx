@@ -31,10 +31,10 @@ const DashboardSidebarContent = ({
   }, [activeParentKey]);
 
   return (
-  <div className="flex h-full flex-col bg-[var(--brand-navigation)] text-white">
-    <div className="relative flex h-[88px] shrink-0 items-center border-b border-white/[0.06] px-4">
+  <div className="flex h-full flex-col bg-(--brand-navigation) text-white">
+    <div className="relative flex h-[88px] shrink-0 items-center border-b border-white/6 px-4">
       <div
-        className="absolute right-4 h-[4.25rem] w-[4.6rem] rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navigation-accent)]"
+        className="absolute right-4 h-17 w-[4.6rem] rounded-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--brand-navigation-accent)"
       >
         <img
           src={sidebarLogo}
@@ -50,7 +50,7 @@ const DashboardSidebarContent = ({
           type="button"
           variant="ghost"
           size="icon"
-          className="absolute left-3 h-11 w-11 text-white hover:bg-white/[0.12] hover:text-white"
+          className="absolute left-3 h-11 w-11 text-white hover:bg-white/12 hover:text-white"
           onClick={onClose}
           aria-label="إغلاق القائمة الجانبية"
         >
@@ -82,16 +82,16 @@ const DashboardSidebarContent = ({
               aria-expanded={hasChildren ? isExpanded : undefined}
               title={isDisabled ? `${section.label} - قريبًا` : section.label}
               aria-label={isDisabled ? `${section.label} - قريبًا ومقفل` : section.label}
-              className={`group relative flex min-h-12 w-full items-center gap-3 overflow-hidden rounded-2xl px-3 text-right text-[13px] font-bold tracking-[-0.01em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navigation-accent)] disabled:cursor-not-allowed disabled:opacity-55 ${
+              className={`group relative flex min-h-12 w-full items-center gap-3 overflow-hidden rounded-2xl px-3 text-right text-[13px] font-bold tracking-[-0.01em] transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--brand-navigation-accent) disabled:cursor-not-allowed disabled:opacity-55 ${
                 isActive
                   ? 'bg-white/15 text-white'
-                  : 'bg-transparent text-white hover:bg-white/[0.08]'
+                  : 'bg-transparent text-white hover:bg-white/8'
               }`}
             >
-              <Icon className={`h-[19px] w-[19px] shrink-0 ${isActive ? 'text-white' : 'text-[var(--brand-navigation-accent)]'}`} />
+              <Icon className={`h-[19px] w-[19px] shrink-0 ${isActive ? 'text-white' : 'text-(--brand-navigation-accent)'}`} />
               <span className="min-w-0 flex-1 truncate">{section.label}</span>
               {Number(section.badge || 0) > 0 && (
-                <span className={`grid min-h-5 min-w-5 shrink-0 place-items-center rounded-full px-1 text-[10px] font-black ${isActive ? 'bg-[var(--brand-navigation)] text-white' : 'bg-[var(--brand-navigation-highlight)] text-white'}`}>
+                <span className={`grid min-h-5 min-w-5 shrink-0 place-items-center rounded-full px-1 text-[10px] font-black ${isActive ? 'bg-(--brand-navigation) text-white' : 'bg-(--brand-navigation-highlight) text-white'}`}>
                   {Number(section.badge).toLocaleString('ar-SA-u-nu-latn')}
                 </span>
               )}
@@ -115,11 +115,11 @@ const DashboardSidebarContent = ({
                       key={child.key}
                       type="button"
                       onClick={() => onChooseSection(child.key)}
-                      className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-right text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-navigation-accent)] ${
-                        childActive ? 'bg-white/[0.12] text-white' : 'text-white/80 hover:bg-white/[0.08] hover:text-white'
+                      className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-right text-xs font-bold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--brand-navigation-accent) ${
+                        childActive ? 'bg-white/12 text-white' : 'text-white/80 hover:bg-white/8 hover:text-white'
                       }`}
                     >
-                      {ChildIcon && <ChildIcon className={`h-[17px] w-[17px] shrink-0 ${childActive ? 'text-white' : 'text-[var(--brand-navigation-accent)]'}`} aria-hidden="true" />}
+                      {ChildIcon && <ChildIcon className={`h-[17px] w-[17px] shrink-0 ${childActive ? 'text-white' : 'text-(--brand-navigation-accent)'}`} aria-hidden="true" />}
                       <span className="min-w-0 flex-1">{child.label}</span>
                     </button>
                   );
@@ -131,19 +131,19 @@ const DashboardSidebarContent = ({
       })}
     </nav>
 
-    <div className="border-t border-white/[0.06] p-3">
+    <div className="border-t border-white/6 p-3">
       <div className="flex items-center justify-between gap-2">
         <Button
           type="button"
           variant="ghost"
           onClick={onLogout}
-          className="h-11 gap-2 px-3 text-white hover:bg-white/[0.12] hover:text-white"
+          className="h-11 gap-2 px-3 text-white hover:bg-white/12 hover:text-white"
           title="تسجيل الخروج"
         >
           <LogOut className="h-5 w-5" />
           تسجيل الخروج
         </Button>
-        <ThemeToggle className="h-11 w-11 shrink-0 text-white hover:bg-white/[0.12] hover:text-white" />
+        <ThemeToggle className="h-11 w-11 shrink-0 text-white hover:bg-white/12 hover:text-white" />
       </div>
     </div>
   </div>

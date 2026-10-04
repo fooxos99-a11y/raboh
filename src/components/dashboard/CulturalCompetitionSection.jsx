@@ -56,14 +56,14 @@ const CulturalCompetitionSection = ({ canManageBank = false }) => {
                 type="button"
                 onClick={hasBank && canManageBank ? () => setShowQuestionBank(true) : undefined}
                 disabled={!hasBank || !canManageBank}
-                className="flex min-h-12 min-w-12 shrink-0 items-center justify-center text-[#d7a43b] transition-transform enabled:hover:scale-110 enabled:focus-visible:outline-none enabled:focus-visible:ring-2 enabled:focus-visible:ring-[#d7a43b]/60 disabled:cursor-default"
+                className="flex min-h-12 min-w-12 shrink-0 items-center justify-center text-[#d7a43b] transition-transform enabled:hover:scale-110 enabled:focus-visible:outline-hidden enabled:focus-visible:ring-2 enabled:focus-visible:ring-[#d7a43b]/60 disabled:cursor-default"
                 aria-label={hasBank && canManageBank ? 'إدارة بنك أسئلة خلية الحروف' : title}
               >
                 <Icon className="h-8 w-8" />
               </button>
               <h2 className="truncate text-xl font-black text-foreground sm:text-2xl">{title}</h2>
             </div>
-            <Button asChild size="lg" className="min-h-12 w-full gap-2 rounded-2xl bg-primary font-black !text-white shadow-[0_10px_24px_hsl(var(--primary)/0.22)] hover:bg-primary/90 hover:!text-white">
+            <Button asChild size="lg" className="min-h-12 w-full gap-2 rounded-2xl bg-primary font-black text-white! shadow-[0_10px_24px_hsl(var(--primary)/0.22)] hover:bg-primary/90 hover:text-white!">
               <Link to={to}>
                 الدخول
                 <ArrowLeft className="h-5 w-5" />

@@ -43,12 +43,12 @@ const DashboardShell = ({
   };
 
   return (
-    <div className="min-h-[100dvh] bg-[#fafbfc] dark:bg-background text-foreground [font-family:var(--font-ui)]" dir="rtl">
+    <div className="min-h-dvh bg-[#fafbfc] dark:bg-background text-foreground [font-family:var(--font-ui)]" dir="rtl">
       <CustomCursor />
       <Helmet><title>{dashboardTitle}</title></Helmet>
 
       <aside
-        className="fixed bottom-0 right-0 top-0 z-50 hidden w-[276px] overflow-hidden border-l border-white/[0.06] shadow-[0_0_35px_rgba(7,28,43,.18)] lg:block"
+        className="fixed bottom-0 right-0 top-0 z-50 hidden w-[276px] overflow-hidden border-l border-white/6 shadow-[0_0_35px_rgba(7,28,43,.18)] lg:block"
       >
         <DashboardSidebarContent
           title={dashboardTitle}
@@ -88,14 +88,14 @@ const DashboardShell = ({
         {sidebarOpen && (
           <>
             <motion.div
-              className="fixed inset-0 z-[70] bg-[#071c2b]/55 backdrop-blur-[2px] lg:hidden"
+              className="fixed inset-0 z-70 bg-[#071c2b]/55 backdrop-blur-[2px] lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSidebarOpen(false)}
             />
             <motion.aside
-              className="fixed bottom-0 right-0 top-0 z-[80] w-[min(88vw,320px)] overflow-hidden shadow-[0_0_48px_rgba(7,28,43,.34)] lg:hidden"
+              className="fixed bottom-0 right-0 top-0 z-80 w-[min(88vw,320px)] overflow-hidden shadow-[0_0_48px_rgba(7,28,43,.34)] lg:hidden"
               initial={{ x: 340 }}
               animate={{ x: 0 }}
               exit={{ x: 340 }}
@@ -116,7 +116,7 @@ const DashboardShell = ({
       </AnimatePresence>
 
       <main
-        className="dashboard-main min-h-[100dvh] min-w-0 px-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-[84px] sm:px-5 sm:pt-[92px] lg:px-8 lg:pb-8 lg:pr-[308px] lg:pt-[114px]"
+        className="dashboard-main min-h-dvh min-w-0 px-3 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-[84px] sm:px-5 sm:pt-[92px] lg:px-8 lg:pb-8 lg:pr-[308px] lg:pt-[114px]"
       >
         <div className={`mx-auto w-full ${maxWidthClass}`}>
           {persistentContent}

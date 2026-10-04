@@ -22,7 +22,7 @@ export default function DailyChallengeOrdering({ gameType, challenge, items, sel
         <Button type="button" disabled={disabled || roundTransitioning || selection.length !== items.length} onClick={() => {
           if (gameType === 'size_ordering' && rounds.length > 1) completeRound(selection);
           else onSubmit({ order: selection });
-        }} className="daily-challenge-primary bg-[#d7a43b] !text-white">{gameType === 'size_ordering' && roundIndex < rounds.length - 1 ? 'الجولة التالية' : 'تأكيد الترتيب'}</Button>
+        }} className="daily-challenge-primary bg-[#d7a43b] text-white!">{gameType === 'size_ordering' && roundIndex < rounds.length - 1 ? 'الجولة التالية' : 'تأكيد الترتيب'}</Button>
       </div>
     </div>
   );

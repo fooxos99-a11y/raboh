@@ -19,18 +19,18 @@ const FamilyRankingCard = ({ item, index, showPoints }) => {
   const Icon = rankIcons[(item.rank + Number(item.id || index) - 1) % rankIcons.length];
 
   return (
-    <article className="rawasi-family-card mx-3 flex min-h-24 w-[min(90vw,28rem)] flex-shrink-0 items-stretch overflow-hidden rounded-2xl border border-white/15 bg-[color-mix(in_srgb,var(--brand-navigation-highlight)_12%,var(--brand-navigation))] text-right shadow-lg shadow-black/25 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-[var(--brand-navigation-accent)] sm:w-[28rem]" dir="rtl">
+    <article className="rawasi-family-card mx-3 flex min-h-24 w-[min(90vw,28rem)] shrink-0 items-stretch overflow-hidden rounded-2xl border border-white/15 bg-[color-mix(in_srgb,var(--brand-navigation-highlight)_12%,var(--brand-navigation))] text-right shadow-lg shadow-black/25 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-(--brand-navigation-accent) sm:w-md" dir="rtl">
       <span className="w-1.5 shrink-0" style={{ backgroundColor: style.color }} />
-      <span className={`m-3 flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border bg-[var(--brand-navigation)]/90 shadow-lg ${style.border} ${style.glow}`}>
+      <span className={`m-3 flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border bg-(--brand-navigation)/90 shadow-lg ${style.border} ${style.glow}`}>
         <Icon className="h-7 w-7" strokeWidth={2} style={{ color: style.color }} />
       </span>
       <span className="min-w-0 flex flex-1 items-center justify-between gap-3 py-3 pl-4">
         <span className="min-w-0">
           <span className="text-xs font-bold" style={{ color: style.color }}>{formatRank(item.rank)}</span>
-          <span className="mt-1 block whitespace-normal break-words text-xl font-black leading-snug text-white">{item.name}</span>
+          <span className="mt-1 block whitespace-normal wrap-break-word text-xl font-black leading-snug text-white">{item.name}</span>
         </span>
         {showPoints && (
-          <span className="inline-flex shrink-0 items-center gap-1 border-r border-white/15 pr-3 text-lg font-black text-[var(--brand-navigation-accent)]">
+          <span className="inline-flex shrink-0 items-center gap-1 border-r border-white/15 pr-3 text-lg font-black text-(--brand-navigation-accent)">
             <Star className="h-5 w-5" />
             {formatNumber(item.points)}
           </span>
@@ -49,7 +49,7 @@ const FamilyRankingMarquee = ({ items, showPoints }) => {
 
   return (
     <div className="space-y-5">
-      <h2 className="rawasi-ranking-title flex items-center justify-center gap-3 px-5 text-center text-3xl font-black text-[var(--brand-navigation-accent)]">
+      <h2 className="rawasi-ranking-title flex items-center justify-center gap-3 px-5 text-center text-3xl font-black text-(--brand-navigation-accent)">
         <Users className="h-8 w-8" />
         أفضل الحلقات
       </h2>

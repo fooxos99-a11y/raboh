@@ -182,7 +182,7 @@ const ReportsProgress = ({ rows = [], period = null }) => {
       </div>
 
       <div className="hidden overflow-hidden rounded-2xl border border-primary/20 md:block">
-        <div className="overflow-x-auto [scrollbar-color:hsl(var(--primary)/0.35)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-primary/30 [&::-webkit-scrollbar-track]:bg-transparent">
+        <div className="overflow-x-auto [scrollbar-color:hsl(var(--primary)/0.35)_transparent] scrollbar-thin [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-primary/30 [&::-webkit-scrollbar-track]:bg-transparent">
           <div className="min-w-[760px]">
             <div className="grid grid-cols-[minmax(240px,1.7fr)_105px_minmax(170px,1.2fr)_minmax(170px,1.2fr)_110px] bg-background/80">
               <HeaderCell>الطالب</HeaderCell>

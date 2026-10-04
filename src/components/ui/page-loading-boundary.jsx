@@ -60,7 +60,7 @@ export default function PageLoadingBoundary({ children, scope, initialScreen = f
 }
 
 function loadingSurfaceClass(scope) {
-  if (scope === 'screen') return 'screen-loading-surface fixed inset-0 z-[1000] grid place-items-center text-[#0aa3b4] [font-family:var(--font-ui)]';
+  if (scope === 'screen') return 'screen-loading-surface fixed inset-0 z-1000 grid place-items-center text-[#0aa3b4] [font-family:var(--font-ui)]';
   if (scope === 'dashboard') return 'screen-loading-surface fixed bottom-0 left-0 right-0 top-[68px] z-30 grid place-items-center lg:right-[276px] lg:top-[84px] text-[#0aa3b4] [font-family:var(--font-ui)]';
   return 'screen-loading-surface absolute inset-0 z-30 grid place-items-center text-[#0aa3b4] [font-family:var(--font-ui)]';
 }

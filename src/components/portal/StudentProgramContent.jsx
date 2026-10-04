@@ -55,7 +55,7 @@ export default function StudentProgramContent({ program, onCompleted }) {
       setQuestionIndex((current) => current + 1);
       return;
     }
-    submit();
+    void submit();
   };
 
   const _resolveConditional = () => {
@@ -69,10 +69,10 @@ export default function StudentProgramContent({ program, onCompleted }) {
   };
   return (
     <section className="relative mx-auto max-w-2xl space-y-5 [font-family:var(--font-ui)]" dir="rtl">
-      <h1 className="break-words text-2xl font-black">{program.title}</h1>
+      <h1 className="wrap-break-word text-2xl font-black">{program.title}</h1>
         {phase === 'content' ? (
           <div className="min-h-0 space-y-5 overflow-y-auto">
-            <ProgramRichText className="rounded-2xl border border-primary/10 bg-primary/[0.05] p-4 text-sm font-semibold text-foreground sm:p-5 sm:text-base">
+            <ProgramRichText className="rounded-2xl border border-primary/10 bg-primary/5 p-4 text-sm font-semibold text-foreground sm:p-5 sm:text-base">
               {content?.value || ''}
             </ProgramRichText>
             {attachment && (
@@ -102,7 +102,7 @@ export default function StudentProgramContent({ program, onCompleted }) {
               {currentQuestion?.options.map((option) => {
                 const selected = selectedOptionId === option.id;
                 return (
-                  <label key={option.id} className={`flex min-h-14 focus-within:ring-2 focus-within:ring-primary cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-bold transition-all sm:text-base ${selected ? 'border-primary/35 bg-primary/[0.06] shadow-sm' : 'border-primary/10 bg-background hover:border-primary/25'}`}>
+                  <label key={option.id} className={`flex min-h-14 focus-within:ring-2 focus-within:ring-primary cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-bold transition-all sm:text-base ${selected ? 'border-primary/35 bg-primary/6 shadow-xs' : 'border-primary/10 bg-background hover:border-primary/25'}`}>
                     <input className="sr-only" type="radio" name={`question-${currentQuestion.id}`} checked={selected} onChange={() => setAnswers({ ...answers, [currentQuestion.id]: option.id })} />
                     <ProgramChoiceIndicator selected={selected} />
                     <span>{option.text}</span>
@@ -126,7 +126,7 @@ export default function StudentProgramContent({ program, onCompleted }) {
 
         {result && (
           <output  className="grid place-items-center rounded-2xl bg-card p-5">
-            <div className="w-full max-w-sm rounded-[2rem] border border-emerald-500/20 bg-card p-7 text-center shadow-[0_24px_70px_rgba(7,28,43,.18)]">
+            <div className="w-full max-w-sm rounded-4xl border border-emerald-500/20 bg-card p-7 text-center shadow-[0_24px_70px_rgba(7,28,43,.18)]">
               <span className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-primary text-primary-foreground shadow-xl shadow-primary/20">
                 <CheckCircle2 className="h-8 w-8" />
               </span>

@@ -17,7 +17,7 @@ const OwnerAnalyticsFilters = ({ filters, complexes, filterOptions, onChange }) 
   };
 
   return (
-    <div className="rounded-xl border border-border/70 bg-card p-2.5 shadow-sm sm:p-3">
+    <div className="rounded-xl border border-border/70 bg-card p-2.5 shadow-xs sm:p-3">
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.25fr)_repeat(3,minmax(0,1fr))]">
         <div className="flex min-w-0 flex-col gap-1">
           <Label className="flex h-4 items-center gap-1.5 text-xs font-bold">
@@ -30,7 +30,7 @@ const OwnerAnalyticsFilters = ({ filters, complexes, filterOptions, onChange }) 
                 <span className="truncate">{selectionLabel}</span>
               </Button>
             </PopoverTrigger>
-            <PopoverContent align="end" className="w-[var(--radix-popover-trigger-width)] min-w-0 bg-card p-2" dir="rtl">
+            <PopoverContent align="end" className="w-(--radix-popover-trigger-width) min-w-0 bg-card p-2" dir="rtl">
               <Button type="button" variant="ghost" className={`h-10 w-full justify-start px-3 ${!selected.length ? 'font-black text-primary' : ''}`} onClick={() => onChange({ ...filters, complexIds: [], committeeId: '', teacherId: '' })}>
                 جميع المجمعات
               </Button>
@@ -94,7 +94,7 @@ const OwnerAnalyticsFilters = ({ filters, complexes, filterOptions, onChange }) 
         </div>
       </div>
       {selected.length === 1 ? (
-        <div className="mt-2 grid gap-2 border-t border-border/60 pt-2 sm:grid-cols-2 lg:w-[27rem]">
+        <div className="mt-2 grid gap-2 border-t border-border/60 pt-2 sm:grid-cols-2 lg:w-108">
           <div className="space-y-1">
             <Label className="text-xs font-bold">الحلقة</Label>
             <Select value={filters.committeeId || 'all'} onValueChange={(value) => onChange({ ...filters, committeeId: value === 'all' ? '' : value })}>

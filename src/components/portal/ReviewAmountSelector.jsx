@@ -23,10 +23,10 @@ export default function ReviewAmountSelector({ cycle, value, onChange, editable 
     {editable && <div className="flex items-center justify-center gap-1">
       <Select value={String(value)} onValueChange={onChange}>
         <SelectTrigger aria-label="مقدار المراجعة بالأوجه" appearance="inline" showChevron={false}
-          className="relative z-[1] h-11 w-auto min-w-11 justify-center px-2 text-center text-xs font-black text-primary [&>span]:text-center">
+          className="relative z-1 h-11 w-auto min-w-11 justify-center px-2 text-center text-xs font-black text-primary [&>span]:text-center">
           <SelectValue />
         </SelectTrigger>
-        <SelectContent align="center" sideOffset={2} className="z-[150] !w-auto !min-w-16 max-h-56 border-primary/25 bg-background/95 text-xs font-black shadow-xl shadow-primary/10 backdrop-blur"
+        <SelectContent align="center" sideOffset={2} className="z-150 w-auto! min-w-16! max-h-56 border-primary/25 bg-background/95 text-xs font-black shadow-xl shadow-primary/10 backdrop-blur-sm"
           onScrollCapture={event => {
             const viewport = event.target;
             if (viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight < 88) {

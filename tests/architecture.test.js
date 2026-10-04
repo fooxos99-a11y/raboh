@@ -242,16 +242,16 @@ test('Rabwa identity is shared across web and native', async () => {
   assert.match(publicLoginText, /<AccountLoginPage/);
   assert.doesNotMatch(publicLoginText, /<PublicHeroSection|<PublicRankingsSection/);
   assert.doesNotMatch(publicLoginText, /<h1/);
-  assert.match(sidebarText, /bg-\[var\(--brand-navigation\)\]/);
-  assert.match(sidebarText, /bg-\[var\(--brand-navigation-highlight\)\]/);
+  assert.match(sidebarText, /bg-\(--brand-navigation\)/);
+  assert.match(sidebarText, /bg-\(--brand-navigation-highlight\)/);
   assert.match(buttonText, /bg-primary/);
-  assert.match(buttonText, /bg-primary !text-white/);
-  assert.match(buttonText, /hover:!text-white/);
+  assert.match(buttonText, /bg-primary text-white!/);
+  assert.match(buttonText, /hover:text-white!/);
   assert.match(sidebarText, /site\.key === 'madarij' \? site\.logo : site\.whiteLogo \|\| site\.logo/);
-  assert.match(sidebarText, /absolute right-4 h-\[4\.25rem\] w-\[4\.6rem\]/);
+  assert.match(sidebarText, /absolute right-4 h-17 w-\[4\.6rem\]/);
   assert.doesNotMatch(sidebarText, /brightness-0 invert/);
   assert.match(sidebarText, /bg-white\/15 text-white/);
-  assert.match(sidebarText, /isActive \? 'text-white' : 'text-\[var\(--brand-navigation-accent\)\]'/);
+  assert.match(sidebarText, /isActive \? 'text-white' : 'text-\(--brand-navigation-accent\)'/);
   assert.doesNotMatch(sidebarText, /branding\/(?:madarik|madarij)/);
 });
 
@@ -524,6 +524,6 @@ test('toast errors render above dialog portals on every page', async () => {
   ]);
 
   assert.match(toasterText, /createPortal\(<ToastViewport \/>, document\.body\)/);
-  assert.match(toastText, /z-\[300\]/);
+  assert.match(toastText, /z-300/);
   assert.match(dialogText, /z-50/);
 });

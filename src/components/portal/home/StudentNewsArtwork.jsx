@@ -7,8 +7,8 @@ export default function StudentNewsArtwork({ entry, expanded = false }) {
     <div className="absolute inset-0 -z-10 bg-black/35" />
     <div data-news-text="" className={`pointer-events-none space-y-3 p-5 text-start sm:p-6 ${expanded ? '' : 'flex h-full flex-col justify-center'}`} style={{ color: entry.textColor || DEFAULT_NEWS_TEXT_COLOR }}>
       <span data-news-label="" className="w-fit self-start rounded-full bg-card/90 px-3 py-1 text-xs font-semibold text-primary">أخبار العائلة</span>
-      <h3 className={`break-words text-lg font-bold leading-relaxed sm:text-xl ${expanded ? '' : 'line-clamp-2'}`}>{entry.title}</h3>
-      {entry.body && <p className={`whitespace-pre-wrap break-words text-sm leading-7 ${expanded ? '' : 'line-clamp-4'}`}>{entry.body}</p>}
+      <h3 className={`wrap-break-word text-lg font-bold leading-relaxed sm:text-xl ${expanded ? '' : 'line-clamp-2'}`}>{entry.title}</h3>
+      {entry.body && <p className={`whitespace-pre-wrap wrap-break-word text-sm leading-7 ${expanded ? '' : 'line-clamp-4'}`}>{entry.body}</p>}
     </div>
   </div>;
 }

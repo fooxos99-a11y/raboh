@@ -33,7 +33,7 @@ const StudentRankingCard = ({ item, index, showPoints }) => {
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.35, delay: Math.min(index, 8) * 0.04 }}
-      className="relative grid min-h-[5.5rem] grid-cols-[88px_minmax(0,1fr)_48px] items-center gap-2 overflow-hidden rounded-2xl border px-4 py-4 shadow-xl backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 sm:min-h-24 sm:grid-cols-[124px_minmax(0,1fr)_60px] sm:gap-4 sm:px-5"
+      className="relative grid min-h-22 grid-cols-[88px_minmax(0,1fr)_48px] items-center gap-2 overflow-hidden rounded-2xl border px-4 py-4 shadow-xl backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 sm:min-h-24 sm:grid-cols-[124px_minmax(0,1fr)_60px] sm:gap-4 sm:px-5"
       style={{
         background: 'linear-gradient(145deg, color-mix(in srgb, var(--brand-navigation-highlight) 17%, var(--brand-navigation)), var(--brand-navigation))',
         borderColor: style.border,
@@ -63,7 +63,7 @@ const StudentRankingCard = ({ item, index, showPoints }) => {
 const StudentRankingList = ({ items, showPoints }) => {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 sm:px-6" dir="rtl">
-      <h2 className="rawasi-ranking-title mb-6 flex items-center justify-center gap-3 text-center text-3xl font-black text-[var(--brand-navigation-accent)]">
+      <h2 className="rawasi-ranking-title mb-6 flex items-center justify-center gap-3 text-center text-3xl font-black text-(--brand-navigation-accent)">
         <Trophy className="h-8 w-8" />
         أفضل الطلاب
       </h2>
@@ -109,7 +109,7 @@ const PublicRankingsSection = () => {
         if (mounted) setIsLoading(false);
       }
     };
-    loadRankings();
+    void loadRankings();
     return () => { mounted = false; };
   }, []);
 
@@ -123,7 +123,7 @@ const PublicRankingsSection = () => {
   const showPoints = settings?.rankingPointsVisible !== false;
 
   return (
-    <section id="public-rankings" className="rawasi-rankings-section relative min-h-[100svh] scroll-mt-24 overflow-hidden border-y border-white/10 py-10 [font-family:var(--font-ui)] sm:py-14" dir="rtl" aria-label="الترتيب">
+    <section id="public-rankings" className="rawasi-rankings-section relative min-h-svh scroll-mt-24 overflow-hidden border-y border-white/10 py-10 [font-family:var(--font-ui)] sm:py-14" dir="rtl" aria-label="الترتيب">
       <PublicHeroBackground />
       <div className="relative z-10 space-y-16">
         {familyVisible && <FamilyRankingMarquee items={families} showPoints={showPoints} />}

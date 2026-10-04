@@ -74,7 +74,7 @@ const CallsSection = ({ onJoinRoom, embedded = false }) => {
     }
     return <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {rooms.map((room) => (
-              <Card key={room.id} className="flex min-h-52 flex-col border-primary/20 bg-background/60 shadow-sm">
+              <Card key={room.id} className="flex min-h-52 flex-col border-primary/20 bg-background/60 shadow-xs">
                 <CardHeader className="flex-row items-start justify-between gap-3 space-y-0">
                   <div className="min-w-0">
                     <h3 className="truncate text-lg font-black text-foreground">{room.name}</h3>

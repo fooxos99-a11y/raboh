@@ -6,8 +6,8 @@ import { fileURLToPath, URL } from 'node:url';
 import { build } from 'esbuild';
 import { chromium } from 'playwright';
 import postcss from 'postcss';
-import tailwindcss from 'tailwindcss';
-import tailwindConfig from '../tailwind.config.js';
+import tailwindcss from '@tailwindcss/postcss';
+import { readFile } from 'node:fs/promises';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const bundle = await build({
@@ -35,11 +35,12 @@ const bundle = await build({
       </>;
     }
     createRoot(document.getElementById('root')).render(<App />);`, resolveDir: root, loader: 'jsx' },
-  bundle: true, write: false, outdir: path.join(root, 'tmp/dialog-test'),
+  bundle: true, write: false, outdir: path.join(root, 'tmp/dialog-test'), external: ['/branding/*'],
   alias: { '@': path.join(root, 'src') }, define: { 'process.env.NODE_ENV': '"development"' },
 });
 const js = bundle.outputFiles.find((file) => file.path.endsWith('.js')).text;
-const utilities = await postcss([tailwindcss({ ...tailwindConfig, content: [path.join(root, 'src/components/portal/StudentMushafIndexDialog.jsx'), path.join(root, 'src/components/ui/*.{js,jsx}')] })]).process('@tailwind base; @tailwind utilities;', { from: undefined });
+const stylesheetPath = path.join(root, 'src/index.css');
+const utilities = await postcss([tailwindcss()]).process(await readFile(stylesheetPath, 'utf8'), { from: stylesheetPath });
 const css = utilities.css + bundle.outputFiles.find((file) => file.path.endsWith('.css')).text;
 const server = createServer((req, res) => {
   const _resolveServer = () => {

@@ -30,7 +30,7 @@ const OwnerComplexCard = ({
   const isActive = complex.status === 'active';
 
   return (
-    <Card className="rounded-2xl border-border/70 bg-card shadow-sm transition-colors hover:border-primary/25">
+    <Card className="rounded-2xl border-border/70 bg-card shadow-xs transition-colors hover:border-primary/25">
       <CardContent className="flex flex-col gap-3 p-3 [font-family:var(--font-ui)] sm:flex-row sm:items-center sm:justify-between sm:p-4">
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 items-center justify-between gap-3 sm:justify-start">

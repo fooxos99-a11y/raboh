@@ -56,10 +56,10 @@ const comparePosition = (first = {}, second = {}) => {
   return Number(first.ayah || 0) - Number(second.ayah || 0);
 };
 
-const inlineSelectTriggerClass = 'inline-flex h-auto !min-h-[44px] w-auto !min-w-0 border-0 !bg-transparent p-0 text-xs font-black text-primary !shadow-none ring-0 hover:text-primary/80 focus:ring-0 focus:ring-offset-0 [&>span]:flex-none [&>svg]:hidden';
-const inlinePageSelectContentClass = 'z-[140] !w-16 !min-w-16 max-h-56 border-primary/25 bg-background/95 text-xs font-black shadow-xl shadow-primary/10 backdrop-blur';
-const inlineTextSelectContentClass = 'z-[140] !w-auto !min-w-24 max-h-56 border-primary/25 bg-background/95 text-xs font-black shadow-xl shadow-primary/10 backdrop-blur';
-const inlineSelectItemClass = '!min-h-[44px] justify-center px-2 text-center text-xs font-black data-[state=checked]:bg-primary/15 data-[state=checked]:text-primary [&>span:last-child]:text-center';
+const inlineSelectTriggerClass = 'inline-flex h-auto min-h-[44px]! w-auto min-w-0! border-0 bg-transparent! p-0 text-xs font-black text-primary shadow-none! ring-0 hover:text-primary/80 focus:ring-0 focus:ring-offset-0 [&>span]:flex-none [&>svg]:hidden';
+const inlinePageSelectContentClass = 'z-140 w-16! min-w-16! max-h-56 border-primary/25 bg-background/95 text-xs font-black shadow-xl shadow-primary/10 backdrop-blur-sm';
+const inlineTextSelectContentClass = 'z-140 w-auto! min-w-24! max-h-56 border-primary/25 bg-background/95 text-xs font-black shadow-xl shadow-primary/10 backdrop-blur-sm';
+const inlineSelectItemClass = 'min-h-[44px]! justify-center px-2 text-center text-xs font-black data-[state=checked]:bg-primary/15 data-[state=checked]:text-primary [&>span:last-child]:text-center';
 
 const taskStart = (task = {}) => ({ page: task.fromPage, surah: task.fromSurah, ayah: task.fromAyah, surahName: task.fromSurahName });
 const taskEnd = (task = {}) => ({ page: task.toPage, surah: task.toSurah, ayah: task.toAyah, surahName: task.toSurahName });
@@ -423,7 +423,7 @@ const QuranExecutionContent = ({ studentId, open = false, onOpenChange, inline =
                 disabled={Boolean(savingTypes[group.type])}
                 onClick={() => {
                   const executed = ['done', 'partial', 'extra'].includes(group.status);
-                  updateTasks(group, executed ? 'not_done' : 'done', executed ? null : getSelectedEnd(group));
+                  void updateTasks(group, executed ? 'not_done' : 'done', executed ? null : getSelectedEnd(group));
                 }}
               >
                 {['done', 'partial', 'extra'].includes(group.status) && <CheckCircle2 className="h-4 w-4" />}
@@ -462,7 +462,7 @@ const QuranExecutionContent = ({ studentId, open = false, onOpenChange, inline =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="z-[51] max-h-[90dvh] max-w-2xl overflow-y-auto border-primary/30 bg-card p-4 text-foreground [font-family:var(--font-ui)] sm:p-6" dir="rtl">
+      <DialogContent className="z-51 max-h-[90dvh] max-w-2xl overflow-y-auto border-primary/30 bg-card p-4 text-foreground [font-family:var(--font-ui)] sm:p-6" dir="rtl">
         <DialogHeader className="border-b border-primary/15 pb-4 text-right">
           <DialogTitle className="text-xl font-black text-primary neon-text">التنفيذ</DialogTitle>
         </DialogHeader>

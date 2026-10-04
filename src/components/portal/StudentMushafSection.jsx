@@ -93,7 +93,7 @@ const StudentMushafSection = ({ studentId, onBack, initialTarget = null }) => {
         if (active) setIsInitializing(false);
       }
     };
-    initialize();
+    void initialize();
     return () => { active = false; };
   }, [initialTarget, indexLoadVersion, readerStorageId, studentId, toast]);
 
@@ -123,7 +123,7 @@ const StudentMushafSection = ({ studentId, onBack, initialTarget = null }) => {
         }
       }
     };
-    loadPage();
+    void loadPage();
     return () => { active = false; };
   }, [index, loadVersion, page, readerStorageId, toast]);
 
@@ -135,8 +135,8 @@ const StudentMushafSection = ({ studentId, onBack, initialTarget = null }) => {
       : (displayedPage >= Number(chapter.startPage) && displayedPage <= Number(chapter.endPage))
   )), [activeSurahNumber, displayedPage, index?.chapters]);
   const toolbarControlClass = theme === 'light'
-    ? '!border-teal-200 !bg-teal-50 !text-[#06465c] shadow-none hover:border-slate-400 hover:bg-slate-100 hover:text-[#06465c]'
-    : '!border-slate-500 !bg-slate-700 !text-white shadow-none hover:border-white/30 hover:bg-white/10 hover:text-white';
+    ? 'border-teal-200! bg-teal-50! text-[#06465c]! shadow-none hover:border-slate-400 hover:bg-slate-100 hover:text-[#06465c]'
+    : 'border-slate-500! bg-slate-700! text-white! shadow-none hover:border-white/30 hover:bg-white/10 hover:text-white';
   const isBookmarked = bookmarks.includes(displayedPage);
 
   const goToPage = (nextPage) => {
@@ -217,7 +217,7 @@ const StudentMushafSection = ({ studentId, onBack, initialTarget = null }) => {
             variant={isBookmarked ? 'default' : 'outline'}
             size="icon"
             onClick={toggleBookmark}
-            className={`h-11 w-11 shrink-0 ${isBookmarked ? 'border-primary bg-primary !text-white hover:bg-primary/90 hover:!text-white' : toolbarControlClass}`}
+            className={`h-11 w-11 shrink-0 ${isBookmarked ? 'border-primary bg-primary text-white! hover:bg-primary/90 hover:text-white!' : toolbarControlClass}`}
             aria-label={isBookmarked ? 'إزالة علامة الصفحة' : 'حفظ علامة الصفحة'}
             aria-pressed={isBookmarked}
           >

@@ -155,7 +155,7 @@ const MushafRecitationDialog = ({
         if (active) setIsLoading(false);
       }
     };
-    loadMushaf();
+    void loadMushaf();
     return () => { active = false; };
   }, [currentTaskLoadKey, loadVersion, open, randomMode, randomSampleCount, student?.studentId, supervisorId]);
 

@@ -5,7 +5,7 @@ const PointIcon = ({ className }) => (
   <svg
     viewBox="0 0 24 24"
     aria-hidden="true"
-    className={cn('h-4 w-4 shrink-0 drop-shadow-sm', className)}
+    className={cn('h-4 w-4 shrink-0 drop-shadow-xs', className)}
     fill="none"
   >
     <path

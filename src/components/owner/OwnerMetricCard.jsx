@@ -42,7 +42,7 @@ const OwnerMetricCard = ({ icon: Icon, label, value, rawValue, previousValue, po
   };
   const ChangeIcon = _resolveChangeIcon();
   return (
-    <Card className="border-border/70 bg-card shadow-sm">
+    <Card className="border-border/70 bg-card shadow-xs">
       <CardContent className="min-h-32 p-3 [font-family:var(--font-ui)] sm:p-4">
         <span className={`grid h-10 w-10 place-items-center rounded-xl bg-primary/10 ${tone}`}><Icon className="h-5 w-5" aria-hidden="true" /></span>
         <strong className="mt-3 block text-xl font-black text-foreground sm:text-2xl">{value}</strong>

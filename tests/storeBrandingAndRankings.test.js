@@ -12,7 +12,7 @@ test('store action uses the shared button theme in light and dark modes', async 
 test('best committee cards show the full name and allow a wider card', async () => {
   const ranking = await readFile(new URL('../src/components/public/FamilyRankingMarquee.jsx', import.meta.url), 'utf8');
   assert.match(ranking, /w-\[min\(90vw,28rem\)\]/);
-  assert.match(ranking, /whitespace-normal break-words[^>]+>\{item\.name\}/);
+  assert.match(ranking, /whitespace-normal wrap-break-word[^>]+>\{item\.name\}/);
   assert.doesNotMatch(ranking, /truncate[^>]+>\{item\.name\}/);
 });
 

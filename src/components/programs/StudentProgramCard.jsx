@@ -13,7 +13,7 @@ export default function StudentProgramCard({ program, onStart }) {
     <div className="flex min-w-0 items-start gap-3">
       <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><BookOpen className="h-5 w-5" aria-hidden="true" /></span>
       <div className="min-w-0 flex-1 space-y-2">
-        <h2 className="break-words text-lg font-black leading-7">{program.title}</h2>
+        <h2 className="wrap-break-word text-lg font-black leading-7">{program.title}</h2>
         {canOpen && <p className="text-sm font-bold tabular-nums text-primary">{units.format(program.pointsReward)}</p>}
       </div>
     </div>

@@ -219,7 +219,7 @@ const RegistrationRequestsSection = () => {
       <CardContent className="p-3 sm:p-4">
         <div className="space-y-2">
         {requests.length ? requests.map((request) => (
-          <article key={request.id} className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-shadow hover:shadow-md dark:border-primary/15 dark:bg-card sm:p-4">
+          <article key={request.id} className="rounded-xl border border-slate-200 bg-white p-3 shadow-xs transition-shadow hover:shadow-md dark:border-primary/15 dark:bg-card sm:p-4">
             <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
               <div className="min-w-0 flex-1 space-y-2">
                 <div className="truncate text-lg font-black text-foreground">{request.name}</div>
@@ -369,7 +369,7 @@ const RegistrationRequestsSection = () => {
 };
 
 const RequestDetail = ({ label, value, wide = false }) => (
-  <div className={wide ? 'min-w-[15rem] flex-1' : ''}>
+  <div className={wide ? 'min-w-60 flex-1' : ''}>
     <span className="font-bold text-muted-foreground">{label}: </span>
     <span className="font-black text-foreground">{value}</span>
   </div>

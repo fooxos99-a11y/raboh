@@ -42,27 +42,27 @@ const topRankMeta = {
     label: 'المركز الأول',
     icon: Crown,
     iconClassName: 'text-amber-500 dark:text-amber-300',
-    rowClassName: 'border-amber-400/80 bg-gradient-to-l from-amber-400/10 via-amber-400/[.04] to-transparent',
+    rowClassName: 'border-amber-400/80 bg-linear-to-l from-amber-400/10 via-amber-400/4 to-transparent',
     accentClassName: 'bg-amber-400',
   },
   2: {
     label: 'المركز الثاني',
     icon: Award,
     iconClassName: 'text-sky-500 dark:text-sky-300',
-    rowClassName: 'border-sky-400/75 bg-gradient-to-l from-sky-400/10 via-sky-400/[.04] to-transparent',
+    rowClassName: 'border-sky-400/75 bg-linear-to-l from-sky-400/10 via-sky-400/4 to-transparent',
     accentClassName: 'bg-sky-400',
   },
   3: {
     label: 'المركز الثالث',
     icon: Award,
     iconClassName: 'text-orange-500 dark:text-orange-300',
-    rowClassName: 'border-orange-400/80 bg-gradient-to-l from-orange-400/10 via-orange-400/[.04] to-transparent',
+    rowClassName: 'border-orange-400/80 bg-linear-to-l from-orange-400/10 via-orange-400/4 to-transparent',
     accentClassName: 'bg-orange-400',
   },
 };
 
 const defaultRankMeta = {
-  rowClassName: 'border-primary/55 bg-gradient-to-l from-primary/[.08] via-primary/[.03] to-transparent',
+  rowClassName: 'border-primary/55 bg-linear-to-l from-primary/8 via-primary/3 to-transparent',
   accentClassName: 'bg-primary',
 };
 
@@ -87,7 +87,7 @@ const RankingMark = ({ rank }) => {
 const RankingRow = ({ item, showPoints, family = false }) => {
   const rankMeta = topRankMeta[item.rank] || defaultRankMeta;
   return (
-    <li className={`relative grid min-h-[4.25rem] grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-3 overflow-hidden rounded-2xl border px-4 py-2.5 sm:min-h-[4.75rem] sm:px-5 ${rankMeta.rowClassName}`}>
+    <li className={`relative grid min-h-17 grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-3 overflow-hidden rounded-2xl border px-4 py-2.5 sm:min-h-19 sm:px-5 ${rankMeta.rowClassName}`}>
       <span className={`absolute inset-y-3 right-0 w-1 rounded-l-full ${rankMeta.accentClassName}`} aria-hidden="true" />
       <RankingMark rank={item.rank} />
       <span className="min-w-0">
@@ -142,7 +142,7 @@ const RawasiPublicRankings = () => {
         if (mounted) setState({ loading: false, settings: null, students: [], families: [] });
       }
     };
-    load();
+    void load();
     return () => { mounted = false; };
   }, []);
 

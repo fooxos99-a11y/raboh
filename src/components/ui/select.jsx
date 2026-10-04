@@ -37,7 +37,7 @@ const SelectTrigger = React.forwardRef(({ className, children, appearance = "sol
     dir="rtl"
     data-appearance={appearance}
     className={cn(
-      "relative flex items-center text-right font-semibold text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-60",
+      "relative flex items-center text-right font-semibold text-foreground ring-offset-background placeholder:text-muted-foreground focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-60",
       appearance === "solid"
         ? "select-trigger-solid h-12 w-full rounded-xl border border-input bg-card py-2 pl-10 pr-4 text-sm shadow-[0_1px_2px_hsl(210_40%_20%/0.025)] transition-[border-color,box-shadow,background-color] focus:border-primary/55 focus:ring-4 focus:ring-primary/10 disabled:bg-muted/60"
         : "inline-flex border-0 bg-transparent p-0 shadow-none",
@@ -73,7 +73,7 @@ const SelectContent = React.forwardRef(({
       avoidCollisions={avoidCollisions}
       collisionPadding={12}
       data-app-select-content=""
-      className={cn("select-content-solid relative z-[120] max-h-[min(20rem,var(--radix-select-content-available-height))] w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)] overflow-hidden overscroll-contain rounded-xl border border-border bg-popover text-right text-foreground shadow-[0_14px_35px_hsl(210_40%_15%/0.16)] touch-pan-y [-webkit-overflow-scrolling:touch] duration-200 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2", className)}
+      className={cn("select-content-solid relative z-120 max-h-[min(20rem,var(--radix-select-content-available-height))] w-(--radix-select-trigger-width) min-w-(--radix-select-trigger-width) overflow-hidden overscroll-contain rounded-xl border border-border bg-popover text-right text-foreground shadow-[0_14px_35px_hsl(210_40%_15%/0.16)] touch-pan-y [-webkit-overflow-scrolling:touch] duration-200 animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2", className)}
       {...props}
     >
       <SelectPrimitive.Viewport className="max-h-[min(20rem,var(--radix-select-content-available-height))] overflow-y-auto overscroll-contain p-1 text-right touch-pan-y [-webkit-overflow-scrolling:touch]">{children}</SelectPrimitive.Viewport>
@@ -86,7 +86,7 @@ const SelectItem = React.forwardRef(({ className, children, showIndicator = true
   <SelectPrimitive.Item
     ref={ref}
     dir="rtl"
-    className={cn("relative flex min-h-11 w-full cursor-default select-none items-center justify-start rounded-lg py-2 pl-8 pr-3 text-right text-sm outline-none focus:bg-primary/10 focus:text-primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50", className)}
+    className={cn("relative flex min-h-11 w-full cursor-default select-none items-center justify-start rounded-lg py-2 pl-8 pr-3 text-right text-sm outline-hidden focus:bg-primary/10 focus:text-primary data-disabled:pointer-events-none data-disabled:opacity-50", className)}
     {...props}
   >
     {showIndicator && (
@@ -97,7 +97,7 @@ const SelectItem = React.forwardRef(({ className, children, showIndicator = true
       </span>
     )}
     <SelectPrimitive.ItemText asChild>
-      <span className={cn("block w-full whitespace-normal break-words text-right leading-6", textClassName)}>{children}</span>
+      <span className={cn("block w-full whitespace-normal wrap-break-word text-right leading-6", textClassName)}>{children}</span>
     </SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ))

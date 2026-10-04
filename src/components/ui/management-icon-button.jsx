@@ -14,8 +14,8 @@ const ManagementIconButton = React.forwardRef(({
     size="icon"
     className={cn(
       'h-11 w-11 border-border/70 shadow-none',
-      tone === 'destructive' && 'text-destructive hover:border-border hover:bg-destructive/[0.06] hover:text-destructive',
-      tone === 'primary' && 'text-primary hover:border-border hover:bg-primary/[0.06] hover:text-primary',
+      tone === 'destructive' && 'text-destructive hover:border-border hover:bg-destructive/6 hover:text-destructive',
+      tone === 'primary' && 'text-primary hover:border-border hover:bg-primary/6 hover:text-primary',
       className,
     )}
     {...props}

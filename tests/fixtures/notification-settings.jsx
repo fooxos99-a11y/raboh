@@ -1,3 +1,12 @@
-import React,{useState} from 'react';import {createRoot} from 'react-dom/client';import NotificationSettings from '@/components/dashboard/NotificationSettings';import '@/index.css';
-function Fixture(){const [settings,setSettings]=useState({memorizationExecutionSource:'student'});globalThis.notificationFixture=settings;return <main className="mx-auto max-w-4xl"><NotificationSettings settings={settings} setSettings={setSettings} executionReminderStudents={[]} toggleListValue={()=>{}}/></main>;}
-createRoot(document.getElementById('root')).render(<Fixture/>);
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import SettingsSection from '@/components/dashboard/SettingsSection';
+import '@/index.css';
+
+const captureSettings = (settings) => { globalThis.notificationFixture = settings; };
+
+createRoot(document.getElementById('root')).render(
+  <main className="mx-auto max-w-4xl">
+    <SettingsSection activeCategory="settingsNotifications" onSettingsChange={captureSettings} />
+  </main>,
+);

@@ -10,7 +10,8 @@ if (!import.meta.env.DEV || !['localhost', '127.0.0.1'].includes(location.hostna
 function Fixture() {
   const revision = useDashboardUndoRefresh();
   const [news, setNews] = useState(null);
-  useEffect(() => { studentNewsService.load().then(setNews); }, []);
-  return <main className="p-4" dir="rtl"><DashboardUndoNotice active={location.search.includes('editor')} />{location.search.includes('editor') ? <StudentNewsEditor key={revision} /> : <StudentNewsCard news={news} />}</main>;
+  const [error, setError] = useState('');
+  useEffect(() => { void studentNewsService.load().then(setNews, (cause) => setError(cause.message)); }, []);
+  return <main className="p-4" dir="rtl">{error && <p role="alert">{error}</p>}<DashboardUndoNotice active={location.search.includes('editor')} />{location.search.includes('editor') ? <StudentNewsEditor key={revision} /> : <StudentNewsCard news={news} />}</main>;
 }
 createRoot(document.getElementById('root')).render(<Fixture />);

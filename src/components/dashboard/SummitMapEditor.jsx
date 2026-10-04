@@ -97,7 +97,7 @@ const SummitMapEditor = ({ value, onChange }) => {
 
   return <div className="space-y-5 [font-family:var(--font-ui)]" dir="rtl">
     <div className="overflow-hidden rounded-2xl border border-primary/20 bg-[#e9e7da]">
-      <div className="relative h-[32rem] max-h-[70dvh] overflow-hidden sm:h-[38rem]"><SummitJourneyMap embedded showViewToggle journey={previewJourney} onStageClick={() => {}} /></div>
+      <div className="relative h-128 max-h-[70dvh] overflow-hidden sm:h-152"><SummitJourneyMap embedded showViewToggle journey={previewJourney} onStageClick={() => {}} /></div>
       <div className="flex items-center gap-3 border-t border-primary/15 bg-card p-3"><Label htmlFor="summit-preview-km" className="shrink-0">معاينة عند</Label><Input id="summit-preview-km" type="number" min="0" max={totalKilometers} value={previewKilometer} onChange={(event) => setPreviewKilometer(clampKilometer(event.target.value, totalKilometers))} /><span className="shrink-0 text-sm font-bold text-muted-foreground">كم</span></div>
     </div>
 

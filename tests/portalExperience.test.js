@@ -67,10 +67,10 @@ test('portal account and public rankings match the student experience with notif
   assert.match(sidebar, /section\.badge/);
   assert.doesNotMatch(sidebar, /إدارة المجمعات القرآنية/);
   assert.match(sidebar, /site\.key === 'madarij' \? site\.logo : site\.whiteLogo \|\| site\.logo/);
-  assert.match(sidebar, /h-\[4\.25rem\] w-\[4\.6rem\]/);
+  assert.match(sidebar, /h-17 w-\[4\.6rem\]/);
   assert.doesNotMatch(sidebar, /<Link|href="\/"|العودة للصفحة الرئيسية/);
   assert.match(sidebar, /src=\{sidebarLogo\}/);
-  assert.equal((sidebar.match(/border-white\/\[0\.06\]/g) || []).length, 2);
+  assert.equal((sidebar.match(/border-white\/6/g) || []).length, 2);
   assert.doesNotMatch(sidebar, /border-white\/15/);
   assert.doesNotMatch(sidebar, /h-\[5rem\] w-\[5\.4rem\]/);
   assert.doesNotMatch(sidebar, />\{title\}<\/div>/);
@@ -126,9 +126,9 @@ test('mobile management screens keep fixed chrome and simplified portrait contro
     readFile(new URL('../src/components/dashboard/WhatsAppSendSection.jsx', import.meta.url), 'utf8'),
   ]);
 
-  assert.match(shell, /<div className="min-h-\[100dvh\]/);
+  assert.match(shell, /<div className="min-h-dvh/);
   assert.match(shell, /dashboard-header fixed/);
-  assert.match(shell, /dashboard-main min-h-\[100dvh\]/);
+  assert.match(shell, /dashboard-main min-h-dvh/);
   assert.doesNotMatch(shell, /dashboard-main[^"\n]*overflow-y-auto/);
   assert.match(reports, /const studentId = 'all'/);
   assert.doesNotMatch(reports, /studentsApi\.getStudents|setStudentId|value=\{studentId\}/);

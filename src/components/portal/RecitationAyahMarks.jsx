@@ -45,7 +45,7 @@ const RecitationAyahMarks = ({ marks = [], historical = false }) => {
             <div key={mark.key} className={`min-w-0 rounded-lg border px-3 py-2 text-right ${section.border} ${section.background}`}>
               {mark.text && (
                 <p
-                  className="break-words text-lg font-normal leading-[2.25] text-foreground"
+                  className="wrap-break-word text-lg font-normal leading-[2.25] text-foreground"
                   style={{ fontFamily: "'Uthmanic-Hafs', 'Amiri', serif" }}
                   translate="no"
                 >
@@ -53,7 +53,7 @@ const RecitationAyahMarks = ({ marks = [], historical = false }) => {
                 </p>
               )}
               {mark.notes && (
-                <p className="mt-1 break-words text-xs font-semibold leading-relaxed text-muted-foreground">
+                <p className="mt-1 wrap-break-word text-xs font-semibold leading-relaxed text-muted-foreground">
                   <span className={section.tone}>ملاحظة:</span> {mark.notes}
                 </p>
               )}

@@ -55,7 +55,7 @@ test('web products share the formal responsive homepage with both themes', async
   assert.match(rankings, /2: \{[\s\S]*?label: 'المركز الثاني',[\s\S]*?icon: Award/);
   assert.match(rankings, /3: \{[\s\S]*?label: 'المركز الثالث',[\s\S]*?icon: Award/);
   assert.match(rankings, /rows\.slice\(0, 8\)\.map/);
-  assert.match(rankings, /min-h-\[4\.25rem\]/);
+  assert.match(rankings, /min-h-17/);
   assert.match(rankings, /rounded-2xl border px-4 py-2\.5/);
   assert.match(rankings, /space-y-2\.5 px-3 pb-4/);
   assert.match(rankings, /text-sm font-black tabular-nums text-muted-foreground/);

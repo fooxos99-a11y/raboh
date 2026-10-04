@@ -32,7 +32,7 @@ export default function TeacherRecitationRetries({ supervisorId }) {
     {rows.map(row => <article key={row.id} className="rounded-2xl border border-primary/15 bg-card p-4">
       <h3 className="mb-3 font-bold">{row.studentName}{row.taskType ? ` — ${getQuranTaskLabel(row)}` : ''}</h3>
       <Button className="min-h-11" disabled={busy !== null} onClick={() => retry(row)}>{busy === row.id ? 'جارٍ الإرسال…' : 'إعادة الإرسال'}</Button>
-      <p className="mt-2 break-words text-xs leading-6 text-muted-foreground">{row.firstFailureReason}</p>
+      <p className="mt-2 wrap-break-word text-xs leading-6 text-muted-foreground">{row.firstFailureReason}</p>
     </article>)}
   </div>;
 }

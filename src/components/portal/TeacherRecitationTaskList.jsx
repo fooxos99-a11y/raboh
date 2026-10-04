@@ -241,7 +241,7 @@ const TeacherRecitationTaskList = ({
                     >
                       <SelectValue placeholder="اختر الحالة" />
                     </SelectTrigger>
-                    <SelectContent className="!min-w-0 !w-36">
+                    <SelectContent className="min-w-0! w-36!">
                       {attendanceStatuses.map((status) => (
                         <SelectItem key={status.value} value={status.value} textClassName="whitespace-nowrap break-normal">
                           {status.label}

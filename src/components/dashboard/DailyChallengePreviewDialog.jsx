@@ -30,7 +30,7 @@ const DailyChallengePreviewDialog = ({
 
   if (open && selectedGame) {
     return createPortal(
-      <div className="fixed inset-0 z-[1000] h-dvh overflow-y-auto bg-[#001f2d] [font-family:var(--font-ui)]" dir="rtl">
+      <div className="fixed inset-0 z-1000 h-dvh overflow-y-auto bg-[#001f2d] [font-family:var(--font-ui)]" dir="rtl">
         <StudentDailyChallengeSection
           key={selectedGame}
           previewGameType={selectedGame}

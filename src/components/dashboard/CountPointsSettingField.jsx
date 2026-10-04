@@ -51,7 +51,7 @@ const CountPointsSettingField = ({
         (كل {unitLabel} ={' '}
         <button
           type="button"
-          className="min-h-6 px-0.5 font-normal text-blue-600 underline-offset-2 hover:underline focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          className="min-h-6 px-0.5 font-normal text-blue-600 underline-offset-2 hover:underline focus-visible:rounded focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-500"
           onClick={openEditor}
           aria-label={rewardUnits.text(`تعديل كيلومترات كل ${unitLabel}`)}
         >

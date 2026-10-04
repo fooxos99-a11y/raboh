@@ -36,7 +36,7 @@ const PublicHeader = ({ site, hasSession = false, onOpenAccount }) => {
             alt={`شعار ${site.name}`}
             decoding="sync"
             fetchPriority="high"
-            className="h-[4.25rem] w-[4.6rem] object-contain sm:h-[5rem] sm:w-[5.4rem]"
+            className="h-17 w-[4.6rem] object-contain sm:h-20 sm:w-[5.4rem]"
           />
         </div>
 
@@ -48,8 +48,8 @@ const PublicHeader = ({ site, hasSession = false, onOpenAccount }) => {
             onClick={onOpenAccount}
             className={`relative z-10 h-11 w-11 touch-manipulation transition-colors duration-300 ${
               isScrolled
-                ? 'text-primary hover:bg-primary/5 hover:text-[var(--brand-navigation-highlight)]'
-                : 'text-white hover:bg-white/10 hover:text-[var(--brand-navigation-accent)]'
+                ? 'text-primary hover:bg-primary/5 hover:text-(--brand-navigation-highlight)'
+                : 'text-white hover:bg-white/10 hover:text-(--brand-navigation-accent)'
             }`}
             title={hasSession ? 'فتح الحساب' : 'الحساب'}
             aria-label={hasSession ? 'فتح الحساب' : 'فتح تسجيل الدخول'}

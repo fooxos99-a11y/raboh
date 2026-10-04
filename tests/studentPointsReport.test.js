@@ -25,10 +25,10 @@ test('student points report is shown only for enabled teacher adjustments', asyn
   assert.match(server, /t\.source_type IN \('supervisor_award', 'supervisor_deduction'\)/);
   assert.match(pointsTable, /row\.committeeName/);
   assert.match(pointsTable, /row\.points/);
-  assert.match(administrators, /<PopoverContent[\s\S]*z-\[160\]/);
+  assert.match(administrators, /<PopoverContent[\s\S]*z-160/);
   assert.match(administrators, /flex min-w-0 flex-1 flex-wrap/);
   assert.doesNotMatch(administrators, /option\.description/);
-  assert.match(administrators, /whitespace-normal break-words/);
+  assert.match(administrators, /whitespace-normal wrap-break-word/);
   assert.match(administrators, /useMediaQuery\('\(max-width: 639px\)'\)/);
   assert.match(administrators, /grid-rows-\[auto_minmax\(0,1fr\)_auto\]/);
   assert.match(administrators, /overflow-y-auto overscroll-contain touch-pan-y \[-webkit-overflow-scrolling:touch\]/);

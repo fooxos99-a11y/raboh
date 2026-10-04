@@ -19,7 +19,7 @@ export default function MessageRecipientsList({ recipients, selectedCount, allSe
               <Button type="button" variant={selected ? 'default' : 'outline'} size="icon" className="h-11 w-11 shrink-0" aria-label={`${selected ? 'إلغاء تحديد' : 'تحديد'} ${recipient.name}`} aria-pressed={selected} onClick={() => onToggle(recipient)}>
                 {selected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
               </Button>
-              <div className="min-w-0"><div className="break-words text-lg font-bold text-foreground">{recipient.name}</div>{renderDetails?.(recipient)}</div>
+              <div className="min-w-0"><div className="wrap-break-word text-lg font-bold text-foreground">{recipient.name}</div>{renderDetails?.(recipient)}</div>
             </div>
             <div className="flex items-center gap-2 text-sm font-bold text-primary">{renderBadge?.(recipient)}</div>
           </div>;

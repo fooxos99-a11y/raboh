@@ -47,7 +47,7 @@ export default function StudentProgramsSection() {
     }
     return <>
       {selected && <>
-        <h1 className="break-words text-2xl font-black">{selected.title}</h1>
+        <h1 className="wrap-break-word text-2xl font-black">{selected.title}</h1>
         <ProgramRichText>{selected.contents?.find(item => item.type === 'text')?.value}</ProgramRichText>
       </>}
       {!error && !programs.length && <p className="py-10 text-center text-muted-foreground">لا توجد برامج متاحة حاليًا.</p>}

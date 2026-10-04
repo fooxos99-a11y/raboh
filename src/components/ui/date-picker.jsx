@@ -158,8 +158,8 @@ const DatePicker = ({
                   'flex h-11 min-w-0 items-center justify-center rounded-lg text-sm font-bold tabular-nums transition',
                   disabled
                     ? 'cursor-not-allowed text-muted-foreground/30'
-                    : 'text-foreground hover:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
-                  isSelected && 'bg-primary !text-white hover:bg-primary hover:!text-white',
+                    : 'text-foreground hover:bg-primary/15 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary',
+                  isSelected && 'bg-primary text-white! hover:bg-primary hover:text-white!',
                 )}
               >
                 {date.getUTCDate()}

@@ -13,8 +13,8 @@ export default function StudentPointsReport({ rows = [] }) {
   return <section className="min-w-0 space-y-3 [font-family:var(--font-ui)]" dir="rtl" aria-label="نقاط الطلاب">
     {!filtered.length && <output  className="p-6 text-center text-muted-foreground">لا يوجد طلاب.</output>}
     {filtered.slice(currentPage * pageSize, (currentPage + 1) * pageSize).map((student) => <details key={student.studentId} className="min-w-0 rounded-xl border border-primary/20 p-3">
-      <summary className="min-h-11 cursor-pointer rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
-        <span className="break-words font-bold">{student.studentName}</span>
+      <summary className="min-h-11 cursor-pointer rounded-lg focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-primary">
+        <span className="wrap-break-word font-bold">{student.studentName}</span>
         <span className="ms-2 text-sm text-muted-foreground">{student.committeeName || 'بدون حلقة'}</span>
         <span className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm">
           <span>صافي الفترة: <b>{format(student.total)}</b></span>
@@ -28,8 +28,8 @@ export default function StudentPointsReport({ rows = [] }) {
           <div className="flex flex-wrap justify-between gap-2"><span>{row.date} — {row.source}</span>
             <b className={row.type === 'deduction' ? 'text-destructive' : 'text-emerald-600 dark:text-emerald-400'}>
               {row.type === 'deduction' ? 'خصم' : 'إضافة'} {format(row.points)}</b></div>
-          <p className="mt-1 break-words leading-6">{row.reason || row.source}</p>
-          <p className="mt-1 break-words text-muted-foreground">بواسطة: {row.actorName}</p>
+          <p className="mt-1 wrap-break-word leading-6">{row.reason || row.source}</p>
+          <p className="mt-1 wrap-break-word text-muted-foreground">بواسطة: {row.actorName}</p>
         </li>)}
       </ul>
     </details>)}

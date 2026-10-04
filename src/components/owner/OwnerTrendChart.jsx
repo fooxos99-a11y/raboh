@@ -39,7 +39,7 @@ const OwnerTrendChart = ({ title, data, series }) => {
   const y = (value) => height - padding - (Number(value || 0) / maxValue) * (height - padding * 2);
 
   return (
-    <Card className="border-border/70 bg-card shadow-sm">
+    <Card className="border-border/70 bg-card shadow-xs">
       <CardHeader className="border-b border-border/70 p-4">
         <h3 className="font-black text-foreground">{title}</h3>
       </CardHeader>

@@ -11,7 +11,7 @@ const PublicInfoLayout = ({ title, children, showSiteName = true }) => {
   const site = useSiteConfig();
 
   return (
-    <div className="min-h-[100svh] bg-background px-3 py-5 text-foreground sm:px-5" dir="rtl">
+    <div className="min-h-svh bg-background px-3 py-5 text-foreground sm:px-5" dir="rtl">
       <Helmet><title>{title} | {site.name}</title></Helmet>
       <div className="mx-auto max-w-3xl space-y-4">
         <div className="flex items-center justify-between gap-3">

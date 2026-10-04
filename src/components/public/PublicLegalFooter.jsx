@@ -3,7 +3,7 @@ import { Link } from '@/lib/router';
 
 const PublicContactDialog = lazy(() => import('@/components/public/PublicContactDialog'));
 
-const legalLinkClass = 'inline-flex min-h-11 items-center justify-center text-[11px] font-black text-white/70 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-4';
+const legalLinkClass = 'inline-flex min-h-11 items-center justify-center text-[11px] font-black text-white/70 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-hidden focus-visible:underline focus-visible:underline-offset-4';
 
 const PublicLegalFooter = ({ onDeleteAccount, showContact = false, hasSession = false, accountName = '' }) => {
   const [contactOpen, setContactOpen] = useState(false);

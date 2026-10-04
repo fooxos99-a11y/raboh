@@ -38,13 +38,13 @@ const PermissionsTrigger = React.forwardRef(({ id, labels, open, onClick, disabl
     aria-haspopup="listbox"
     aria-expanded={open}
     onClick={onClick}
-    className="select-trigger-solid relative flex min-h-12 w-full items-center rounded-md border border-primary/30 bg-background py-2.5 pl-10 pr-3 text-right text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+    className="select-trigger-solid relative flex min-h-12 w-full items-center rounded-md border border-primary/30 bg-background py-2.5 pl-10 pr-3 text-right text-sm ring-offset-background focus:outline-hidden focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
     {...triggerProps}
   >
     {labels.length ? (
       <span className="flex min-w-0 flex-1 flex-wrap gap-1.5 pl-2 text-foreground">
         {labels.map((label) => (
-          <span key={label} className="max-w-full whitespace-normal break-words rounded-md border border-primary/15 bg-primary/10 px-2 py-1 text-xs font-bold leading-5">
+          <span key={label} className="max-w-full whitespace-normal wrap-break-word rounded-md border border-primary/15 bg-primary/10 px-2 py-1 text-xs font-bold leading-5">
             {rewardUnits.text(label)}
           </span>
         ))}
@@ -71,13 +71,13 @@ const PermissionOptionsList = ({ values, onToggle, rewardUnits, className = '' }
           role="option"
           aria-selected={selected}
           onClick={() => onToggle(option.key)}
-          className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-lg border px-3 py-2.5 text-right outline-none transition focus-visible:ring-2 focus-visible:ring-primary/50 ${
+          className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-lg border px-3 py-2.5 text-right outline-hidden transition focus-visible:ring-2 focus-visible:ring-primary/50 ${
             selected
               ? 'border-primary/25 bg-primary/10 text-popover-foreground'
               : 'border-transparent bg-popover text-popover-foreground hover:border-primary/15 hover:bg-primary/5'
           }`}
         >
-          <span className="min-w-0 flex-1 whitespace-normal break-words text-sm font-black leading-6 text-popover-foreground">
+          <span className="min-w-0 flex-1 whitespace-normal wrap-break-word text-sm font-black leading-6 text-popover-foreground">
             {rewardUnits.text(option.label)}
           </span>
           <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border ${selected ? 'border-primary bg-primary text-primary-foreground' : 'border-primary/25 bg-background'}`}>
@@ -145,7 +145,7 @@ const PermissionsSelect = ({ id, value, onToggle, disabled = false }) => {
       <PopoverContent
         align="end"
         collisionPadding={12}
-        className="z-[160] max-h-[min(24rem,var(--radix-popover-content-available-height))] w-[var(--radix-popover-trigger-width)] max-w-[calc(100vw-1.5rem)] overflow-y-auto overscroll-contain p-1.5 text-popover-foreground touch-pan-y [-webkit-overflow-scrolling:touch] sm:min-w-[26rem]"
+        className="z-160 max-h-[min(24rem,var(--radix-popover-content-available-height))] w-(--radix-popover-trigger-width) max-w-[calc(100vw-1.5rem)] overflow-y-auto overscroll-contain p-1.5 text-popover-foreground touch-pan-y [-webkit-overflow-scrolling:touch] sm:min-w-104"
         dir="rtl"
       >
         <PermissionOptionsList values={values} onToggle={onToggle} rewardUnits={rewardUnits} className="space-y-1" />

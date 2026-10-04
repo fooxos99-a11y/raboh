@@ -103,7 +103,7 @@ const CountOnlyEvaluationDialog = ({
             <CountField id="recitation-mistake-count" label="عدد الأخطاء" value={mistakeCount} onChange={setMistakeCount} />
           </div>
         )}
-        <DialogFooter className="!flex-row !justify-between gap-2" dir="rtl">
+        <DialogFooter className="flex-row! justify-between! gap-2" dir="rtl">
           <Button type="button" variant="outline" className="min-h-11 px-3" onClick={() => onOpenChange?.(false)} disabled={isSaving}>إغلاق</Button>
           <div className="flex items-center gap-2">
             {secondaryAction}

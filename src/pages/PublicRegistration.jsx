@@ -166,7 +166,7 @@ const PublicRegistration = () => {
         <title>طلب التسجيل</title>
       </Helmet>
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-primary/[0.06] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-linear-to-b from-primary/6 to-transparent" />
       <div className="relative mx-auto max-w-5xl">
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -177,7 +177,7 @@ const PublicRegistration = () => {
               <p className="text-lg font-black">{site.name}</p>
             </div>
           </div>
-          <ThemeToggle className="h-11 w-11 border border-border bg-card shadow-sm" />
+          <ThemeToggle className="h-11 w-11 border border-border bg-card shadow-xs" />
         </div>
 
         <Card>
@@ -188,7 +188,7 @@ const PublicRegistration = () => {
 
             {!enabled ? (
               <div className="rounded-2xl border border-border bg-muted/45 p-7 text-center">
-                <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-card text-muted-foreground shadow-sm">
+                <span className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-card text-muted-foreground shadow-xs">
                   <LockKeyhole className="h-5 w-5" />
                 </span>
                 <p className="mt-4 text-lg font-black text-foreground">التسجيل مغلق حالياً</p>

@@ -24,7 +24,7 @@ const DownloadApp = () => {
 
   return (
     <main className="grid min-h-dvh w-full place-items-center overflow-x-hidden bg-[radial-gradient(circle_at_top,#0d6377_0,#04394d_42%,#022b3b_100%)] p-5 [font-family:var(--font-ui)]" dir="rtl">
-      <section className="w-full max-w-md rounded-[2rem] border border-white/20 bg-white/95 p-6 text-center shadow-2xl backdrop-blur sm:p-8">
+      <section className="w-full max-w-md rounded-4xl border border-white/20 bg-white/95 p-6 text-center shadow-2xl backdrop-blur-sm sm:p-8">
         <img src={appLogo} alt={`شعار ${site.name}`} width="96" height="96" className="mx-auto block h-24 w-24 object-contain" decoding="sync" />
         <h1 className="mt-4 text-2xl font-black text-[#063b50]">تحميل تطبيق {site.name}</h1>
         <div className="mt-6 grid gap-3">

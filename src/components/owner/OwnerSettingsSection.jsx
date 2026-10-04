@@ -38,7 +38,7 @@ const OwnerSettingsSection = ({ complexes }) => {
     }
   };
 
-  useEffect(() => { load(); }, [complexId]);
+  useEffect(() => { void load(); }, [complexId]);
 
   const updatePolicy = (definition, policy) => {
     setPolicies((current) => ({ ...current, [definition.key]: policy }));
@@ -76,11 +76,11 @@ const OwnerSettingsSection = ({ complexes }) => {
       return <DashboardLoader className="min-h-80" />;
     }
     return <>
-          <Card className="border-border/70 bg-card shadow-sm">
+          <Card className="border-border/70 bg-card shadow-xs">
             <CardContent className="space-y-2 p-3 sm:p-4">
               {platformSettingsGroups.map((group, groupIndex) => (
                 <details key={group.key} className="group rounded-xl border border-border/70 bg-card" open={groupIndex === 0}>
-                  <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2 px-4 py-3 font-black outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                  <summary className="flex min-h-12 cursor-pointer list-none items-center gap-2 px-4 py-3 font-black outline-hidden focus-visible:ring-2 focus-visible:ring-ring">
                     <SlidersHorizontal className="h-4 w-4 text-primary" aria-hidden="true" />
                     <span className="min-w-0 flex-1">{rewardUnits.text(group.label)}</span>
                     <ChevronDown className="h-4 w-4 text-muted-foreground transition group-open:rotate-180" aria-hidden="true" />

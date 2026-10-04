@@ -54,11 +54,11 @@ const ContactMessagesSection = () => {
                     <time className="mt-1 block text-[11px] font-bold text-muted-foreground">{formatDateTime(message.createdAt)}</time>
                   </div>
                 </div>
-                <p className="mt-4 whitespace-pre-wrap break-words rounded-xl bg-card px-4 py-3 text-sm font-bold leading-7 text-foreground">{message.subject}</p>
+                <p className="mt-4 whitespace-pre-wrap wrap-break-word rounded-xl bg-card px-4 py-3 text-sm font-bold leading-7 text-foreground">{message.subject}</p>
                 {message.reply && (
                   <div className="mt-3 rounded-xl border border-primary/15 bg-primary/5 px-4 py-3">
                     <p className="text-xs font-black text-primary">رد المجمع</p>
-                    <p className="mt-1 whitespace-pre-wrap break-words text-sm font-bold leading-7 text-foreground">{message.reply}</p>
+                    <p className="mt-1 whitespace-pre-wrap wrap-break-word text-sm font-bold leading-7 text-foreground">{message.reply}</p>
                   </div>
                 )}
               </article>

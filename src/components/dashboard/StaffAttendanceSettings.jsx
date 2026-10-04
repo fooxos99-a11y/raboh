@@ -37,7 +37,7 @@ export default function StaffAttendanceSettings({ settings, setSettings, childre
               onChange={(event) => setSettings({ ...settings, staffAttendanceLateAfterAsrMinutes: event.target.value })}
               className="h-11 border-primary/30 bg-card pe-16"
             />
-            <span className="pointer-events-none absolute inset-y-0 end-3 flex items-center text-sm font-bold text-muted-foreground">دقيقة</span>
+            <span className="pointer-events-none absolute inset-y-0 inset-e-3 flex items-center text-sm font-bold text-muted-foreground">دقيقة</span>
           </div>
         </div>
       )}

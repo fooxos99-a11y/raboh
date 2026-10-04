@@ -97,7 +97,7 @@ export default function NotificationsSection() {
         <Dialog open={historyOpen} onOpenChange={setHistoryOpen}><DialogContent dir="rtl" className="max-h-[85dvh] overflow-y-auto [font-family:var(--font-ui)]"><DialogHeader><DialogTitle>الإشعارات المرسلة</DialogTitle></DialogHeader><div className="space-y-3">
           {!history.length && <p className="text-muted-foreground">لا توجد إشعارات مرسلة.</p>}
           {history.map((item) => <article key={item.id} className="space-y-2 rounded-xl border border-border p-3">
-            <h3 className="break-words font-bold">{item.title}</h3><p className="whitespace-pre-wrap break-words text-sm">{item.body}</p>
+            <h3 className="wrap-break-word font-bold">{item.title}</h3><p className="whitespace-pre-wrap wrap-break-word text-sm">{item.body}</p>
             <p className="text-xs text-muted-foreground">{item.createdAt} · {item.createdBy}</p>
             <p className="text-xs text-muted-foreground">إرسال الأجهزة: {item.pushSent || 0} · بانتظار الإرسال: {item.pushPending || 0} · تعذر الإرسال: {item.pushFailed || 0}</p>
             <div className="flex flex-wrap items-center gap-3 text-sm"><span>أُرسل داخل التطبيق: {item.recipientCount}</span><span>قُرئ: {item.readCount}</span><Button variant="outline" className="min-h-11" onClick={() => showRecipients(item.id)}>المستلمون</Button></div>

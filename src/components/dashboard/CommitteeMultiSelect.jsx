@@ -28,7 +28,7 @@ const CommitteeMultiSelect = ({ committees = [], value = [], onChange }) => {
           <ChevronDown className="h-4 w-4 shrink-0" aria-hidden="true" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[var(--radix-popover-trigger-width)] max-w-[calc(100vw-2rem)] max-h-[min(20rem,var(--radix-popover-content-available-height))] overflow-y-auto p-2" dir="rtl">
+      <PopoverContent align="end" className="w-(--radix-popover-trigger-width) max-w-[calc(100vw-2rem)] max-h-[min(20rem,var(--radix-popover-content-available-height))] overflow-y-auto p-2" dir="rtl">
     <fieldset className="min-w-0 m-0 border-0 p-0 grid grid-cols-1 gap-2" aria-label="حلقات يوم السرد" dir="rtl">
       <CheckboxOption checked={allSelected} onCheckedChange={selectAll} className={buttonVariants({ variant: 'outline', className: optionClassName(allSelected) })}>
         <span className="flex h-5 w-5 items-center justify-center rounded border border-current">{allSelected && <Check className="h-4 w-4" />}</span>

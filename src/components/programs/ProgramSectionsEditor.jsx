@@ -9,7 +9,7 @@ export default function ProgramSectionsEditor({ sections, onChange }) {
   const units = useRewardUnits();
   return <div className="space-y-3 [font-family:var(--font-ui)]">
     {sections.map((section, index) => <Card key={section.id || index}><CardContent className="flex flex-wrap items-center gap-3 p-4">
-      <span className="min-w-0 flex-1 break-words font-bold">{section.title}</span>
+      <span className="min-w-0 flex-1 wrap-break-word font-bold">{section.title}</span>
       <span>{units.format(section.pointsReward)}</span>
       <Button variant="outline" onClick={() => setEditing(index)}>تعديل</Button>
       <Button variant="outline" onClick={() => onChange(sections.filter((_, itemIndex) => itemIndex !== index))}>حذف</Button>

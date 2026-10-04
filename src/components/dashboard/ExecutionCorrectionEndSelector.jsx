@@ -7,7 +7,7 @@ export default function ExecutionCorrectionEndSelector({ referenceMode, start, o
   if (referenceMode !== 'page') return <fieldset disabled={disabled}><RecitationEndSelector start={start} options={options} value={value} onChange={onChange} /></fieldset>;
   const pages = correctionPageOptions(options);
   return (
-    <div className="flex flex-wrap items-center gap-1 text-sm font-bold [font-family:var(--font-ui)] [&_[role=combobox]]:!min-h-11 [&_[role=combobox]]:!min-w-11">
+    <div className="flex flex-wrap items-center gap-1 text-sm font-bold [font-family:var(--font-ui)] **:[[role=combobox]]:min-h-11! **:[[role=combobox]]:min-w-11!">
       <span>من وجه {start?.page} إلى وجه</span>
       <InlineRecitationSelect ariaLabel="وجه نهاية التنفيذ" disabled={disabled} value={value?.page}
         options={pages.map((option) => ({ value: option.page, label: option.page }))}

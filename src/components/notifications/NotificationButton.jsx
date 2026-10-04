@@ -68,9 +68,9 @@ const NotificationButton = ({ showTrigger = true, presentation = 'dialog', open:
     }
     if (notifications.length) {
       return notifications.map((notification) => (
-              <button key={notification.id} type="button" onClick={() => markRead(notification)} className={`w-full rounded-xl border p-3 text-right transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${notification.isRead ? 'border-primary/10 bg-background/60' : 'border-primary/35 bg-primary/10'}`}>
-                <div className="break-words font-black text-foreground">{notification.title}</div>
-                <p className="mt-1 whitespace-pre-wrap break-words text-sm font-bold leading-6 text-muted-foreground">{notification.body}</p>
+              <button key={notification.id} type="button" onClick={() => markRead(notification)} className={`w-full rounded-xl border p-3 text-right transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary ${notification.isRead ? 'border-primary/10 bg-background/60' : 'border-primary/35 bg-primary/10'}`}>
+                <div className="wrap-break-word font-black text-foreground">{notification.title}</div>
+                <p className="mt-1 whitespace-pre-wrap wrap-break-word text-sm font-bold leading-6 text-muted-foreground">{notification.body}</p>
                 <div className="mt-2 text-xs font-bold text-muted-foreground">{notification.createdAt}</div>
               </button>
             ));

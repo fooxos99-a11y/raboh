@@ -122,7 +122,7 @@ export default function ProgramsSection() {
             <Card key={program.id} onClick={event => { if (!event.target.closest('button') && (program.sectionsEnabled || !program.questions.length)) setEntered(program); }} className={`group overflow-hidden rounded-2xl border-primary/15 transition-all hover:-translate-y-0.5 hover:shadow-lg ${program.status === 'locked' ? 'opacity-75' : ''}`}>
               <CardContent className="space-y-5 p-5 sm:p-6">
                 <div className="flex items-start justify-between gap-3">
-                  <h2 className="min-w-0 break-words text-xl font-black text-foreground">{program.title}</h2>
+                  <h2 className="min-w-0 wrap-break-word text-xl font-black text-foreground">{program.title}</h2>
                   <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-md shadow-primary/10">
                     <BookOpen className="h-5 w-5" />
                   </span>

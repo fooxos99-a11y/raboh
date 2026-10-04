@@ -256,21 +256,21 @@ const SummitJourneySection = ({ onBack }) => {
     };
   }, [displayedKilometers, isMoving, journey]);
 
-  if (!visibleJourney) return <DashboardLoader className="fixed inset-0 z-[90] min-h-dvh bg-[#d9c7a5]" />;
+  if (!visibleJourney) return <DashboardLoader className="fixed inset-0 z-90 min-h-dvh bg-[#d9c7a5]" />;
   return (
-    <div className="fixed inset-0 z-[90] h-dvh overflow-hidden bg-[#d9c7a5] [font-family:var(--font-ui)]" dir="rtl">
-      <Button variant="ghost" size="icon" className="absolute right-4 top-[calc(env(safe-area-inset-top)+1rem)] z-[140] h-12 w-12 touch-manipulation rounded-full border border-white/45 bg-[#143043]/90 p-0 text-white shadow-lg backdrop-blur-md hover:bg-[#173c54] hover:text-white sm:right-6" onClick={onBack} aria-label="الرجوع" title="الرجوع"><ArrowRight className="h-5 w-5" aria-hidden="true" /></Button>
+    <div className="fixed inset-0 z-90 h-dvh overflow-hidden bg-[#d9c7a5] [font-family:var(--font-ui)]" dir="rtl">
+      <Button variant="ghost" size="icon" className="absolute right-4 top-[calc(env(safe-area-inset-top)+1rem)] z-140 h-12 w-12 touch-manipulation rounded-full border border-white/45 bg-[#143043]/90 p-0 text-white shadow-lg backdrop-blur-md hover:bg-[#173c54] hover:text-white sm:right-6" onClick={onBack} aria-label="الرجوع" title="الرجوع"><ArrowRight className="h-5 w-5" aria-hidden="true" /></Button>
       <SummitJourneyMap journey={visibleJourney} onStageClick={openStation} />
 
       {visibleJourney.reachedSummit && (
-        <dialog className="m-0 max-w-none h-full w-full border-0 absolute inset-0 z-[150] grid place-items-center overflow-hidden bg-[#102b3c]/88 p-5 text-center backdrop-blur" open aria-label="الوصول إلى النهاية">
-          <div className="relative max-w-lg rounded-[2rem] border border-white/60 bg-white p-8 text-slate-900 shadow-2xl"><Flag className="mx-auto h-16 w-16 text-primary" /><h2 className="mt-4 text-3xl font-black">وصلت إلى {journey.mapConfig.goal.name}</h2><p className="mt-3 text-slate-600">أكملت الرحلة وقطعت {Number(journey.totalKilometers).toLocaleString('ar-SA-u-nu-latn')} كيلومتر.</p><Button className="mt-6" onClick={onBack}>العودة للرئيسية</Button></div>
+        <dialog className="m-0 max-w-none h-full w-full border-0 absolute inset-0 z-150 grid place-items-center overflow-hidden bg-[#102b3c]/88 p-5 text-center backdrop-blur-sm" open aria-label="الوصول إلى النهاية">
+          <div className="relative max-w-lg rounded-4xl border border-white/60 bg-white p-8 text-slate-900 shadow-2xl"><Flag className="mx-auto h-16 w-16 text-primary" /><h2 className="mt-4 text-3xl font-black">وصلت إلى {journey.mapConfig.goal.name}</h2><p className="mt-3 text-slate-600">أكملت الرحلة وقطعت {Number(journey.totalKilometers).toLocaleString('ar-SA-u-nu-latn')} كيلومتر.</p><Button className="mt-6" onClick={onBack}>العودة للرئيسية</Button></div>
         </dialog>
       )}
 
       <Dialog open={notificationOpen && !journey?.activeStation} onOpenChange={() => {}}>
-        <DialogContent overlayClassName="z-[150]" className="z-[160] max-w-sm border-[var(--brand-navigation-highlight)] bg-[#fffaf0] text-center [font-family:var(--font-ui)]" dir="rtl">
-          <BellRing className="mx-auto h-14 w-14 text-[var(--brand-navigation-highlight)]" />
+        <DialogContent overlayClassName="z-150" className="z-160 max-w-sm border-(--brand-navigation-highlight) bg-[#fffaf0] text-center [font-family:var(--font-ui)]" dir="rtl">
+          <BellRing className="mx-auto h-14 w-14 text-(--brand-navigation-highlight)" />
           <DialogHeader>
             <DialogTitle className="text-center text-2xl font-black text-[#6f4d11]">
               {getArrivalTitle(activeStation)}
@@ -281,19 +281,19 @@ const SummitJourneySection = ({ onBack }) => {
               ? activeStation.notificationText
               : 'يمكنك الآن متابعة الطريق.'}
           </p>
-          <Button className="h-12 w-full bg-[var(--brand-navigation-highlight)] text-white hover:brightness-90" onClick={continueAfterNotification}>{activeStation?.challengeEnabled && !activeStation?.completed ? 'الانتقال إلى التحدي' : 'متابعة الطريق'}</Button>
+          <Button className="h-12 w-full bg-(--brand-navigation-highlight) text-white hover:brightness-90" onClick={continueAfterNotification}>{activeStation?.challengeEnabled && !activeStation?.completed ? 'الانتقال إلى التحدي' : 'متابعة الطريق'}</Button>
         </DialogContent>
       </Dialog>
 
       <Dialog open={Boolean(selectedStage && !attempt && !result && !journey?.activeStation)} onOpenChange={(open) => { if (!open && !activeStation) setSelectedStage(null); }}>
-        <DialogContent overlayClassName="z-[150]" className="z-[160] max-w-md [font-family:var(--font-ui)]" dir="rtl">
+        <DialogContent overlayClassName="z-150" className="z-160 max-w-md [font-family:var(--font-ui)]" dir="rtl">
           <DialogHeader><DialogTitle className="text-center text-2xl font-black">{selectedStage?.name}</DialogTitle></DialogHeader>
           <div className="space-y-4 text-center"><p className="text-muted-foreground">وصلت إلى {selectedStage?.name} عند {selectedStage?.points.toLocaleString('ar-SA-u-nu-latn')} كم. أكمل التحدي لتحصل على مكافأة الفوز بالتحدي: {Number(selectedStage?.rewardPoints ?? journey.challengeMaxPoints).toLocaleString('ar-SA-u-nu-latn')} كم.</p>{selectedStage?.completed && <p className="rounded-xl bg-primary/10 p-3 text-sm font-bold text-primary">أنهيت هذا التحدي سابقًا.</p>}<Button className="h-12 w-full" disabled={isStarting} onClick={startStage}>{isStarting ? <LoadingSpinner size="md" /> : 'ابدأ التحدي'}</Button></div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={Boolean(attempt && !journey?.activeStation)} onOpenChange={(open) => !open && setAttempt(null)}>
-        <DialogContent overlayClassName="z-[150]" className="z-[160] max-h-[94dvh] max-w-xl overflow-y-auto bg-[#001f2d] [font-family:var(--font-ui)]" dir="rtl">
+        <DialogContent overlayClassName="z-150" className="z-160 max-h-[94dvh] max-w-xl overflow-y-auto bg-[#001f2d] [font-family:var(--font-ui)]" dir="rtl">
           {SUMMIT_DAILY_CHALLENGE_GAME_TYPES.includes(attempt?.gameType) ? (
             <SummitMiniGame attempt={attempt} onSubmit={submitAttempt} isSubmitting={isSubmitting} />
           ) : (
@@ -305,7 +305,7 @@ const SummitJourneySection = ({ onBack }) => {
       </Dialog>
 
       <Dialog open={Boolean(result && !journey?.activeStation)} onOpenChange={(open) => !open && setResult(null)}>
-        <DialogContent overlayClassName="z-[150]" className="z-[160] max-w-sm text-center [font-family:var(--font-ui)]" dir="rtl"><div className="space-y-4 py-4">{result?.completed ? <Trophy className="mx-auto h-14 w-14 text-primary" /> : <Navigation className="mx-auto h-14 w-14 text-muted-foreground" />}<h2 className="text-2xl font-black">{result?.completed ? 'اكتمل التحدي' : 'المحاولة غير مكتملة'}</h2><p className="text-muted-foreground">{result?.completed ? `حصلت على ${result.awardedPoints} كم.` : 'أعد المحاولة وحاول إكمال التحدي.'}</p><Button className="w-full" onClick={() => { if (result?.completed) void continueAfterChallenge(); else { setResult(null); void startStage(); } }}>{result?.completed ? 'متابعة الرحلة' : 'إعادة المحاولة'}</Button></div></DialogContent>
+        <DialogContent overlayClassName="z-150" className="z-160 max-w-sm text-center [font-family:var(--font-ui)]" dir="rtl"><div className="space-y-4 py-4">{result?.completed ? <Trophy className="mx-auto h-14 w-14 text-primary" /> : <Navigation className="mx-auto h-14 w-14 text-muted-foreground" />}<h2 className="text-2xl font-black">{result?.completed ? 'اكتمل التحدي' : 'المحاولة غير مكتملة'}</h2><p className="text-muted-foreground">{result?.completed ? `حصلت على ${result.awardedPoints} كم.` : 'أعد المحاولة وحاول إكمال التحدي.'}</p><Button className="w-full" onClick={() => { if (result?.completed) void continueAfterChallenge(); else { setResult(null); void startStage(); } }}>{result?.completed ? 'متابعة الرحلة' : 'إعادة المحاولة'}</Button></div></DialogContent>
       </Dialog>
     </div>
   );

@@ -116,10 +116,10 @@ test('renders a stable fifteen-line Mushaf face with coordinated themes and comp
   assert.match(page, /decorationsByLine\.get\(lineIndex \+ 1 - lineShift\) \? \(/);
   assert.match(page, /<MushafLineDecoration decoration=\{decorationsByLine\.get/);
   assert.doesNotMatch(page, /MushafPageMeta|juzNumber|pageSurahName/);
-  assert.match(page, /aspect-\[13\/24\]/);
-  assert.match(page, /grid-rows-\[repeat\(15/);
+  assert.match(page, /aspect-13\/24/);
+  assert.match(page, /grid-rows-15/);
   assert.match(page, /pb-\[16%\] pt-\[5%\]/);
-  assert.match(page, /aspect-\[13\/24\] h-full max-h-full w-auto/);
+  assert.match(page, /aspect-13\/24 h-full max-h-full w-auto/);
   assert.match(page, /maxWidth: 'min\(100%, 38rem\)'/);
   assert.match(page, /fontSize: '4\.7cqw'/);
   assert.match(page, /data-mushaf-no-swipe/);

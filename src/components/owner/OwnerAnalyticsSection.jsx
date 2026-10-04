@@ -150,7 +150,7 @@ const OwnerAnalyticsSection = ({ complexes: availableComplexes, onOpenComplex, o
 
           <div className="grid gap-4 xl:grid-cols-2">
             <React.Suspense fallback={<DashboardLoader className="min-h-72" />}><OwnerTrendChart title="الحفظ والمراجعة" data={quranTrend} series={[{ key: 'memorization', label: 'الحفظ', color: '#0f766e' }, { key: 'mastery', label: 'الإتقان', color: '#8b5cf6' }, { key: 'review', label: 'المراجعة', color: '#7c3aed' }, { key: 'link', label: 'الربط', color: '#0284c7' }, { key: 'repeatFaces', label: 'التكرار', color: '#d97706' }]} /></React.Suspense>
-            <Card className="border-border/70 bg-card shadow-sm">
+            <Card className="border-border/70 bg-card shadow-xs">
               <CardHeader className="border-b border-border/70 p-4"><h3 className="font-black text-foreground">تحليل الإنجاز</h3></CardHeader>
               <CardContent className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3">
                 {[
@@ -162,7 +162,7 @@ const OwnerAnalyticsSection = ({ complexes: availableComplexes, onOpenComplex, o
           </div>
 
           <div className="grid gap-4 xl:grid-cols-2">
-            <Card className="border-border/70 bg-card shadow-sm">
+            <Card className="border-border/70 bg-card shadow-xs">
               <CardHeader className="border-b border-border/70 p-4"><h3 className="font-black text-foreground">حالة الخطط</h3></CardHeader>
               <CardContent className="grid gap-4 p-4 sm:grid-cols-[160px_1fr] sm:items-center">
                 <div className="mx-auto grid h-36 w-36 place-items-center rounded-full" style={{ background: `conic-gradient(#0f766e ${completedShare}%, hsl(var(--muted)) 0)` }} role="img" aria-label={`نسبة الخطط المكتملة ${percent(completedShare)}`}>
@@ -178,7 +178,7 @@ const OwnerAnalyticsSection = ({ complexes: availableComplexes, onOpenComplex, o
                 </div>
               </CardContent>
             </Card>
-            <Card className="border-border/70 bg-card shadow-sm">
+            <Card className="border-border/70 bg-card shadow-xs">
               <CardHeader className="border-b border-border/70 p-4"><h3 className="font-black text-foreground">الاختبارات</h3></CardHeader>
               <CardContent className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3">
                 {[
@@ -191,7 +191,7 @@ const OwnerAnalyticsSection = ({ complexes: availableComplexes, onOpenComplex, o
           </div>
 
           <div className="grid gap-4 xl:grid-cols-2">
-            <Card className="border-border/70 bg-card shadow-sm">
+            <Card className="border-border/70 bg-card shadow-xs">
               <CardHeader className="flex-row items-center justify-between gap-3 border-b border-border/70 p-4">
                 <h3 className="font-black text-foreground">ترتيب المجمعات</h3>
                 <Select value={rankingKey} onValueChange={setRankingKey}>
@@ -203,7 +203,7 @@ const OwnerAnalyticsSection = ({ complexes: availableComplexes, onOpenComplex, o
                 {ranked.map((complex, index) => {
                   const value = Number(complex.stats[rankingKey] || 0);
                   const max = Number(ranked[0]?.stats?.[rankingKey] || 1);
-                  return <button key={complex.id} type="button" className="block min-h-14 w-full rounded-xl border border-border/70 p-3 text-right hover:border-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40" onClick={() => onOpenComplex(complex.id)}>
+                  return <button key={complex.id} type="button" className="block min-h-14 w-full rounded-xl border border-border/70 p-3 text-right hover:border-primary/30 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40" onClick={() => onOpenComplex(complex.id)}>
                     <span className="flex items-center justify-between gap-3"><strong><span className="me-2 text-primary">{['🥇', '🥈', '🥉'][index] || `#${number(index + 1)}`}</span>{complex.name}</strong><b>{rankingOptions[rankingKey].format(value)}</b></span>
                     <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-muted"><i className="block h-full rounded-full bg-primary" style={{ width: `${Math.max(2, (value / Math.max(1, max)) * 100)}%` }} /></span>
                   </button>;
@@ -211,7 +211,7 @@ const OwnerAnalyticsSection = ({ complexes: availableComplexes, onOpenComplex, o
                 {!ranked.length ? <p className="py-8 text-center font-bold text-muted-foreground">لا توجد بيانات قابلة للترتيب.</p> : null}
               </CardContent>
             </Card>
-            <Card className="border-border/70 bg-card shadow-sm">
+            <Card className="border-border/70 bg-card shadow-xs">
               <CardHeader className="border-b border-border/70 p-4"><h3 className="flex items-center gap-2 font-black text-foreground"><AlertTriangle className="h-5 w-5 text-amber-600" />تحتاج إلى متابعة</h3></CardHeader>
               <CardContent className="space-y-2 p-4">
                 {alerts.map((alert) => <div key={alert.id} className="rounded-xl border border-amber-500/25 bg-amber-500/5 p-3"><strong className="block text-sm text-foreground">{alert.name}</strong><p className="mt-1 text-xs font-bold leading-5 text-muted-foreground">{alert.text}</p></div>)}
@@ -220,7 +220,7 @@ const OwnerAnalyticsSection = ({ complexes: availableComplexes, onOpenComplex, o
             </Card>
           </div>
 
-          <Card className="border-border/70 bg-card shadow-sm">
+          <Card className="border-border/70 bg-card shadow-xs">
             <CardHeader className="border-b border-border/70 p-4"><h3 className="font-black text-foreground">أفضل الطلاب إنجازًا</h3></CardHeader>
             <CardContent className="grid gap-2 p-4 sm:grid-cols-2 xl:grid-cols-5">
               {(data.leaders || []).slice(0, 10).map((leader, index) => <div key={`${leader.complexId}-${leader.id}`} className="rounded-xl border border-border/70 p-3"><span className="text-xs font-black text-primary">#{number(index + 1)}</span><strong className="mt-1 block truncate text-sm">{leader.name}</strong><small className="block truncate font-bold text-muted-foreground">{leader.complexName} · {leader.committeeName || '-'}</small><b className="mt-2 block text-sm text-emerald-600">{number(leader.achievedFaces)} وجه</b></div>)}

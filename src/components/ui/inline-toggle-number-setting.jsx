@@ -35,7 +35,7 @@ const InlineToggleNumberSetting = ({
               onChange={(event) => onValueChange(Math.min(max, Math.max(min, Number(event.target.value || min))))}
             />
             {suffix && (
-              <span className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-sm font-normal text-muted-foreground">
+              <span className="pointer-events-none absolute inset-s-3 top-1/2 -translate-y-1/2 text-sm font-normal text-muted-foreground">
                 {suffix}
               </span>
             )}

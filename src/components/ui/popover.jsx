@@ -12,7 +12,7 @@ const PopoverContent = React.forwardRef(({ className, align = 'center', sideOffs
       align={align}
       sideOffset={sideOffset}
       className={cn(
-        'z-[130] overscroll-contain rounded-xl border border-border bg-popover p-3 text-popover-foreground shadow-[0_14px_35px_hsl(210_40%_15%/0.16)] outline-none touch-pan-y [-webkit-overflow-scrolling:touch]',
+        'z-130 overscroll-contain rounded-xl border border-border bg-popover p-3 text-popover-foreground shadow-[0_14px_35px_hsl(210_40%_15%/0.16)] outline-hidden touch-pan-y [-webkit-overflow-scrolling:touch]',
         className,
       )}
       {...props}

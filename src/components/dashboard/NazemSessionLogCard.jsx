@@ -27,7 +27,7 @@ export default function NazemSessionLogCard({ group, retryJob, retryingJobId }) 
           <span>{entryLabel(entry)}</span>
           <span className={entry.status === 'synced' ? 'text-emerald-700' : 'text-amber-700'}>{entry.status === 'synced' && (entry.authoritative || entry.alreadyRecorded) ? 'مؤكد في ناظم' : labels[entry.status] || 'يحتاج مراجعة'}</span>
         </div>
-        {(entry.message || entry.errorCode) && <p className="mt-1 break-words text-xs leading-6">{nazemIssueMessage(entry)}</p>}
+        {(entry.message || entry.errorCode) && <p className="mt-1 wrap-break-word text-xs leading-6">{nazemIssueMessage(entry)}</p>}
         <details className="mt-1 text-xs text-muted-foreground">
           <summary className="min-h-11 cursor-pointer content-center">التفاصيل</summary>
           <p>{entry.createdAt} · المحاولة {entry.attemptNumber || 0}</p>
@@ -40,7 +40,7 @@ export default function NazemSessionLogCard({ group, retryJob, retryingJobId }) 
     </div>
     {group.history.length > 0 && <details className="text-xs text-muted-foreground">
       <summary className="min-h-11 cursor-pointer content-center">السجل السابق ({group.history.length})</summary>
-      {group.history.map(entry => <p key={entry.id} className="break-words py-2 leading-5">{entryLabel(entry)} · {labels[entry.status] || entry.status} · {entry.createdAt}{entry.message ? ` — ${entry.message}` : ''}</p>)}
+      {group.history.map(entry => <p key={entry.id} className="wrap-break-word py-2 leading-5">{entryLabel(entry)} · {labels[entry.status] || entry.status} · {entry.createdAt}{entry.message ? ` — ${entry.message}` : ''}</p>)}
     </details>}
   </article>;
 }

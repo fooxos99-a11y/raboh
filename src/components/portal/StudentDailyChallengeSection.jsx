@@ -39,7 +39,7 @@ function ResultScreen({ result, onBack }) {
         <h1>{_resolveConditional()}</h1>
         {result.pendingSync ? <p>ستُعتمد النتيجة تلقائيًا فور عودة الاتصال.</p> : null}
         {result.correct ? <div className="daily-challenge-points"><Zap className="h-5 w-5" /> +{rewardUnits.format(result.awardedPoints)}</div> : null}
-        <Button type="button" onClick={onBack} className="daily-challenge-primary bg-[#d7a43b] !text-white">العودة</Button>
+        <Button type="button" onClick={onBack} className="daily-challenge-primary bg-[#d7a43b] text-white!">العودة</Button>
       </section>
     </main>
   );
@@ -155,7 +155,7 @@ export default function StudentDailyChallengeSection({ onBack, previewGameType =
           <Sparkles className="daily-challenge-spark" />
           <div className="daily-challenge-icon-orbit"><Brain className="h-14 w-14 text-[#f2bd4f]" /></div>
           <div><span className="daily-challenge-kicker">مهمة جديدة كل يوم</span><h1>اختبر سرعتك وتركيزك</h1><p>لعبة جديدة كل يوم، ولديك محاولة واحدة و60 ثانية فقط.</p></div>
-          <Button type="button" disabled={submitting} className="daily-challenge-primary bg-[#d7a43b] !text-white" onClick={async () => {
+          <Button type="button" disabled={submitting} className="daily-challenge-primary bg-[#d7a43b] text-white!" onClick={async () => {
             setSubmitting(true);
             try {
               const studentId = Number(localStorage.getItem('wajeh_student_id') || 0);

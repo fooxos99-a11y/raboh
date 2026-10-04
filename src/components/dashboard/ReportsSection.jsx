@@ -425,7 +425,7 @@ const ReportsSection = ({
         {!compact && <ChevronDown className={`h-4 w-4 transition ${exportOpen ? 'rotate-180' : ''}`} />}
       </DashboardSecondaryButton>
       {exportOpen && (
-        <div className="absolute left-0 top-12 z-[120] w-56 overflow-hidden rounded-xl border border-primary/20 bg-popover p-1 text-popover-foreground shadow-2xl shadow-primary/10" dir="rtl">
+        <div className="absolute left-0 top-12 z-120 w-56 overflow-hidden rounded-xl border border-primary/20 bg-popover p-1 text-popover-foreground shadow-2xl shadow-primary/10" dir="rtl">
           <button type="button" onClick={() => exportReport('pdf')} className="flex min-h-11 w-full items-center gap-2 rounded-lg px-3 py-2 text-right text-sm font-bold hover:bg-primary/10">
             <FileText className="h-4 w-4 text-primary" />
             PDF
@@ -585,7 +585,7 @@ const ReportsSection = ({
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-5 !pt-6">
+        <CardContent className="space-y-5 pt-6!">
           {_resolveReportsSection()}
         </CardContent>
       </Card>

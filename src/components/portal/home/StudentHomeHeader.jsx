@@ -14,7 +14,7 @@ export default function StudentHomeHeader({ points, progress, progressLabel = "�
   const select = (key) => { setOpen(false); onOpen(key); };
   return <header className="student-home-header"><div className="student-home-header-inner">
     <div className="student-home-account-group"><Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild><Button variant="ghost" className="student-home-level !text-white" aria-label="قائمة حساب الطالب" title="الملف الشخصي"><User size={24} aria-hidden="true" /></Button></PopoverTrigger>
+      <PopoverTrigger asChild><Button variant="ghost" className="student-home-level text-white!" aria-label="قائمة حساب الطالب" title="الملف الشخصي"><User size={24} aria-hidden="true" /></Button></PopoverTrigger>
       <PopoverContent align="end" className="student-home-account-menu" dir="rtl" aria-label="الحساب">
         <div className="student-home-points" aria-label="إجمالي النقاط">{points == null ? <span>—</span> : <RankingPointsValue value={points} />}</div>
         {[[CalendarDays, 'الجلسات', 'sessions'], [PhoneCall, 'المكالمات', 'calls'], ...(!mobile && programsEnabled ? [[BookOpen, 'البرامج', 'programs']] : [])].map(([Icon, label, key]) => <Button variant="ghost" key={key} className="student-home-menu-item" onClick={() => select(key)}><Icon size={18} /><span>{label}</span></Button>)}

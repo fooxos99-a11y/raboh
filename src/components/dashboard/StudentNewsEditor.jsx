@@ -68,7 +68,7 @@ export default function StudentNewsEditor() {
     {news.entries.map(entry => <article key={entry.id} className="flex min-w-0 gap-3 rounded-2xl border bg-card p-3 sm:p-4">
       {entry.image && <img src={entry.image} alt="" className="h-20 w-20 shrink-0 rounded-lg bg-muted/30 object-cover sm:h-24 sm:w-24" />}
       <div className="min-w-0 flex-1 space-y-1">
-        <h3 className="break-words text-sm font-bold text-primary">{entry.title}</h3>
+        <h3 className="wrap-break-word text-sm font-bold text-primary">{entry.title}</h3>
         <p className="text-xs text-muted-foreground">{audienceLabel(entry, committees)}</p>
         <p className="text-xs text-muted-foreground">{displayStatus(entry, now)}</p>
         <div className="flex flex-wrap gap-1">

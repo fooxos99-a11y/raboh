@@ -13,7 +13,7 @@ const IconActionButton = React.forwardRef(({ label, children, ...props }, ref) =
       <TooltipPrimitive.Portal>
         <TooltipPrimitive.Content
           sideOffset={6}
-          className="z-[100] rounded-md border border-primary/20 bg-popover px-2.5 py-1.5 text-xs font-bold text-popover-foreground shadow-lg"
+          className="z-100 rounded-md border border-primary/20 bg-popover px-2.5 py-1.5 text-xs font-bold text-popover-foreground shadow-lg"
         >
           {label}
           <TooltipPrimitive.Arrow className="fill-popover" />

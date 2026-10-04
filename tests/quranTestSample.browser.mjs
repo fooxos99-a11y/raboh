@@ -3,10 +3,11 @@ import console from 'node:console';
 import { chromium } from 'playwright';
 
 const browser = await chromium.launch({ headless: true });
+const base = globalThis.process.env.PORTAL_TEST_URL || 'http://127.0.0.1:3011';
 try {
   for (const width of [360, 1440]) {
     const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
-    await page.goto('http://127.0.0.1:3011/tests/fixtures/quran-test-sample.html');
+    await page.goto(`${base}/tests/fixtures/quran-test-sample.html`);
     const finish = page.getByRole('button', { name: 'إنهاء', exact: true });
     const next = page.getByRole('button', { name: 'المقطع التالي', exact: true });
     await finish.waitFor();
@@ -19,7 +20,7 @@ try {
       pages.add(await page.getByLabel(/^رقم الصفحة /).textContent());
       await next.click();
     }
-    assert.deepEqual([...pages].toSorted(), ['1', '2']);
+    assert.deepEqual([...pages].toSorted((first, second) => Number(first) - Number(second)), ['1', '2']);
     const size = await finish.boundingBox();
     assert.ok(size.width >= 44 && size.height >= 44, JSON.stringify({ width, size }));
     assert.equal(await page.locator('article').getAttribute('dir'), 'rtl');
@@ -27,7 +28,7 @@ try {
     await finish.click();
     await page.waitForFunction(() => Boolean(globalThis.savedTestPayload));
     const payload = await page.evaluate(() => globalThis.savedTestPayload);
-    assert.deepEqual(payload.samplePages.toSorted(), [1, 2]);
+    assert.deepEqual(payload.samplePages.toSorted((first, second) => Number(first) - Number(second)), [1, 2]);
     assert.equal(payload.wordMarks.filter((mark) => mark.markType === 'warning').length, 1);
     assert.equal(payload.wordMarks.filter((mark) => mark.markType === 'mistake').length, 1);
     await page.close();

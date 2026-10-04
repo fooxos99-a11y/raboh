@@ -37,7 +37,7 @@ export default function StudentNewsCard({ news, active = true }) {
       </Button>}
     </div>
     <div className="relative flex h-[280px] flex-col sm:h-[320px]">
-    <Button variant="ghost" className="absolute inset-0 z-[1] !h-full w-full touch-pan-y rounded-none !p-0 hover:translate-y-0 hover:bg-transparent active:scale-100"
+    <Button variant="ghost" className="absolute inset-0 z-1 h-full! w-full touch-pan-y rounded-none p-0! hover:translate-y-0 hover:bg-transparent active:scale-100"
       aria-label={`عرض الخبر ${current + 1}: ${title}`} onFocus={() => setPaused(true)}
       onPointerDown={event => { start.current = event.clientX; }}
       onPointerCancel={() => { start.current = null; }}

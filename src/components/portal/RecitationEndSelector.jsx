@@ -76,7 +76,7 @@ const RecitationEndSelector = ({
   };
 
   const controls = (
-    <div className="flex min-w-0 flex-wrap items-center justify-center gap-x-1 gap-y-0 text-xs font-black leading-4 text-muted-foreground [font-family:var(--font-ui)] [&_[role=combobox]]:!min-h-11 [&_[role=combobox]]:!min-w-11 sm:text-sm sm:leading-5">
+    <div className="flex min-w-0 flex-wrap items-center justify-center gap-x-1 gap-y-0 text-xs font-black leading-4 text-muted-foreground [font-family:var(--font-ui)] **:[[role=combobox]]:min-h-11! **:[[role=combobox]]:min-w-11! sm:text-sm sm:leading-5">
       <span className="whitespace-nowrap">من {surahLabel(start)} {start.ayah}</span>
       <span>إلى</span>
       <InlineRecitationSelect
@@ -114,7 +114,7 @@ const RecitationEndSelector = ({
           {range}
         </Button>
       </PopoverTrigger>
-      <PopoverContent dir="rtl" className="max-w-[calc(100vw-24px)] [font-family:var(--font-ui)] [&_[role=combobox]]:!min-h-11 [&_[role=combobox]]:!min-w-11">
+      <PopoverContent dir="rtl" className="max-w-[calc(100vw-24px)] [font-family:var(--font-ui)] **:[[role=combobox]]:min-h-11! **:[[role=combobox]]:min-w-11!">
         {controls}
       </PopoverContent>
     </Popover>

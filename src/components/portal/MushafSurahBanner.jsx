@@ -49,7 +49,7 @@ const MushafSurahBanner = ({ surahName, theme = 'dark', className = '' }) => {
   return (
     <div
       data-mushaf-no-swipe
-      className={`relative flex h-full w-full max-w-[29rem] items-center justify-center overflow-hidden text-primary ${className}`}
+      className={`relative flex h-full w-full max-w-116 items-center justify-center overflow-hidden text-primary ${className}`}
       aria-label={accessibleName}
       translate="no"
     >

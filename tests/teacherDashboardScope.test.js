@@ -226,8 +226,8 @@ test('teacher recitation attendance reveals grouped actions without a page reloa
   assert.doesNotMatch(endSelector, /surahs\.length > 1/);
   assert.match(endSelector, /ariaLabel="سورة النهاية"/);
   assert.doesNotMatch(endSelector, /const sameSurah = Number\(start\.surah\)/);
-  assert.match(inlineSelect, /!gap-0/);
-  assert.match(inlineSelect, /!px-0\.5/);
+  assert.match(inlineSelect, /gap-0!/);
+  assert.match(inlineSelect, /px-0\.5!/);
   assert.match(inlineSelect, /appearance="inline"/);
   assert.doesNotMatch(amountVisibility, /useState|Eye|Button/);
   assert.doesNotMatch(deploymentEnv, /VITE_API_BASE/);

@@ -51,7 +51,7 @@ const CommitteeCard = ({ committee, onSelect }) => (
   <button
     type="button"
     onClick={() => onSelect(committee.id)}
-    className="w-full rounded-lg border border-primary/15 bg-card/55 p-3 text-right transition hover:border-primary/35 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+    className="w-full rounded-lg border border-primary/15 bg-card/55 p-3 text-right transition hover:border-primary/35 hover:bg-primary/5 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
   >
     <div className="mb-3 flex items-center justify-between gap-3">
       <div className="min-w-0">

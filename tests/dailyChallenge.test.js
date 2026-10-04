@@ -44,7 +44,7 @@ test('daily challenge is configurable, student-only, database-backed, and resets
   assert.match(portal, /isImmersiveRouteLoading/);
   assert.match(portal, /\['dailyChallenge', 'summit'\]\.includes\(requestedSection\)/);
   assert.match(portal, /hasDashboard \|\| isLoading \|\| waitingForAttendance \|\| !activeSection/);
-  assert.match(portal, /fixed inset-0 z-\[100\].*dailyChallenge/s);
+  assert.match(portal, /fixed inset-0 z-100.*dailyChallenge/s);
   assert.match(portal, /!isOnline[\s\S]*list\.push\(\{ key: 'dailyChallenge'/);
   assert.match(gateway, /showDailyChallenge=\{dailyChallengeAvailable\}/);
   assert.match(gateway, /useSaudiClock\(\)/);
@@ -151,7 +151,7 @@ test('manager can preview every daily challenge through the exact student experi
   assert.doesNotMatch(preview, /مضافة|إضافة/);
   assert.doesNotMatch(preview, /onToggleGame/);
   assert.doesNotMatch(settings, /onToggleGame=\{\(value\) => toggleListValue\('dailyChallengeGames', value\)\}/);
-  assert.match(preview, /fixed inset-0 z-\[1000\] h-dvh overflow-y-auto/);
+  assert.match(preview, /fixed inset-0 z-1000 h-dvh overflow-y-auto/);
   assert.match(studentExperience, /previewMode/);
   assert.match(studentExperience, /createDailyChallenge\(previewGameType\)/);
   assert.match(studentExperience, /isDailyChallengeCorrect/);

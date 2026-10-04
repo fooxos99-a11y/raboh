@@ -12,7 +12,7 @@ export default function StudentHomeWindow({ title, onClose, children, wide = fal
   const body = useRef(null);
   const positions = useRef(new Map());
   useLayoutEffect(() => { if (body.current) body.current.scrollTop = positions.current.get(surfaceKey) || 0; }, [surfaceKey]);
-  const content = <div ref={body} onScroll={(event) => positions.current.set(surfaceKey, event.currentTarget.scrollTop)} className={`student-home-window-body ${storePage ? '!p-4 sm:!p-6' : ''}`}>{children}</div>;
+  const content = <div ref={body} onScroll={(event) => positions.current.set(surfaceKey, event.currentTarget.scrollTop)} className={`student-home-window-body ${storePage ? 'p-4! sm:p-6!' : ''}`}>{children}</div>;
   useEffect(() => {
     if (!mobile && !fullPage) return;
     const overflow = document.body.style.overflow;

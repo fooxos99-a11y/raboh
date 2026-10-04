@@ -354,7 +354,7 @@ const WhatsAppSendSection = () => {
       </Card>
 
       <Dialog open={qrOpen} onOpenChange={setQrOpen}>
-        <DialogContent className="max-w-md rounded-[2rem] border-primary/30 bg-card/95 text-foreground shadow-2xl shadow-primary/20 backdrop-blur-xl" dir="rtl">
+        <DialogContent className="max-w-md rounded-4xl border-primary/30 bg-card/95 text-foreground shadow-2xl shadow-primary/20 backdrop-blur-xl" dir="rtl">
           <DialogHeader>
             <DialogTitle className="text-center text-2xl font-black text-primary neon-text">ربط واتساب</DialogTitle>
           </DialogHeader>

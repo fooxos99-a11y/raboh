@@ -121,7 +121,7 @@ export default function CompensationDialog({ open, onOpenChange, supervisorId, s
             </Section>
           </div>
         )}
-        <DialogFooter className="!flex-row !justify-start gap-2" dir="rtl">
+        <DialogFooter className="flex-row! justify-start! gap-2" dir="rtl">
           <Button type="button" variant="outline" className="min-h-11 px-3" onClick={() => onOpenChange?.(false)}>إغلاق</Button>
         </DialogFooter>
       </DialogContent>

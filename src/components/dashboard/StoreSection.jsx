@@ -243,7 +243,7 @@ const StoreSection = () => {
   return (
     <div className="space-y-5 [font-family:var(--font-ui)]">
       {configurationActions}
-      <div className="flex flex-col gap-3 rounded-2xl border border-[#d7a43b]/20 bg-gradient-to-l from-[#052e41] to-[#083d52] p-2 shadow-[0_14px_34px_rgba(5,46,65,0.16)] sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-[#d7a43b]/20 bg-linear-to-l from-[#052e41] to-[#083d52] p-2 shadow-[0_14px_34px_rgba(5,46,65,0.16)] sm:flex-row sm:items-center sm:justify-between">
         <div className="grid grid-cols-2 gap-2">
           <Button type="button" className={storeTabClassName(tab === 'products')} variant="ghost" onClick={() => setTab('products')}>
             <Package className="h-4 w-4" /> المنتجات

@@ -158,7 +158,7 @@ const LoginGateway = ({ loginPage = false, deletionPage = false }) => {
   if (!featuresReady) return <LoadingIndicator mode="screen" delayMs={0} />;
 
   return (
-    <div className="min-h-[100svh] overflow-x-clip bg-background text-foreground [font-family:var(--font-ui)]" dir="rtl">
+    <div className="min-h-svh overflow-x-clip bg-background text-foreground [font-family:var(--font-ui)]" dir="rtl">
       {site.features?.studentHome && storedUser?.role === 'student' ? <Suspense fallback={<LoadingIndicator mode="screen" delayMs={0} />}>
         <StudentHome key={storedUser.id} studentId={storedUser.id} showPath={studentFeatures.summitEnabled} showDailyChallenge={dailyChallengeAvailable} executionEnabled={studentFeatures.hasStudentQuranExecution} onLogout={() => { setStoredUser(null); logout(); }} />
       </Suspense> : <LoadingIndicator mode="screen" delayMs={0} />}

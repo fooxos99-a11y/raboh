@@ -210,7 +210,7 @@ const TeacherEvaluationDialog = ({ supervisorId, open = false, onOpenChange, inl
   };
 
   const openRecitation = (student) => {
-    prepareRecitation(student);
+    void prepareRecitation(student);
   };
 
   // A compensation is created as real tasks, then recited like any amount of the day.
