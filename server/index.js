@@ -1,7 +1,5 @@
 import { loadReviewCycle, saveReviewCycle, selectAuthorizedReview } from './services/quranReviewCycle.js';
 import { parseReviewExecution, reviewRangeLabel } from '../shared/quran-review-cycle.js';
-import { normalizeEventNotifications } from '../shared/event-notifications.js';
-import { notifyStudentsOfEvent } from './services/eventNotifications.js';
 import { extendReviewEnd } from '../shared/quran-review-extension.js';
 import { runCountedStatements, queryTaskGroups } from './services/queryResults.js';
 import { createDashboardUndo } from './services/dashboardUndo.js';
@@ -5909,7 +5907,6 @@ function normalizeSettings(rows) {
     reciterMemorizationRecitationMode: _resolveReciterMemorizationRecitationMode(),
     reciterReviewRecitationMode: _resolveReciterReviewRecitationMode(),
     reciterLinkRecitationMode: _resolveReciterLinkRecitationMode(),
-    eventNotifications: normalizeEventNotifications(JSON.parse(settings.eventNotifications || '{}')),
     registrationEnabled: settings.registrationEnabled === 'true',
     registrationPreAcceptTemplate: settings.registrationPreAcceptTemplate || 'السلام عليكم، تم قبول طلب تسجيل الطالب {name} مبدئياً، وسيتم التواصل معكم لإكمال الإجراء.',
     registrationAcceptTemplate: settings.registrationAcceptTemplate || 'السلام عليكم، تم قبول الطالب {name} في حلقة {committee}. رقم الدخول: {login}.',
@@ -7531,13 +7528,6 @@ app.use('/api/nazem', createNazemIntegrationRouter({
   importPlanCandidate: importNazemPlanCandidate,
 }));
 
-app.get('/api/settings/notification-administrators', requirePermission('settings'), async (_req, res, next) => {
-  try {
-    const [people] = await db().query("SELECT id, name FROM supervisors WHERE is_active = 1 AND role IN ('manager', 'admin') ORDER BY name");
-    res.json(people);
-  } catch (error) { next(error); }
-});
-
 app.get('/api/settings', requirePermission('settings'), async (_req, res, next) => {
   try {
     res.json(await loadSettings());
@@ -7724,12 +7714,6 @@ app.put('/api/settings', requirePermission('settings'), async (req, res, next) =
   let transactionStarted = false;
   try {
     const previousSettings = await loadSettings();
-    const eventNotifications = normalizeEventNotifications(req.body.eventNotifications ?? previousSettings.eventNotifications);
-    const selectedAdministrators = eventNotifications.storeOrder.administrators;
-    if (selectedAdministrators.length) {
-      const [valid] = await connection.query("SELECT id FROM supervisors WHERE is_active = 1 AND role IN ('manager', 'admin') AND id IN (?)", [selectedAdministrators]);
-      if (valid.length !== selectedAdministrators.length) return res.status(422).json({ message: 'اختر إداريين نشطين لاستقبال طلبات المتجر.' });
-    }
     const { studentRankingsVisible, familyRankingsVisible } = requestedRankingVisibility(req);
     const { teacherMemorizationRecitationMode, teacherReviewRecitationMode, teacherLinkRecitationMode, reciterMemorizationRecitationMode, reciterReviewRecitationMode, reciterLinkRecitationMode } = retainedRecitationModes(previousSettings);
     const _resolveStaffAttendanceSource = () => {
@@ -7762,7 +7746,6 @@ app.put('/api/settings', requirePermission('settings'), async (req, res, next) =
     const buildExecutionEditingSettingsUpdateValues = buildExecutionEditingSettingsUpdate(req, previousSettings);
     const buildEvaluationSettingsUpdateValues = buildEvaluationSettingsUpdate({ req, previousSettings, teacherMemorizationRecitationMode, teacherReviewRecitationMode, teacherLinkRecitationMode, reciterMemorizationRecitationMode, reciterReviewRecitationMode, reciterLinkRecitationMode });
     const settings = {
-      eventNotifications,
       ...buildRewardSettingsUpdateValues,
       ...buildAttendanceSettingsUpdateValues,
       ...buildNotificationSettingsUpdateValues,
@@ -8170,11 +8153,6 @@ app.put('/api/settings', requirePermission('settings'), async (req, res, next) =
       [JSON.stringify(settings.executionReminderExcludedStudentIds)],
     );
 
-    await connection.query("INSERT INTO app_settings (setting_key, setting_value) VALUES ('eventNotifications', ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)", [JSON.stringify(eventNotifications)]);
-    const previousStations = new Set((previousSettings.summitMapConfig?.stations || []).map(station => station.id));
-    if (settings.summitEnabled) for (const station of settings.summitMapConfig?.stations || []) {
-      if (!previousStations.has(station.id)) await notifyStudentsOfEvent(connection, { type: 'station', key: station.id, values: { station: station.name }, config: eventNotifications });
-    }
     await syncStudentPointFamilyContributionSetting(connection, previousSettings, settings);
     await syncFamilyPointStudentContributionSetting(connection, settings);
     await syncInactiveSourcePointAdjustments(connection, settings);

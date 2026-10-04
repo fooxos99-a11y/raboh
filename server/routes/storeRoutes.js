@@ -1,4 +1,3 @@
-import { emitEventNotification } from '../services/eventNotifications.js';
 import { decideStoreOrder } from '../services/storeOrderDecision.js';
 import express from 'express';
 import { db } from '../db.js';
@@ -352,7 +351,6 @@ export function createStoreRouter({
         await connection.query('UPDATE store_products SET stock = stock - 1 WHERE id = ?', [product.id]);
       }
 
-      await emitEventNotification(connection, { type: 'storeOrder', key: String(orderResult.insertId), values: { student: student.name || String(student.id), product: product.name }, config: settings.eventNotifications });
       await applyStoreRankingDeduction({ settings, applyStudentPointDelta, connection, student, price, purchaseDate, logStudentPointTransaction, req, product, orderResult });
 
       await connection.commit();

@@ -531,7 +531,6 @@ export const studentsApi = {
       method: 'PATCH',
       body: JSON.stringify({ committeeId }),
     }),
-  getNotificationAdministrators: () => request('/settings/notification-administrators'),
   getStudentQuranToday: loadStudentToday,
   getStudentQuranSessions: (studentId) => request(`/students/${studentId}/quran-sessions`),
   getStudentPlanOverview: (studentId) => request(`/students/${studentId}/quran-sessions?view=plan&includePoints=1`),

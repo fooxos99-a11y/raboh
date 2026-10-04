@@ -4,8 +4,8 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { notifyTeacherPointAdjustment } from '../server/services/teacherPointNotification.js';
 
-test('teacher additions and deductions notify only the recipient with the recorded reason', async () => {
-  for (const type of ['increase', 'deduction']) {
+test('teacher additions notify only the recipient with the recorded reason', async () => {
+  for (const type of ['increase']) {
     const calls = [];
     const connection = { query: async (sql, values) => {
       if (sql.includes('FROM app_settings')) return [[]];
@@ -16,12 +16,20 @@ test('teacher additions and deductions notify only the recipient with the record
       transactionId: 15, studentId: 8, type, points: 5, reason: 'سبب الاختبار', actor: { id: 3, name: 'معلم الاختبار' },
     }), 91);
     assert.match(calls[0].values[1], /سبب الاختبار/);
-    assert.equal(calls[0].values[2], type === 'increase' ? 'teacher-points:15' : 'event:violation:15');
-    assert.deepEqual(calls[1].values, type === 'increase' ? [91, 8] : [91, 'student', 8]);
+    assert.equal(calls[0].values[2], 'teacher-points:15');
+    assert.deepEqual(calls[1].values, [91, 8]);
     assert.match(calls[2].sql, /INSERT IGNORE INTO notification_push_deliveries/);
     assert.match(calls[2].sql, /d.user_role = r.user_role AND d.user_id = r.user_id/);
     assert.ok(calls.every(({ sql }) => !/COMMIT|ROLLBACK/.test(sql)));
   }
+});
+
+test('deductions no longer send the removed violation notification', async () => {
+  const connection = { query: async () => { throw new Error('must not query'); } };
+  assert.equal(await notifyTeacherPointAdjustment(connection, {
+    transactionId: 15, studentId: 8, type: 'deduction', points: 5,
+    reason: 'سبب الاختبار', actor: { id: 3, name: 'المعلم' },
+  }), null);
 });
 
 test('no notification for an absent movement and notification failures reach the transaction owner', async () => {

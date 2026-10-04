@@ -1,4 +1,3 @@
-import { notifyStudentsOfEvent } from '../services/eventNotifications.js';
 import { groupProgramSections } from '../../shared/program-sections.js';
 import { countTrailingCharacter } from '../../shared/string-suffix.js';
 import { saveProgramSections } from '../services/programSections.js';
@@ -208,7 +207,6 @@ export function createProgramRouter({ loadSettings, applyStudentPointDelta, logS
       );
       await replaceProgramChildren(connection, result.insertId, payload);
       await saveProgramSections(connection, result.insertId, payload.sections, replaceProgramChildren);
-      if (payload.status === 'open') await notifyStudentsOfEvent(connection, { type:'program', key: String(result.insertId), values:{program:payload.title} });
       await connection.commit();
       res.status(201).json({ program: (await loadPrograms({ pathId: result.insertId, includeAnswers: true }))[0] });
     } catch (error) { await connection.rollback(); next(error); } finally { connection.release(); }
@@ -230,7 +228,6 @@ export function createProgramRouter({ loadSettings, applyStudentPointDelta, logS
       if (!result.affectedRows) throw fail('المستوى غير موجود.', 404);
       await replaceProgramChildren(connection, req.params.id, payload);
       await saveProgramSections(connection, req.params.id, payload.sections, replaceProgramChildren);
-      if (current.status !== 'open' && payload.status === 'open' && !current.parentPathId) await notifyStudentsOfEvent(connection, {type:'program',key:String(req.params.id),values:{program:payload.title}});
       await connection.commit();
       res.json({ program: (await loadPrograms({ pathId: req.params.id, includeAnswers: true }))[0] });
     } catch (error) { await connection.rollback(); next(error); } finally { connection.release(); }

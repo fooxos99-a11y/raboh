@@ -1,31 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import SettingsGroup from './SettingsGroup';
 import MessageTemplateField, { TemplateVariablesHint } from './MessageTemplateField';
-import SettingToggle, { ToggleSwitch } from '@/components/ui/setting-toggle';
+import { ToggleSwitch } from '@/components/ui/setting-toggle';
 import MultiSelectSetting from '@/components/ui/multi-select-setting';
 import { Label } from '@/components/ui/label';
-import { studentsApi } from '@/services/studentsApi';
-import { eventNotificationDefinitions, normalizeEventNotifications } from '../../../shared/event-notifications.js';
 
 export default function NotificationSettings({settings,setSettings,executionReminderStudents,toggleListValue}) {
-  const [administrators,setAdministrators]=useState([]);
-  const [error,setError]=useState('');
-  useEffect(()=>{let active=true;studentsApi.getNotificationAdministrators().then(people=>{if(active)setAdministrators(people);}).catch(()=>{if(active)setError('تعذر تحميل الإداريين. أعد فتح الصفحة.');});return()=>{active=false;};},[]);
-  const config=normalizeEventNotifications(settings.eventNotifications);
-  const update=(key,patch)=>setSettings({...settings,eventNotifications:{...config,[key]:{...config[key],...patch}}});
   return <>
-    <SettingsGroup>
-      {eventNotificationDefinitions.map(def=><div key={def.key} className="space-y-3">
-        <SettingToggle label={def.label} checked={config[def.key].enabled} onCheckedChange={enabled=>update(def.key,{enabled})}/>
-        {config[def.key].enabled && <>
-          <MessageTemplateField id={'notification-'+def.key} label="قالب الإشعار" value={config[def.key].template} onChange={template=>update(def.key,{template})} placeholder={def.template}/>
-          {def.key==='storeOrder' && <div className="space-y-2"><Label>الإداريون المستلمون</Label>
-            {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
-            <MultiSelectSetting value={config.storeOrder.administrators} options={administrators.map(person=>({value:person.id,label:person.name}))} placeholder="اختر الإداريين" onToggle={id=>update('storeOrder',{administrators:config.storeOrder.administrators.includes(Number(id))?config.storeOrder.administrators.filter(value=>value!==Number(id)):[...config.storeOrder.administrators,Number(id)]})}/>
-          </div>}
-        </>}
-      </div>)}
-    </SettingsGroup>
           <SettingsGroup>
             <div className="flex items-start justify-between gap-3">
               <h3 className="text-sm font-black text-primary">قوالب التحضير والتنفيذ</h3>

@@ -1,4 +1,3 @@
-import { notifyCityTransition } from './eventNotifications.js';
 
 export function getManualAttendancePoints(settings, status) {
   if (status === 'present') return Math.max(0, Number(settings.attendancePoints || 0));
@@ -45,7 +44,6 @@ export async function applyStudentPointDelta(connection, studentId, delta, setti
     );
   }
 
-  await notifyCityTransition(connection, studentId, currentPoints, nextPoints, settings);
   return effectiveDelta;
 }
 
@@ -83,7 +81,6 @@ export async function applyAttendancePointDelta(connection, studentId, delta, se
     );
   }
 
-  await notifyCityTransition(connection, studentId, currentPoints, nextPoints, settings);
   return effectiveDelta;
 }
 
@@ -128,7 +125,6 @@ export async function syncStudentPointBalance(connection, studentId, settings = 
     );
   }
 
-  await notifyCityTransition(connection, studentId, currentPoints, nextPoints, settings);
   return delta;
 }
 
