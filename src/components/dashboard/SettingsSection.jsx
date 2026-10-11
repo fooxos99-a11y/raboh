@@ -242,8 +242,10 @@ const SettingsSection = ({
       .then((data) => {
         if (mounted) setExecutionReminderStudents(Array.isArray(data?.students) ? data.students : []);
       })
-      .catch(() => {
-        if (mounted) setExecutionReminderStudents([]);
+      .catch((error) => {
+        if (!mounted) return;
+        setExecutionReminderStudents([]);
+        toast({ title: 'تعذر تحميل أسماء الطلاب', description: error.message, variant: 'destructive' });
       });
     return () => {
       mounted = false;

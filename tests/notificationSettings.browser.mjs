@@ -50,6 +50,12 @@ try {for(const width of [360,768,1440]){
  assert.equal(await page.evaluate(()=>globalThis.notificationFixture.registrationAcceptTemplate),'اختبار القبول');
  assert.equal(await page.getByText('قوالب التسجيل',{exact:true}).count(),1);
  assert.equal(await page.evaluate(()=>globalThis.document.documentElement.scrollWidth>globalThis.innerWidth),false);
+ await page.unroute('**/api/settings/execution-reminder-students');
+ await page.route('**/api/settings/execution-reminder-students', route=>route.fulfill({
+  status:403,json:{message:'ليست لديك صلاحية لتنفيذ هذا الإجراء.'},
+ }));
+ await page.reload();
+ await page.getByText('تعذر تحميل أسماء الطلاب',{exact:true}).waitFor();
  await page.close();
  globalThis.console.log(`Notification names, selection and persistence passed at ${width}px`);
 }}finally{await browser.close();}

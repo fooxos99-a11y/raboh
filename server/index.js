@@ -546,6 +546,7 @@ function getDashboardPermissionKeysForRequest(req) {
   const method = req.method;
   const rules = [
     [path === '/settings', ['settings']],
+    [method === 'GET' && path === '/settings/execution-reminder-students', ['settings']],
     [path === '/student-news/manage' || path === '/student-news/audience', ['settings']],
     [path.startsWith('/staff-attendance'), ['staffAttendance']],
     [path.startsWith('/recitation-preferences'), ['quranEvaluation']],
